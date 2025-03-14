@@ -13,3 +13,6 @@ const Button = ({ variant, className, children, ...props }) => {
 };
 
 export default Button;
+
+export const ButtonLightClass =
+  "font-semibold hover:!bg-gray-400 focus:!ring-gray-400 !text-gray-700 !from-gray-300 !border-gray-300 via-white !to-gray-300/50";
