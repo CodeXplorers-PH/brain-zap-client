@@ -1,13 +1,14 @@
 import React from 'react';
-import SectionHeading from '@/components/shared/SectionHeading';
-import { makeQuiz } from '@/data/Quiz';
-
+import SectionHeading from '@/components/ui/SectionHeading';
+import { featuresData } from '@/data/Features';
 import shareIcon from '@/assets/icons/share.png';
+
+import featuresImg from '@/assets/img/features.webp';
 
 const Features = () => {
   return (
-    <section className="bg-gradient-to-t from-[#b599fc] via-[#eeddfa] to-wheat pt-16 pb-40 relative">
-      <div className="wrapper">
+    <section className="flex-section bg-gradient-to-t from-[#b599fc] via-[#eeddfa] to-wheat pt-20 pb-60 relative">
+      <div className="wrapper flex-col">
         {/* Heading */}
         <SectionHeading
           heading="Make your quiz"
@@ -17,7 +18,7 @@ const Features = () => {
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Cards */}
           <div className="order-2 md:order-1 grid grid-cols-1 sm:grid-cols-2 gap-12">
-            {makeQuiz.map(quiz => (
+            {featuresData.map(quiz => (
               <div key={quiz.id}>
                 <div className="bg-white/30 backdrop-blur-md size-10 p-1.5 rounded-md">
                   <img
@@ -33,8 +34,8 @@ const Features = () => {
           </div>
 
           {/* Animation */}
-          <div className="px-12 order-1 md:order-2 hidden lg:block">
-            <div className="h-full p-2 border border-black rounded-2xl"></div>
+          <div className="order-1 md:order-2 hidden lg:block">
+            <img src={featuresImg} alt="" />
           </div>
         </div>
       </div>
