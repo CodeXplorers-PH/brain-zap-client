@@ -4,6 +4,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* A Default class for Section, Header and Footer */
+.flex-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+button {
+  cursor: pointer;
+}
+
+.wrapper {
+  max-width: 1440px;
+  width: 100%;
+  display: inline-flex;
+  padding-left: 20px;
+  padding-right: 20px;
+}
 /* ShadCN Styles Start */
 
 :root {
@@ -125,6 +142,10 @@
 
 @theme {
   /* Fonts  */
-  --font-primary: "Inter", sans-serif;
+  --font-primary: "Poppins", sans-serif;
   --font-secondary: "Goudy Bookletter 1911", serif;
+
+  /* Color */
+  --color-text: #2e2a42e6;
+  --color-huf-purple: #7b63f5;
 }
