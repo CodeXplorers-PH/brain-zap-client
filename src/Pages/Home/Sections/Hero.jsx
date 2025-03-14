@@ -1,5 +1,6 @@
 import Button, { ButtonLightClass } from "@/components/ui/Button";
 import Heading from "@/components/ui/Heading";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 import P from "@/components/ui/P";
 import { Link } from "react-router-dom";
 
@@ -7,8 +8,8 @@ const Hero = () => {
   return (
     <>
       <section className="flex-section bg-huf-purple/20">
-        <div className="w-full h-[700px] z-0 flex items-center absolute"></div>
-        <div className="wrapper z-20 justify-between gap-10  !max-w-[1240px] py-52">
+        <HeroBackground />
+        <div className="wrapper z-20 justify-between gap-10  !max-w-[1240px] py-60">
           <div className="w-full text-center md:text-start flex flex-col items-center md:items-start md:w-6/12 space-y-8">
             <div className="flex flex-col items-center md:items-start">
               <Heading className={`z-10 relative`}>
