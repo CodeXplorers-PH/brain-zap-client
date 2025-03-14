@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import LogoURI from "@/assets/logo.svg";
 import { Navs } from "@/data/Header";
 import Button from "../ui/Button";
 import { Turn as Hamburger } from "hamburger-react";
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -27,7 +27,7 @@ const Header = () => {
         initial={{ y: 0 }}
         animate={{ y: isHidden ? "-100%" : "0%" }}
         transition={{ duration: 0 }}
-        className="fixed top-0 left-0 flex justify-center w-full backdrop-blur-md z-[99999] transition-all"
+        className="fixed top-0 left-0 flex justify-center w-full backdrop-blur-3xl z-[99999] transition-all"
       >
         <div className="wrapper py-3 gap-5 items-center justify-between">
           {/* Header Logo */}
@@ -61,7 +61,7 @@ const Header = () => {
                 <HeaderButton />
               </div>
               <div
-                className={`lg:hidden bg-white transition-all border rounded-md ${
+                className={`lg:hidden bg-white/50 transition-all border rounded-md ${
                   isOpen && "!bg-huf-purple/20 !border-huf-purple/50"
                 }`}
               >
@@ -73,8 +73,55 @@ const Header = () => {
       </motion.header>
       <AnimatePresence>
         {isOpen && (
-          <motion.div>
-            <h1>s</h1>
+          <motion.div
+            onClick={() => setIsOpen(false)}
+            initial={{ translateX: "-100%" }}
+            animate={{ translateX: 0 }}
+            exit={{ translateX: "-100%" }}
+            transition={{ type: "tween", ease: "easeInOut", duration: 0.4 }}
+            className="fixed flex w-full lg:!hidden bg-black/30 cursor-pointer h-screen z-[999999999999999999999999]"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className=" cursor-default w-full min-[300px]:w-[300px] bg-white h-screen"
+            >
+              <div className="flex items-center w-full p-5 justify-between">
+                <Link to={`/`} className="w-fit">
+                  <img width={140} src={LogoURI} />
+                </Link>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="hover:rotate-45 transition-all"
+                >
+                  <X
+                    size={30}
+                    strokeWidth={1}
+                    className="bg-huf-purple/20 border border-huf-purple/20 p-1 rounded-md"
+                  />
+                </button>
+              </div>
+              <div className="w-full flex flex-col justify-between h-[92%] gap-10 py-5 overflow-y-scroll [&::-webkit-scrollbar]:w-0">
+                <ul className="w-full">
+                  {Navs.map((navlink, index) => (
+                    <li key={`navlink-sidebar-${index}`} className="w-full">
+                      <NavLink
+                        to={navlink.path}
+                        className={({ isActive }) =>
+                          `flex transition-all w-full py-2 text-sm text-text font-medium hover:bg-huf-purple/20 px-5 ${
+                            isActive && "bg-huf-purple/20"
+                          }`
+                        }
+                      >
+                        {navlink.pathName}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+                <div className="px-5">
+                  <HeaderButton className="w-full rounded-md" />
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -84,15 +131,15 @@ const Header = () => {
 
 export default Header;
 
-export const HeaderButton = () => {
+export const HeaderButton = ({ className }) => {
   return (
     <>
       <Link to={`/pricing`}>
-        <Button>
+        <Button className={className || ""}>
           Get Started{" "}
           <ChevronRight
             strokeWidth={1.5}
-            className="absolute opacity-0 transition-all group-hover:translate-x-14 ml-2 group-hover:opacity-100"
+            className={`absolute opacity-0 transition-all group-hover:translate-x-14 ml-2 group-hover:opacity-100`}
           />
         </Button>
       </Link>

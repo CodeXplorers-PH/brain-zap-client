@@ -4,7 +4,7 @@ export const Navs = [
     pathName: "Home",
   },
   {
-    path: "/",
+    path: "/about",
     pathName: "About",
   },
   {

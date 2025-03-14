@@ -13,6 +13,10 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Home /> /* Home Page */,
       },
+      {
+        path: "*",
+        element: "4504",
+      },
     ],
   },
 ]);
