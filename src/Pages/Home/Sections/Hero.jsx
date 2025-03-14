@@ -1,6 +1,7 @@
 import Button, { ButtonLightClass } from "@/components/ui/Button";
 import Heading from "@/components/ui/Heading";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import WistiaPlayer from "@/components/ui/HeroVideo";
 import P from "@/components/ui/P";
 import { Link } from "react-router-dom";
 
@@ -9,8 +10,8 @@ const Hero = () => {
     <>
       <section className="flex-section bg-huf-purple/20">
         <HeroBackground />
-        <div className="wrapper z-20 justify-between gap-10  !max-w-[1240px] py-60">
-          <div className="w-full text-center md:text-start flex flex-col items-center md:items-start md:w-6/12 space-y-8">
+        <div className="wrapper min-h-[900px] z-20 justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] py-60">
+          <div className="w-full text-center md:text-start flex flex-col items-center md:items-start lg:w-6/12 space-y-8">
             <div className="flex flex-col items-center md:items-start">
               <Heading className={`z-10 relative`}>
                 Brain Zap AI Powered Quiz Platform
@@ -39,7 +40,7 @@ const Hero = () => {
               family's unique rhythm to give you confidence and physician-backed
               guidance when it matters most.
             </P>
-            <div className="flex gap-5 items-center">
+            <div className="flex gap-5 items-center flex-wrap justify-center">
               <Link to={`/login`}>
                 <Button>Try for free</Button>
               </Link>
@@ -47,6 +48,9 @@ const Hero = () => {
                 <Button className={ButtonLightClass}>Pricing</Button>
               </Link>
             </div>
+          </div>
+          <div className="w-full lg:w-6/12">
+            <WistiaPlayer />
           </div>
         </div>
       </section>

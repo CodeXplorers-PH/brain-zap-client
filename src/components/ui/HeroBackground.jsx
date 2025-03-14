@@ -14,13 +14,13 @@ export const HeroBackground = () => {
           <div className="ml-[300px]">
             <Cloud className="-translate-y-10" width={400} />
             <div>
-              <Cloud className="translate-x-36" width={400} />
+              <Cloud className="translate-x-48" width={300} />
             </div>
           </div>
-          <div className="ml-[300px]">
-            <Cloud className="-translate-y-10" width={400} />
+          <div className="ml-[600px]">
+            <Cloud className=" -translate-x-20 -translate-y-10" width={300} />
             <div>
-              <Cloud className="translate-x-80" width={400} />
+              <Cloud width={500} />
             </div>
           </div>
         </Marquee>
