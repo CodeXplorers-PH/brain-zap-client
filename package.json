@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.5.0",
     "hamburger-react": "^2.5.2",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.479.0",
     "motion": "^12.5.0",
     "react": "^19.0.0",
