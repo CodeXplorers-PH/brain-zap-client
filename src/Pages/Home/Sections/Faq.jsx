@@ -28,7 +28,7 @@ const Faq = () => {
         <Accordion
           type="single"
           collapsible
-          className="w-11/12 lg:w-3/4 mx-auto bg-white p-8 mt-12 rounded-xl"
+          className="w-[80%] lg:w-3/4 mx-auto bg-white p-8 mt-12 rounded-xl"
         >
           <AccordionItem value="item-1 ">
             <AccordionTrigger className="text-xl">
@@ -49,7 +49,8 @@ const Faq = () => {
               </li>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-2" >
+
+          <AccordionItem value="item-2">
             <AccordionTrigger className="text-xl">
               How will you keep my data private?
             </AccordionTrigger>
@@ -59,11 +60,38 @@ const Faq = () => {
               login we verify the users credentials with the cookies.
             </AccordionContent>
           </AccordionItem>
+
           <AccordionItem value="item-3">
-            <AccordionTrigger>Is it animated?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It's animated by default, but you can disable it if you
-              prefer.
+            <AccordionTrigger className="text-xl">
+              Do you have a free trial?
+            </AccordionTrigger>
+            <AccordionContent className="text-lg">
+              Yes, we do have a free trial in timed mode of our quiz. A logged
+              in user can play a demo exam for the first time to test himself.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-4">
+            <AccordionTrigger className="text-xl">
+              What kind of people can use this app?
+            </AccordionTrigger>
+            <AccordionContent className="text-lg">
+              <li>Students can prepare for a programming related challenge.</li>
+              <li>Self learners can improve their coding skill.</li>
+              <li>Professionals can seek deep knowledge about AI.</li>
+              <li>
+                Training program can asses their students through this web app.
+              </li>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-5">
+            <AccordionTrigger className="text-xl">
+              Do we have the premium version of BrainZap?
+            </AccordionTrigger>
+            <AccordionContent className="text-lg">
+              Yes, for all the users we have some premium quizzes for better
+              user experience.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
