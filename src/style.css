@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
 
@@ -145,10 +145,11 @@ p {
 
 @theme {
   /* Fonts  */
-  --font-primary: "Poppins", sans-serif;
-  --font-secondary: "Goudy Bookletter 1911", serif;
+  --font-primary: 'Poppins', sans-serif;
+  --font-secondary: 'Goudy Bookletter 1911', serif;
 
   /* Color */
   --color-text: #2e2a42e6;
   --color-huf-purple: #7b63f5;
+  --background-color-wheat: #f6f5f1;
 }
