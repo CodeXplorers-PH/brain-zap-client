@@ -1,8 +1,9 @@
 import React from 'react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { Link } from 'react-router-dom';
-import Button from '@/components/ui/Button';
+import Button, { ButtonYellowClass } from '@/components/ui/Button';
 import { getStartData } from '@/data/GetStarted';
+import { ChevronRight } from 'lucide-react';
 
 const GetStarted = () => {
   return (
@@ -17,8 +18,12 @@ const GetStarted = () => {
         {/* Get Started button */}
         <div className="my-8 flex justify-center">
           <Link to="/pricing">
-            <Button className="shadow-[0px_2px_4px_2px_#646464]">
-              Get Started Now
+            <Button className={`!py-3 ${ButtonYellowClass}`}>
+              Get Started Now{' '}
+              <ChevronRight
+                strokeWidth={1.5}
+                className="absolute opacity-0 transition-all group-hover:translate-x-20 ml-2 group-hover:opacity-100"
+              />
             </Button>
           </Link>
         </div>
@@ -31,7 +36,7 @@ const GetStarted = () => {
                 index === 0
                   ? 'bg-[#D2F2D2]'
                   : index === 1
-                  ? 'bg-[#FFDF78]'
+                  ? 'bg-yellow'
                   : 'bg-[#AFDDFF]'
               }`}
               key={data.id}

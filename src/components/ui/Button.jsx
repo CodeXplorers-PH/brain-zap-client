@@ -3,7 +3,7 @@ const Button = ({ variant, className, children, ...props }) => {
     <>
       <button
         className={`px-10 py-[7px] flex focus:ring-2 ring-offset-2 focus:ring-huf-purple justify-center group items-center gap-2 rounded-full bg-gradient-to-r hover:bg-purple-950 transition-all from-huf-purple via-huf-purple/70 to-huf-purple/80 border border-huf-purple text-white ${
-          className || ""
+          className || ''
         }`}
       >
         {children}
@@ -15,4 +15,7 @@ const Button = ({ variant, className, children, ...props }) => {
 export default Button;
 
 export const ButtonLightClass =
-  "font-semibold hover:!bg-gray-300 focus:!ring-gray-300 !text-gray-700 !from-gray-300 !border-gray-300 via-white !to-gray-300/50";
+  'font-semibold hover:!bg-gray-300 focus:!ring-gray-300 !text-gray-700 !from-gray-300 !border-gray-300 via-white !to-gray-300/50';
+
+export const ButtonYellowClass =
+  'font-semibold hover:!bg-yellow focus:!ring-yellow !text-gray-700 !from-yellow !border-yellow via-yellow/30 !to-yellow/50';

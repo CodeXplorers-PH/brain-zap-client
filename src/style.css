@@ -151,5 +151,6 @@ p {
   /* Color */
   --color-text: #2e2a42e6;
   --color-huf-purple: #7b63f5;
-  --background-color-wheat: #f6f5f1;
+  --color-wheat: #f6f5f1;
+  --color-yellow: #ffdf78;
 }
