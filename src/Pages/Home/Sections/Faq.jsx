@@ -10,7 +10,7 @@ import animationData from "../../../assets/animation/faq.json";
 
 const Faq = () => {
   return (
-    <section className="bg-[#F6F5F1] pt-20 pb-60 relative">
+    <section className="bg-[#F6F5F1] pt-20 pb-32 relative">
       {/* Heading */}
       <SectionHeading
         heading="FAQ"
