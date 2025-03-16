@@ -14,7 +14,6 @@ const Features = () => {
           heading="Make your quiz"
           subHeading="Create and Customize Your Own AI-Powered Quiz for a Personalized Learning Experience."
         />
-
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Cards */}
           <div className="order-2 md:order-1 grid grid-cols-1 sm:grid-cols-2 gap-12">
