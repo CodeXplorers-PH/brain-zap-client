@@ -4,7 +4,7 @@ const SectionHeading = ({ heading = '', subHeading = '', color }) => {
   return (
     <>
       <h1
-        className={`text-center font-secondary text-5xl sm:text-6xl text-text font-medium ${
+        className={`text-center font-secondary text-5xl sm:text-7xl text-text font-medium ${
           color || ''
         }`}
       >
