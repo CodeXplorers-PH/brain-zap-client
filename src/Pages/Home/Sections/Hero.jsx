@@ -38,9 +38,7 @@ const Hero = () => {
                 </svg>
               </div>
               <P>
-                Riley is the only all-in-one baby tracker that learns your
-                family's unique rhythm to give you confidence and
-                physician-backed guidance when it matters most.
+              Brain Zap is an AI-powered quiz platform that adapts to your learning style, delivering personalized challenges and smart insights to boost your knowledge and confidence.
               </P>
               <div className="flex gap-5 items-center flex-wrap justify-center">
                 <Link to={`/login`}>
