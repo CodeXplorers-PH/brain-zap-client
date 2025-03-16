@@ -58,7 +58,7 @@ const pricingPlans = [
 
 const PricingPlan = () => {
   return (
-    <div className="pt-40 bg-gradient-to-br from-huf-purple/40 to-sky-200/20 pb-20">
+    <div className="pt-40 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-16">
           <h2 className="text-5xl font-bold text-purple-800 text-center mb-4">Pricing Plans</h2>
