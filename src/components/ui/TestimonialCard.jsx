@@ -2,7 +2,7 @@ import StarRatings from "react-star-ratings";
 const TestimonialCard = ({ testimonialData }) => {
   const { name, image, location, age, feedback, rating } = testimonialData;
   return (
-    <div className="p-8 bg-white rounded-2xl space-y-8 text-text transform transition-transform duration-300 hover:scale-105">
+    <div className="p-8 bg-white rounded-2xl space-y-8 text-text transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
       <figure>
         <svg
           xmlns="http://www.w3.org/2000/svg"
