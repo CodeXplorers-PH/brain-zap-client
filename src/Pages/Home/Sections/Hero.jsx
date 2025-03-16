@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 const Hero = () => {
   return (
     <>
-      <section className="flex-section flex-col items-center gap-0">
+      <section className="flex-section flex-col items-center gap-0 bg-gradient-to-br from-huf-purple/40 to-sky-200/20">
         <div className="">
           <HeroBackground />
           <div className="wrapper min-h-[900px] z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-0 pt-60">
