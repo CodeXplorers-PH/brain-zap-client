@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { categories } from "@/data/Categories";
 import { Search } from "lucide-react";
-
 const Blog = () => {
   return (
     <div className="bg-[#F6F5F1] min-h-[900px] pt-20 pb-60">
       {/* Heading */}
       <SectionHeading
-        heading="BrainZap Articles"
+        heading="Brain Zap Articles"
         subHeading="Helpful articles with all the information you need to raise happy, healthy children!"
       ></SectionHeading>
 
@@ -19,6 +19,18 @@ const Blog = () => {
           placeholder="Search"
           className="pl-10 pr-4 py-6 rounded-full focus:ring-0 focus:outline-0 focus:ring-[#7E66F5] focus-visible:border-[#7E66F5] focus-visible:ring-0 bg-white placeholder:text-sm"
         />
+      </div>
+
+      {/* Categories */}
+      <div className="flex flex-wrap justify-center mt-10 gap-4 w-fit mx-auto">
+        {categories.map((category) => (
+          <div
+            key={category.id}
+            className="bg-white border cursor-pointer rounded-full text-center px-5 py-2 w-fit hover:text-[#9681FE] transition duration-200"
+          >
+            {category.category}
+          </div>
+        ))}
       </div>
     </div>
   );
