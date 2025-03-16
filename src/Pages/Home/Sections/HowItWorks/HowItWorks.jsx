@@ -27,8 +27,11 @@ const HowItWorks = () => {
                   </p>
                 </Card>
                 {/* Arrow button for mobile */}
-
-                <div className="absolute top-1/2 right-[-32px] transform -translate-y-1/2">
+                <div className="md:hidden absolute w-full items-center flex justify-center">
+                  <MoveDown size={32} />
+                </div>
+                 {/* Arrow button for medium and large devices */}
+                <div className="hidden md:block absolute top-1/2 right-[-32px] transform -translate-y-1/2">
                   <MoveRight size={32} />
                 </div>
               </div>
@@ -47,7 +50,12 @@ const HowItWorks = () => {
                     your skills.
                   </p>
                 </Card>
-                <div className="absolute -left-9 transform">
+                {/* Arrow button for mobile */}
+                <div className="md:hidden absolute w-full items-center flex justify-center">
+                  <MoveDown size={32} />
+                </div>
+                 {/* Arrow button for medium and large devices */}
+                <div className="hidden md:block absolute -left-9 transform">
                   <MoveDownLeft size={42} />
                 </div>
               </div>
@@ -64,7 +72,12 @@ const HowItWorks = () => {
                     time.
                   </p>
                 </Card>
-                <div className="absolute top-1/2 right-[-32px] transform -translate-y-1/2">
+                {/* Arrow button for mobile */}
+                <div className="md:hidden absolute w-full items-center flex justify-center">
+                  <MoveDown size={32} />
+                </div>
+                 {/* Arrow button for medium and large devices */}
+                <div className="hidden md:block absolute top-1/2 right-[-32px] transform -translate-y-1/2">
                   <MoveRight size={32} />
                 </div>
               </div>
