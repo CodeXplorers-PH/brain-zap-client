@@ -138,7 +138,7 @@ const Footer = () => {
 
         <div className="sm:flex sm:items-center sm:justify-between">
           <h6 className="text-sm text-white text-center w-full">
-            © Copyright 2021, All Rights Reserved by{" "}
+            © Copyright {new Date().getFullYear()}, All Rights Reserved by{" "}
             <Link to={"/"}>
               <img className="w-20 h-9 inline" src={LogoURI} alt="Logo" />
             </Link>
