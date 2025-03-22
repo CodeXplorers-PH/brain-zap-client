@@ -5,35 +5,88 @@ import { AuthContext } from '@/provider/AuthProvider';
 
 const Signup = () => {
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [strength, setStrength] = useState(0);
     const [photoName, setPhotoName] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [errors, setErrors] = useState({});
     const fileInputRef = useRef(null);
 
-    const {createNewUser , setUser} = useContext(AuthContext);
+    const { createNewUser, setUser } = useContext(AuthContext);
+
+    const validatePassword = (pass) => {
+        const errors = {};
+        
+        if (pass.length < 8) {
+            errors.length = "Password must be at least 8 characters";
+        }
+        if (!/[a-z]/.test(pass)) {
+            errors.lowercase = "Password must include at least one lowercase letter";
+        }
+        if (!/[A-Z]/.test(pass)) {
+            errors.uppercase = "Password must include at least one uppercase letter";
+        }
+        if (!/[0-9]/.test(pass)) {
+            errors.number = "Password must include at least one number";
+        }
+        
+        return errors;
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+        
+        // Validate password requirements
+        const passwordErrors = validatePassword(password);
+        if (Object.keys(passwordErrors).length > 0) {
+            newErrors.password = passwordErrors;
+        }
+        
+        // Validate password confirmation
+        if (password !== confirmPassword) {
+            newErrors.confirmPassword = "Passwords do not match";
+        }
+        
+        // Validate terms acceptance
+        if (!termsAccepted) {
+            newErrors.terms = "You must accept the Terms and Conditions";
+        }
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        if (!validateForm()) {
+            return;
+        }
 
         const form = new FormData(e.target);
         const name = form.get('name');
         const email = form.get('email');
         const photo = form.get('photo');
-        const password = form.get('password');
-        console.log({name, email, photo, password});
-
+        
         createNewUser(email, password)
         .then(result => {
             const user = result.user;
-            setUser(user)
+            setUser(user);
             console.log(user);
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage);
-            // ..
+            
+            // Handle Firebase authentication errors
+            if (errorCode === "auth/email-already-in-use") {
+                setErrors({ submit: "Email already in use. Please use a different email." });
+            } else {
+                setErrors({ submit: errorMessage });
+            }
         });
     }
 
@@ -59,6 +112,10 @@ const Signup = () => {
         setStrength(calculateStrength(newPassword));
     };
 
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
+    };
+
     const handleFileChange = (e) => {
         if (e.target.files[0]) {
             setPhotoName(e.target.files[0].name);
@@ -75,6 +132,10 @@ const Signup = () => {
 
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword(!showConfirmPassword);
+    };
+
+    const handleTermsChange = (e) => {
+        setTermsAccepted(e.target.checked);
     };
 
     // Get color and label for password strength
@@ -102,6 +163,12 @@ const Signup = () => {
                     </p>
                 </div>
 
+                {errors.submit && (
+                    <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md text-sm">
+                        {errors.submit}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="grid gap-4">
                     {/* Full Name */}
                     <div className="grid gap-2">
@@ -113,6 +180,7 @@ const Signup = () => {
                             type="text"
                             placeholder="John Doe"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
+                            required
                         />
                     </div>
                     <div className="grid gap-2">
@@ -127,32 +195,6 @@ const Signup = () => {
                         />
                     </div>
 
-                    {/* Profile Photo
-                    <div className="grid gap-2">
-                        <label className="text-sm font-medium text-slate-700">
-                            Profile photo
-                        </label>
-                        <div className="flex items-center gap-3">
-                            <button
-                                type="button"
-                                onClick={handleUploadClick}
-                                className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
-                            >
-                                Choose file
-                            </button>
-                            <span className="text-sm text-slate-500 truncate">
-                                {photoName || "No file chosen"}
-                            </span>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
-                        </div>
-                    </div> */}
-
                     {/* Email */}
                     <div className="grid gap-2">
                         <label htmlFor="email" className="text-sm font-medium text-slate-700">
@@ -163,6 +205,7 @@ const Signup = () => {
                             type="email"
                             placeholder="m@example.com"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
+                            required
                         />
                     </div>
 
@@ -177,7 +220,8 @@ const Signup = () => {
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={handlePasswordChange}
-                                className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
+                                className={`h-10 w-full rounded-md border ${errors.password ? 'border-red-500' : 'border-slate-300'} bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1`}
+                                required
                             />
                             <button
                                 type="button"
@@ -187,6 +231,15 @@ const Signup = () => {
                                 {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                             </button>
                         </div>
+
+                        {/* Password Requirements and Errors */}
+                        {errors.password && (
+                            <div className="mt-1 space-y-1">
+                                {Object.values(errors.password).map((error, idx) => (
+                                    <p key={idx} className="text-xs text-red-600">{error}</p>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Password Strength Bar */}
                         {password && (
@@ -213,7 +266,7 @@ const Signup = () => {
                         )}
                     </div>
 
-                    {/* Confirm Password
+                    {/* Confirm Password */}
                     <div className="grid gap-2">
                         <label htmlFor="confirmPassword" className="text-sm font-medium text-slate-700">
                             Confirm password
@@ -221,7 +274,10 @@ const Signup = () => {
                         <div className="relative">
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
-                                className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
+                                value={confirmPassword}
+                                onChange={handleConfirmPasswordChange}
+                                className={`h-10 w-full rounded-md border ${errors.confirmPassword ? 'border-red-500' : 'border-slate-300'} bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1`}
+                                required
                             />
                             <button
                                 type="button"
@@ -231,20 +287,31 @@ const Signup = () => {
                                 {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                             </button>
                         </div>
-                    </div> */}
+                        {errors.confirmPassword && (
+                            <p className="mt-1 text-xs text-red-600">{errors.confirmPassword}</p>
+                        )}
+                    </div>
 
                     {/* Terms Agreement */}
-                    <div className="flex items-center space-x-2 pt-2">
+                    <div className="flex items-start space-x-2 pt-2">
                         <input
                             type="checkbox"
-                            className="h-4 w-4 rounded border-slate-300 text-black focus:ring-slate-400 focus:ring-offset-0"
+                            id="terms"
+                            checked={termsAccepted}
+                            onChange={handleTermsChange}
+                            className={`mt-1 h-4 w-4 rounded border-${errors.terms ? 'red-500' : 'slate-300'} text-black focus:ring-slate-400 focus:ring-offset-0`}
                         />
-                        <label htmlFor="terms" className="text-sm text-slate-600">
-                            I agree to the{' '}
-                            <a href="#" className="font-medium text-slate-900 hover:underline">Terms of Service</a>
-                            {' '}and{' '}
-                            <a href="#" className="font-medium text-slate-900 hover:underline">Privacy Policy</a>
-                        </label>
+                        <div>
+                            <label htmlFor="terms" className="text-sm text-slate-600">
+                                I agree to the{' '}
+                                <a href="#" className="font-medium text-slate-900 hover:underline">Terms of Service</a>
+                                {' '}and{' '}
+                                <a href="#" className="font-medium text-slate-900 hover:underline">Privacy Policy</a>
+                            </label>
+                            {errors.terms && (
+                                <p className="mt-1 text-xs text-red-600">{errors.terms}</p>
+                            )}
+                        </div>
                     </div>
 
                     <button

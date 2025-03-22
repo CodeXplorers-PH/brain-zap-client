@@ -34,7 +34,7 @@ const Header = () => {
     },
     {
       path: "/profile",
-      pathName: user ? user.name : "Profile",
+      pathName: user ? user.email : "Profile",
     },
   ];
 
