@@ -12,7 +12,7 @@ const Hero = () => {
       <section className="flex-section flex-col items-center gap-0 bg-gradient-to-br from-huf-purple/40 to-sky-200/20">
         <div className="">
           <HeroBackground />
-          <div className="wrapper z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-10 pt-36 lg:pt-44">
+          <div className="wrapper z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-10 pt-36 lg:pt-60">
             <div className="w-full text-center lg:text-start flex flex-col items-center lg:items-start lg:w-6/12 space-y-8">
               <div className="flex flex-col items-center lg:items-start">
                 <Heading className={`z-10 relative`}>
