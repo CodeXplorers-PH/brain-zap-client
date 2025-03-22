@@ -155,7 +155,7 @@ export default Header;
 export const HeaderButton = ({ className }) => {
   return (
     <>
-      <Link to={`/pricing`}>
+      <Link to={`/login`}>
         <Button className={className || ""}>
           Get Started{" "}
           <ChevronRight
