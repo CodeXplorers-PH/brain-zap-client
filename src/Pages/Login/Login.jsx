@@ -1,9 +1,30 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { AuthContext } from '@/provider/AuthProvider';
 
 const Login = () => {
+
+    const { userLogin, setUser } = useContext(AuthContext)
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const email = form.email.value;
+        const password = form.password.value;
+        console.log({ email, password });
+        userLogin(email, password)
+            .then(result => {
+                const user = result.user;
+                setUser(user);
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    };
+
+
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -11,7 +32,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 py-8">
+        <div className="flex py-40 flex-col items-center justify-center bg-slate-50 px-4">
             <div className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Welcome back</h1>
@@ -36,13 +57,13 @@ const Login = () => {
                     </div>
                 </div>
 
-                <form className="grid gap-4">
+                <form onSubmit={handleSubmit} className="grid gap-4">
                     <div className="grid gap-2">
                         <label htmlFor="email" className="text-sm font-medium text-slate-700">
                             Email
                         </label>
                         <input
-                            id="email"
+                            name="email"
                             type="email"
                             placeholder="m@example.com"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
@@ -60,7 +81,8 @@ const Login = () => {
                         </div>
                         <div className="relative">
                             <input
-                                id="password"
+                                name="password"
+                                placeholder='********'
                                 type={showPassword ? "text" : "password"}
                                 className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
                             />
