@@ -1,19 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { AuthContext } from '@/provider/AuthProvider';
 import SocialLogin from './SocialLogin';
 
 const Login = () => {
-    const { userLogin, setUser } = useContext(AuthContext);
+    const { userLogin, setUser, passwordResetEmail } = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
+    const [resetEmailSent, setResetEmailSent] = useState(false);
+    const [isResetting, setIsResetting] = useState(false);
+
+    const emailRef = useRef();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        // Reset previous errors
+        // Reset previous errors and notifications
         setErrors({});
+        setResetEmailSent(false);
         
         const form = e.target;
         const email = form.email.value;
@@ -52,6 +57,49 @@ const Login = () => {
                 }
             });
     };
+
+    const handleForget = (e) => {
+        e.preventDefault(); // Prevent default anchor behavior
+        
+        // Clear previous statuses and errors
+        setResetEmailSent(false);
+        setErrors({});
+        
+        const email = emailRef.current.value;
+        if (!email) {
+            setErrors({ email: "Please enter your email address for password reset." });
+            return;
+        }
+        
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            setErrors({ email: "Please enter a valid email address." });
+            return;
+        }
+        
+        setIsResetting(true);
+        
+        passwordResetEmail(email)
+            .then(() => {
+                setResetEmailSent(true);
+                setIsResetting(false);
+            })
+            .catch((error) => {
+                setIsResetting(false);
+                // Handle specific error cases
+                const errorCode = error.code;
+                if (errorCode === "auth/user-not-found") {
+                    setErrors({ email: "No account found with this email." });
+                } else if (errorCode === "auth/invalid-email") {
+                    setErrors({ email: "Invalid email format." });
+                } else if (errorCode === "auth/too-many-requests") {
+                    setErrors({ email: "Too many requests. Please try again later." });
+                } else {
+                    setErrors({ email: "Failed to send reset email. Please try again." });
+                }
+            });
+    }
     
     const handleLoginSuccess = (user) => {
         setUser(user);
@@ -81,6 +129,13 @@ const Login = () => {
                         {errors.submit}
                     </div>
                 )}
+                
+                {/* Password reset success message */}
+                {resetEmailSent && (
+                    <div className="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-md text-sm">
+                        Password reset email has been sent. Please check your inbox.
+                    </div>
+                )}
 
                 <SocialLogin 
                     onLoginSuccess={handleLoginSuccess} 
@@ -96,6 +151,7 @@ const Login = () => {
                             id="email"
                             name="email"
                             type="email"
+                            ref={emailRef}
                             placeholder="m@example.com"
                             className={`h-10 w-full rounded-md border ${errors.email ? 'border-red-500' : 'border-slate-300'} bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1`}
                         />
@@ -109,9 +165,13 @@ const Login = () => {
                             <label htmlFor="password" className="text-sm font-medium text-slate-700">
                                 Password
                             </label>
-                            <a href="#" className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:underline">
-                                Forgot your password?
-                            </a>
+                            <button
+                                onClick={handleForget}
+                                disabled={isResetting}
+                                className={`text-sm font-medium text-slate-600 hover:text-slate-900 hover:underline focus:outline-none ${isResetting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            >
+                                {isResetting ? 'Sending...' : 'Forgot your password?'}
+                            </button>
                         </div>
                         <div className="relative">
                             <input
