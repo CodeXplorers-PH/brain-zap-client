@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { AuthContext } from '@/provider/AuthProvider';
+import SocialLogin from './SocialLogin';
 
 const Signup = () => {
     const [password, setPassword] = useState('');
@@ -162,6 +163,8 @@ const Signup = () => {
                         Enter your details to get started
                     </p>
                 </div>
+
+                <SocialLogin  />
 
                 {errors.submit && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md text-sm">
