@@ -1,11 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
 
 const Header = () => {
-  const { user, logout } = useContext(AuthContext);
-  const [isOpen, setIsOpen] = useState(false);
+  const { user, logOut } = useContext(AuthContext);
 
   // Nav items
   const Navs = [
@@ -18,10 +17,6 @@ const Header = () => {
     { path: "/contact", pathName: "Contact" },
   ];
 
-  // Handle logout
-  const handleLogout = () => {
-    logout && logout();
-  };
 
   return (
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
@@ -95,7 +90,7 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <button onClick={handleLogout} className="py-2">
+                  <button onClick={logOut} className="py-2">
                     <LogOut size={16} />
                     Logout
                   </button>
