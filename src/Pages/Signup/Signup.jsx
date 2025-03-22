@@ -154,7 +154,7 @@ const Signup = () => {
     const strengthData = getStrengthData();
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 py-8">
+        <div className="flex flex-col items-center justify-center bg-slate-50 px-4 py-40">
             <div className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Create an account</h1>
