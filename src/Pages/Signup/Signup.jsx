@@ -82,7 +82,6 @@ const Signup = () => {
                             Full name
                         </label>
                         <input
-                            id="fullName"
                             type="text"
                             placeholder="John Doe"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
@@ -121,7 +120,6 @@ const Signup = () => {
                             Email
                         </label>
                         <input
-                            id="email"
                             type="email"
                             placeholder="m@example.com"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
@@ -135,7 +133,6 @@ const Signup = () => {
                         </label>
                         <div className="relative">
                             <input
-                                id="password"
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={handlePasswordChange}
@@ -182,7 +179,6 @@ const Signup = () => {
                         </label>
                         <div className="relative">
                             <input
-                                id="confirmPassword"
                                 type={showConfirmPassword ? "text" : "password"}
                                 className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
                             />
@@ -200,7 +196,6 @@ const Signup = () => {
                     <div className="flex items-center space-x-2 pt-2">
                         <input
                             type="checkbox"
-                            id="terms"
                             className="h-4 w-4 rounded border-slate-300 text-black focus:ring-slate-400 focus:ring-offset-0"
                         />
                         <label htmlFor="terms" className="text-sm text-slate-600">
