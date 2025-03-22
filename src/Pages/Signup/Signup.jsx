@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { AuthContext } from '@/provider/AuthProvider';
 
 const Signup = () => {
     const [password, setPassword] = useState('');
@@ -9,6 +10,32 @@ const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const fileInputRef = useRef(null);
+
+    const {createNewUser , setUser} = useContext(AuthContext);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const form = new FormData(e.target);
+        const name = form.get('name');
+        const email = form.get('email');
+        const photo = form.get('photo');
+        const password = form.get('password');
+        console.log({name, email, photo, password});
+
+        createNewUser(email, password)
+        .then(result => {
+            const user = result.user;
+            setUser(user)
+            console.log(user);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            // ..
+        });
+    }
 
     const calculateStrength = (pass) => {
         let score = 0;
@@ -75,20 +102,32 @@ const Signup = () => {
                     </p>
                 </div>
 
-                <form className="grid gap-4">
+                <form onSubmit={handleSubmit} className="grid gap-4">
                     {/* Full Name */}
                     <div className="grid gap-2">
                         <label htmlFor="fullName" className="text-sm font-medium text-slate-700">
                             Full name
                         </label>
                         <input
+                            name='name'
                             type="text"
                             placeholder="John Doe"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
                         />
                     </div>
+                    <div className="grid gap-2">
+                        <label htmlFor="fullName" className="text-sm font-medium text-slate-700">
+                            Photo URL
+                        </label>
+                        <input
+                            name='photo'
+                            type="text"
+                            placeholder="https://i.ibb.co.com/..."
+                            className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
+                        />
+                    </div>
 
-                    {/* Profile Photo */}
+                    {/* Profile Photo
                     <div className="grid gap-2">
                         <label className="text-sm font-medium text-slate-700">
                             Profile photo
@@ -112,7 +151,7 @@ const Signup = () => {
                                 className="hidden"
                             />
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Email */}
                     <div className="grid gap-2">
@@ -120,6 +159,7 @@ const Signup = () => {
                             Email
                         </label>
                         <input
+                            name='email'
                             type="email"
                             placeholder="m@example.com"
                             className="h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
@@ -133,6 +173,7 @@ const Signup = () => {
                         </label>
                         <div className="relative">
                             <input
+                                name='password'
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={handlePasswordChange}
@@ -172,7 +213,7 @@ const Signup = () => {
                         )}
                     </div>
 
-                    {/* Confirm Password */}
+                    {/* Confirm Password
                     <div className="grid gap-2">
                         <label htmlFor="confirmPassword" className="text-sm font-medium text-slate-700">
                             Confirm password
@@ -190,7 +231,7 @@ const Signup = () => {
                                 {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                             </button>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Terms Agreement */}
                     <div className="flex items-center space-x-2 pt-2">
