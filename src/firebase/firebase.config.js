@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDuJG3QlvEJ2OUoi0y4WV5nmukLRmgdJ8Y",
-  authDomain: "brain-zap-99226.firebaseapp.com",
-  projectId: "brain-zap-99226",
-  storageBucket: "brain-zap-99226.firebasestorage.app",
-  messagingSenderId: "982476426468",
-  appId: "1:982476426468:web:26fdd67fb46b4294c2f0f1"
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId,
 };
 
 // Initialize Firebase

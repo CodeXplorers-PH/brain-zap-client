@@ -24,7 +24,7 @@ const Header = () => {
         {/* Logo Section */}
         <div className="navbar-start">
           <Link to="/" className="font-bold text-xl text-primary">
-            TaskZen
+            BrainZap
           </Link>
         </div>
 

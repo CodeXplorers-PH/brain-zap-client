@@ -1,10 +1,11 @@
 import React, { useState, useRef, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { AuthContext } from '@/provider/AuthProvider';
 import SocialLogin from './SocialLogin';
 
 const Signup = () => {
+    const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [strength, setStrength] = useState(0);
@@ -15,7 +16,7 @@ const Signup = () => {
     const [errors, setErrors] = useState({});
     const fileInputRef = useRef(null);
 
-    const { createNewUser, setUser } = useContext(AuthContext);
+    const { createNewUser, setUser, updateUserProfile } = useContext(AuthContext);
 
     const validatePassword = (pass) => {
         const errors = {};
@@ -75,8 +76,14 @@ const Signup = () => {
         .then(result => {
             const user = result.user;
             setUser(user);
-            console.log(user);
+            updateUserProfile({ displayName: name, photoURL: photo })
+            .then(() => {
+                navigate('/');
+            }).catch(err => {
+                console.log('Error updating user profile');
+            })
         })
+
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
