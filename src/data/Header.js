@@ -23,4 +23,8 @@ export const Navs = [
     path: "/start-quiz",
     pathName: "Start Quiz",
   },
+  {
+    path: "/profile",
+    pathName: "Contact",
+  },
 ];

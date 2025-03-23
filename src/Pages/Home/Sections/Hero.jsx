@@ -1,10 +1,10 @@
-import Button, { ButtonLightClass } from "@/components/ui/Button";
-import Heading from "@/components/ui/Heading";
-import { HeroBackground } from "@/components/ui/HeroBackground";
-import HeroMarquee from "@/components/ui/HeroMarquee";
-import WistiaPlayer from "@/components/ui/HeroVideo";
-import P from "@/components/ui/P";
-import { Link } from "react-router-dom";
+import Button, { ButtonLightClass } from '@/components/ui/Button';
+import Heading from '@/components/ui/Heading';
+import { HeroBackground } from '@/components/ui/HeroBackground';
+import HeroMarquee from '@/components/ui/HeroMarquee';
+import WistiaPlayer from '@/components/ui/HeroVideo';
+import P from '@/components/ui/P';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -12,7 +12,7 @@ const Hero = () => {
       <section className="flex-section flex-col items-center gap-0 bg-gradient-to-br from-huf-purple/40 to-sky-200/20">
         <div className="">
           <HeroBackground />
-          <div className="wrapper min-h-[900px] z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-0 pt-60">
+          <div className="wrapper z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-10 pt-36 lg:pt-60">
             <div className="w-full text-center lg:text-start flex flex-col items-center lg:items-start lg:w-6/12 space-y-8">
               <div className="flex flex-col items-center lg:items-start">
                 <Heading className={`z-10 relative`}>
@@ -38,7 +38,9 @@ const Hero = () => {
                 </svg>
               </div>
               <P>
-              Brain Zap is an AI-powered quiz platform that adapts to your learning style, delivering personalized challenges and smart insights to boost your knowledge and confidence.
+                Brain Zap is an AI-powered quiz platform that adapts to your
+                learning style, delivering personalized challenges and smart
+                insights to boost your knowledge and confidence.
               </P>
               <div className="flex gap-5 items-center flex-wrap justify-center">
                 <Link to={`/login`}>
