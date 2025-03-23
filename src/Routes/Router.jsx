@@ -8,6 +8,7 @@ import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
 import Signup from "@/Pages/Auth/Signup";
 import { createBrowserRouter } from "react-router-dom";
 import QuizPage from "@/Pages/QuizPage/QuizPage";
+import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "/quiz/:category",
         element: <QuizPage /> /* Quiz Page */,
+      },
+      {
+        path: "/quiz/:category/answer",
+        element: <QuizAnswer /> /* Quiz Answer Page */,
       },
       {
         path: "*",

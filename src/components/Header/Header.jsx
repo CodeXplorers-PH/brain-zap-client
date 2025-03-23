@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
