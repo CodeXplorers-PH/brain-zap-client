@@ -20,6 +20,10 @@ export const Navs = [
     pathName: "Contact",
   },
   {
+    path: "/start-quiz",
+    pathName: "Start Quiz",
+  },
+  {
     path: "/profile",
     pathName: "Contact",
   },
