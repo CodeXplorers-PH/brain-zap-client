@@ -6,12 +6,12 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <>
+    <main className="bg-background-1 pb-80">
       {/* Header */}
       <Header />
       <Outlet />
-      <Footer />
-    </>
+      {/* <Footer /> */}
+    </main>
   );
 };
 

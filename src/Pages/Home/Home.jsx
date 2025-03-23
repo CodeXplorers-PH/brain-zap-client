@@ -7,14 +7,14 @@ import HowItWorks from './Sections/HowItWorks';
 
 const Home = () => {
   return (
-    <>
+    <main className='bg-background-1'>
       <Hero />
-      <Features />
+      {/* <Features />
       <GetStarted />
       <Faq />
       <Testimonial />
-      <HowItWorks />
-    </>
+      <HowItWorks /> */}
+    </main>
   );
 };
 

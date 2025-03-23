@@ -1,169 +1,128 @@
-import { Link, NavLink } from "react-router-dom"; // Link and NavLink are used for navigation between pages in a React Router application.
-import LogoURI from "@/assets/logo.svg"; // Importing the website's logo.
-import { Navs } from "@/data/Header"; // Importing navigation links data.
-import Button from "../ui/Button"; // Importing a custom Button component.
-import { Turn as Hamburger } from "hamburger-react"; // Importing a hamburger menu component for mobile navigation.
-import { useState } from "react"; // Importing React's useState hook to manage component state.
-import { ChevronRight, X } from "lucide-react"; // Importing icons for navigation and close button.
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion"; // Importing animation utilities from Framer Motion.
-
+import React, { useState } from "react";
+import logo from "../../assets/logo.svg";
+import { NavLink } from "react-router-dom";
+import { Navs } from "@/data/Header";
+import ShinyText from "../ui/ShinyText/ShinyText";
+import { ChevronRight, Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 const Header = () => {
-  const { scrollY } = useScroll();
-  const [isHidden, setIsHidden] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsHidden(latest > scrollY.getPrevious()); // If scrolling down, hide the header; otherwise, show it.
-  });
+  const closeMenu = () => setIsOpen(false);
 
   return (
-    <>
-      {/* Animated header that hides when scrolling down */}
-      <motion.header
-        initial={{ y: 0 }} // Initial position at the top
-        animate={{ y: isHidden ? "-100%" : "0%" }} // Moves up when isHidden is true
-        transition={{ duration: 0 }} // Instant transition
-        className="fixed top-0 left-0 flex justify-center w-full backdrop-blur-3xl z-[99999] transition-all"
+    <header className="w-full sticky top-0 bg-background-1 z-20">
+      <div className="w-full h-[200px] bg-gradient-to-t from-transparent via-brand-1/10 to-transparent absolute z-[-2]"></div>
+      <motion.nav
+        initial={{ paddingBottom: "16px" }}
+        animate={{ paddingBottom: isOpen ? "380px" : "16px" }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="flex items-center justify-between gap-4 pt-6 w-4/5 mx-auto"
       >
-        <div className="wrapper py-3 gap-5 items-center justify-between">
-          {/* Logo Section */}
-          <Link to={`/`}>
-            <img width={180} src={LogoURI} />
-          </Link>
+        {/* Logo Section */}
+        <div className="flex-shrink-0">
+          <NavLink to="/" aria-label="Home" onClick={closeMenu}>
+            <img src={logo} alt="Brain Zap Logo" className="w-40 h-auto" />
+          </NavLink>
+        </div>
 
-          {/* Navigation and Menu */}
-          <div className="flex items-center gap-14">
-            {/* Desktop Navigation */}
-            <nav className="w-full hidden top-20 p-5 fixed lg:flex justify-center left-0 lg:static lg:w-fit">
-              <motion.ul className="flex justify-center text-center gap-5 bg-huf-purple/10 border-huf-purple/30 overflow-hidden lg:gap-7 w-full flex-col border p-5 py-10 rounded-xl lg:border-none lg:flex-row lg:p-0 lg:bg-transparent">
-                {/* Looping through the Navs array to render navigation links */}
-                {Navs &&
-                  Navs.map((navlink, index) => (
-                    <li key={`navlink-${index}`}>
-                      <Link
-                        className="font-medium hover:text-text/80 transition-all text-text"
-                        to={navlink.path}
-                      >
-                        {navlink.pathName}
-                      </Link>
-                    </li>
-                  ))}
+        {/* Navigation and CTA Section */}
+        <div className="items-center gap-8 hidden md:flex">
+          {/* Navigation Links */}
+          <ul className="flex items-center gap-8" role="navigation">
+            {Navs?.map((nav, index) => (
+              <li key={nav?.path || index}>
+                <NavLink
+                  to={nav?.path}
+                  className={({ isActive }) =>
+                    `text-xl transition-colors duration-300 hover:text-text-title text-text-subtitle ${
+                      isActive ? "text-text-title" : "text-text-subtitle"
+                    }`
+                  }
+                >
+                  {nav?.pathName}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
 
-                {/* Displaying the button inside the mobile menu */}
-                <div className="min-[520px]:hidden flex w-full justify-center">
-                  <HeaderButton />
-                </div>
-              </motion.ul>
-            </nav>
-
-            {/* Right side of the header containing the menu button */}
-            <div className="flex items-center gap-5">
-              {/* Displaying the "Get Started" button on larger screens */}
-              <div className="max-[520px]:hidden flex items-center gap-5">
-                <HeaderButton />
-              </div>
-
-              {/* Mobile Menu Button */}
-              <div
-                className={`lg:hidden bg-white/50 transition-all border rounded-md ${
-                  isOpen && "!bg-huf-purple/20 !border-huf-purple/50"
-                }`}
-              >
-                <Hamburger size={25} toggled={isOpen} toggle={setIsOpen} />
-              </div>
-            </div>
+          {/* CTA Button */}
+          <div>
+            <button
+              className="border border-neutral-800/60 hover:border-neutral-700/60 hover:bg-neutral-800/10 duration-300 transition px-6 py-3 rounded-full flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-text-title"
+              aria-label="Get Started"
+            >
+              <ShinyText
+                text="Get Started"
+                className="text-text-subtitle text-xl"
+                speed={3}
+              />
+              <ChevronRight className="text-text-subtitle transform transition-transform duration-200 group-hover:translate-x-1" />
+            </button>
           </div>
         </div>
-      </motion.header>
 
-      {/* Mobile Navigation Menu - Only visible when isOpen is true */}
+        {/* Mobile Menu Toggle Button */}
+        <button
+          className="text-text-subtitle md:hidden"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+        >
+          {isOpen ? <X size={40} /> : <Menu size={40} />}
+        </button>
+      </motion.nav>
+
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            onClick={() => setIsOpen(false)} // Clicking outside the menu closes it
-            initial={{ translateX: "-100%" }} // Initially hidden off-screen
-            animate={{ translateX: 0 }} // Slides in when opened
-            exit={{ translateX: "-100%" }} // Slides out when closed
-            transition={{ type: "tween", ease: "easeInOut", duration: 0.4 }}
-            className="fixed flex w-full lg:!hidden bg-black/30 cursor-pointer h-screen z-[999999999999999999999999]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="md:hidden w-full absolute top-24 left-0"
           >
-            {/* Sidebar Content */}
-            <div
-              onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
-              className="cursor-default w-full min-[300px]:w-[300px] bg-white h-screen"
+            <ul
+              className="flex flex-col items-center gap-4 py-4"
+              role="navigation"
             >
-              {/* Sidebar Header */}
-              <div className="flex items-center w-full p-5 justify-between">
-                <Link to={`/`} className="w-fit">
-                  <img width={140} src={LogoURI} />
-                </Link>
-
-                {/* Close Button */}
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="hover:rotate-45 transition-all"
-                >
-                  <X
-                    size={30}
-                    strokeWidth={1}
-                    className="bg-huf-purple/20 border border-huf-purple/20 p-1 rounded-md"
-                  />
-                </button>
-              </div>
-
-              {/* Sidebar Navigation Links */}
-              <div className="w-full flex flex-col gap-10 py-5 overflow-y-scroll [&::-webkit-scrollbar]:w-0">
-                <ul className="w-full">
-                  {/* Looping through the Navs array to render sidebar navigation links */}
-                  {Navs.map((navlink, index) => (
-                    <li key={`navlink-sidebar-${index}`} className="w-full">
-                      <NavLink
-                        to={navlink.path}
-                        className={({ isActive }) =>
-                          `flex transition-all w-full py-2 border-y border-transparent text-sm text-text font-medium hover:bg-huf-purple/20 px-5 ${
-                            isActive && "bg-huf-purple/20 !border-huf-purple/20"
-                          }`
-                        }
-                      >
-                        {navlink.pathName}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Sidebar Button */}
-                <div className="px-5">
-                  <HeaderButton className="w-full rounded-md" />
-                </div>
-              </div>
+              {Navs?.map((nav, index) => (
+                <li key={nav?.path || index}>
+                  <NavLink
+                    to={nav?.path}
+                    className={({ isActive }) =>
+                      `text-xl transition-colors duration-300 hover:text-text-title text-text-subtitle ${
+                        isActive ? "text-text-title" : "text-text-subtitle"
+                      }`
+                    }
+                    onClick={closeMenu}
+                  >
+                    {nav?.pathName}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-center py-4">
+              <button
+                className="border border-neutral-800/60 hover:border-neutral-700/60 hover:bg-neutral-800/10 duration-300 transition px-6 py-3 rounded-full flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-text-title"
+                aria-label="Get Started"
+              >
+                <ShinyText
+                  text="Get Started"
+                  className="text-text-subtitle text-xl"
+                  speed={3}
+                />
+                <ChevronRight className="text-text-subtitle transform transition-transform duration-200 group-hover:translate-x-1" />
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+
+      {/* Divider */}
+      <div className="w-screen left-0 h-[1px] bg-neutral-800/60 absolute"></div>
+    </header>
   );
 };
 
 export default Header;
-
-// Header Button Component
-export const HeaderButton = ({ className }) => {
-  return (
-    <>
-      <Link to={`/pricing`}>
-        <Button className={className || ""}>
-          Get Started{" "}
-          <ChevronRight
-            strokeWidth={1.5}
-            className="absolute opacity-0 transition-all group-hover:translate-x-14 ml-2 group-hover:opacity-100"
-          />
-        </Button>
-      </Link>
-    </>
-  );
-};

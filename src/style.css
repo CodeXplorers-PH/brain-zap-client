@@ -149,8 +149,13 @@ p {
   --font-secondary: 'Goudy Bookletter 1911', serif;
 
   /* Color */
-  --color-text: #2e2a42e6;
+  --color-text-subtitle: #5A5A5A;
+  --color-text-title: #EFEFEF;
   --color-huf-purple: #7b63f5;
   --color-wheat: #f6f5f1;
   --color-yellow: #ffdf78;
+  --color-brand-1: #427BED;
+  --color-background-1: #111111;
+  --color-background-2: #171717;
 }
+
