@@ -31,8 +31,8 @@ export const router = createBrowserRouter([
         element: <StartQuiz /> /* Quiz Page */,
       },
       {
-        path:"/contact",
-        element:<Contact />
+        path: "/contact",
+        element: <Contact />,
       },
       {
         path: "/login",
