@@ -41,7 +41,7 @@ const Quiz = ({ questions }) => {
             <h3 className="text-xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-purple-500 to-purple-800">
               {`Question ${index + 1}: ${q.question}`}
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {q.options.map((option, i) => (
                 <button
                   key={i}
