@@ -19,4 +19,8 @@ export const Navs = [
     path: "/contact",
     pathName: "Contact",
   },
+  {
+    path: "/start-quiz",
+    pathName: "Start Quiz",
+  },
 ];
