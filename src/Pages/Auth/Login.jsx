@@ -102,6 +102,7 @@ const Login = () => {
     }
     
     const handleLoginSuccess = (user) => {
+        console.log("User login successful")
         setUser(user);
     };
     
