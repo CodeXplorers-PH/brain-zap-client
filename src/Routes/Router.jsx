@@ -9,6 +9,7 @@ import Signup from "@/Pages/Auth/Signup";
 import { createBrowserRouter } from "react-router-dom";
 import QuizPage from "@/Pages/QuizPage/QuizPage";
 import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
+import Contact from "@/Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "/start-quiz",
         element: <StartQuiz /> /* Start Quiz Page */,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
       {
         path: "/login",

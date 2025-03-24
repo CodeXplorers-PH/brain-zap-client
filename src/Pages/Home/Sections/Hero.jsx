@@ -1,10 +1,10 @@
-import Button, { ButtonLightClass } from '@/components/ui/Button';
-import Heading from '@/components/ui/Heading';
-import { HeroBackground } from '@/components/ui/HeroBackground';
-import HeroMarquee from '@/components/ui/HeroMarquee';
-import WistiaPlayer from '@/components/ui/HeroVideo';
-import P from '@/components/ui/P';
-import { Link } from 'react-router-dom';
+import Button, { ButtonLightClass } from "@/components/ui/Button";
+import Heading from "@/components/ui/Heading";
+import { HeroBackground } from "@/components/ui/HeroBackground";
+import HeroMarquee from "@/components/ui/HeroMarquee";
+import WistiaPlayer from "@/components/ui/HeroVideo";
+import P from "@/components/ui/P";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -43,7 +43,7 @@ const Hero = () => {
                 insights to boost your knowledge and confidence.
               </P>
               <div className="flex gap-5 items-center flex-wrap justify-center">
-                <Link to={`/login`}>
+                <Link to={`/quiz`}>
                   <Button>Try for free</Button>
                 </Link>
                 <Link to={`/pricing`}>

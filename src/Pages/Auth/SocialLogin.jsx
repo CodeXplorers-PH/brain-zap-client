@@ -20,6 +20,7 @@ const SocialLogin = () => {
         try {
             const result = await method();
             console.log(result.user);
+            console.log("User logged in")
             navigate('/');
         } catch (error) {
             console.error(`${provider} sign-in error:`, error.message);
