@@ -15,6 +15,7 @@ button {
   cursor: pointer;
 }
 p {
+  color: white;
   font-weight: 500;
 }
 .wrapper {

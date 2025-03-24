@@ -1,29 +1,8 @@
-import Marquee from "react-fast-marquee";
-
 export const HeroBackground = () => {
   return (
     <>
       <div className="w-full  z-0 left-0 flex items-center overflow-hidden absolute">
-        <Marquee direction="right" className="w-full h-[990px]">
-          <div>
-            <Cloud className="z-50 -translate-y-24" width={400} />
-            <div>
-              <Cloud className="-ml-80 translate-y-20" width={400} />
-            </div>
-          </div>
-          <div className="ml-[300px]">
-            <Cloud className="" width={400} />
-            <div>
-              <Cloud className="translate-x-48" width={300} />
-            </div>
-          </div>
-          <div className="ml-[600px]">
-            <Cloud className=" -translate-x-20 -translate-y-10" width={300} />
-            <div>
-              <Cloud width={500} />
-            </div>
-          </div>
-        </Marquee>
+        
       </div>
     </>
   );

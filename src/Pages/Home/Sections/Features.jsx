@@ -1,12 +1,12 @@
-import React from 'react';
-import SectionHeading from '@/components/ui/SectionHeading';
-import { featuresData } from '@/data/Features';
+import React from "react";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { featuresData } from "@/data/Features";
 
-import featuresImg from '@/assets/img/features.webp';
+import featuresImg from "@/assets/img/features.webp";
 
 const Features = () => {
   return (
-    <section className="flex-section bg-gradient-to-t from-[#b599fc] via-[#eeddfa] to-wheat pt-20 pb-60 relative">
+    <section className="flex-section bg-[#090909] pt-20 pb-60 relative">
       <div className="wrapper flex-col">
         {/* Heading */}
         <SectionHeading
@@ -17,8 +17,11 @@ const Features = () => {
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 items-center gap-4">
           {/* Cards */}
           <div className="order-2 md:order-1 grid grid-cols-1 sm:grid-cols-2 gap-12">
-            {featuresData.map(quiz => (
-              <div key={quiz.id}>
+            {featuresData.map((quiz) => (
+              <div
+                key={quiz.id}
+                className="bg-white/10 backdrop-blur-lg text-white rounded-2xl p-2 transform transition-all duration-300 hover:scale-105 hover:shadow-[0px_0px_20px_rgba(255,255,255,0.2)] border border-white/20"
+              >
                 <div className="bg-white/30 backdrop-blur-md size-10 p-1.5 rounded-md">
                   <img
                     className="max-w-full max-h-full aspect-square"
@@ -26,7 +29,9 @@ const Features = () => {
                     alt="img"
                   />
                 </div>
-                <h5 className="font-semibold text-text my-4">{quiz.tittle}</h5>
+                <h5 className="font-semibold bg-gradient-to-r from-pink-400 to-green-400 bg-clip-text text-transparent my-4">
+                  {quiz.tittle}
+                </h5>
                 <p className="text-sm">{quiz.description}</p>
               </div>
             ))}
