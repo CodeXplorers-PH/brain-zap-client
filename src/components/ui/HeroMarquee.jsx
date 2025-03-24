@@ -19,7 +19,7 @@ const HeroMarquee = () => {
     <div className="wrapper pb-40 flex-col">
       <Marquee
         direction="left"
-        className="p-5 border rounded-xl border-huf-purple/20 bg-huf-purple/10"
+        className="p-5 border rounded-xl border-huf-purple/20 bg-white/35"
       >
         {HeroMarqueeData.map((img, index) => (
           <img
@@ -27,7 +27,7 @@ const HeroMarquee = () => {
             src={img}
             width={130}
             alt={`Marquee ${index + 1}`}
-            className="mx-5 invert-100 opacity-50 max-h-10 hover:opacity-100 cursor-pointer transition-all"
+            className="mx-5 invert-100 max-h-10 hover:opacity-100 cursor-pointer transition-all"
           />
         ))}
       </Marquee>

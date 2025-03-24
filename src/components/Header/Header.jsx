@@ -122,7 +122,7 @@ const Header = () => {
           ) : (
             // Get Started Button - leads to login
             <Link to="/login">
-              <button className="btn btn-primary rounded-full px-6">
+              <button className="bg-gradient-to-r from-blue-500 to-teal-400 text-white font-bold rounded-full text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg px-6 py-2">
                 Get Started
               </button>
             </Link>

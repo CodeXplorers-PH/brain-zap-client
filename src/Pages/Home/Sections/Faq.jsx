@@ -10,7 +10,7 @@ import animationData from "../../../assets/animation/faq.json";
 
 const Faq = () => {
   return (
-    <section className="bg-[#F6F5F1] pt-20 pb-32 relative">
+    <section className="bg-[#090909] pt-20 pb-32 relative">
       {/* Heading */}
       <SectionHeading
         heading="FAQ"
@@ -29,70 +29,175 @@ const Faq = () => {
         <Accordion
           type="single"
           collapsible
-          className="w-[80%] lg:w-3/4 mx-auto bg-white p-8 mt-12 rounded-xl "
+          className="w-[80%] lg:w-3/4 space-y-5 mx-auto bg-white/10 backdrop-blur-lg text-white  p-8 mt-12 rounded-xl "
         >
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
+          <AccordionItem
+            value="item-1"
+            className="border border-gray-700 rounded-lg overflow-hidden  bg-[#222] shadow-2xl"
+          >
+            <AccordionTrigger className="lg:text-xl text-base text-white px-4 py-3">
               How do I know I can trust BrainZap?
             </AccordionTrigger>
-            <AccordionContent className="list-disc lg:text-lg text-sm text-text">
-              <li>
-                Reliable AI Technology – Our AI generates quizzes based on
-                verified sources to ensure accuracy and engagement.
-              </li>
-              <li>
-                Privacy & Security – We follow strict data protection policies
-                and never share your personal information with third parties.
-              </li>
-              <li>
-                Active Support – Our team is always available to address any
-                concerns and continuously enhance your experience.
-              </li>
+            <AccordionContent className="list-disc lg:text-lg text-sm text-gray-300 bg-gray-800 p-4 rounded-b-lg">
+              <ul className="space-y-2 pl-5">
+                <li>
+                  <span className="font-semibold text-blue-400">
+                    Reliable AI Technology –
+                  </span>{" "}
+                  Our AI generates quizzes based on verified sources to ensure
+                  accuracy and engagement.
+                </li>
+                <li>
+                  <span className="font-semibold text-green-400">
+                    Privacy & Security –
+                  </span>{" "}
+                  We follow strict data protection policies and never share your
+                  personal information with third parties.
+                </li>
+                <li>
+                  <span className="font-semibold text-yellow-400">
+                    Active Support –
+                  </span>{" "}
+                  Our team is always available to address any concerns and
+                  continuously enhance your experience.
+                </li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
+          <AccordionItem
+            value="item-2"
+            className="border border-gray-700 rounded-lg overflow-hidden  bg-[#222] shadow-2xl"
+          >
+            <AccordionTrigger className="lg:text-xl text-base text-white px-4 py-3">
               How will you keep my data private?
             </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              This platform can ensure you that, your data is fully secure with
-              the organization. Only you can access your data. After successful
-              login we verify the users credentials with the cookies.
+            <AccordionContent className="list-disc lg:text-lg text-sm text-gray-300 bg-gray-800 p-4 rounded-b-lg">
+              <ul className="space-y-2 pl-5">
+                <li>
+                  <span className="font-semibold text-blue-400">
+                    Reliable AI Technology –
+                  </span>{" "}
+                  Our AI generates quizzes based on verified sources to ensure
+                  accuracy and engagement.
+                </li>
+                <li>
+                  <span className="font-semibold text-green-400">
+                    Privacy & Security –
+                  </span>{" "}
+                  We follow strict data protection policies and never share your
+                  personal information with third parties.
+                </li>
+                <li>
+                  <span className="font-semibold text-yellow-400">
+                    Active Support –
+                  </span>{" "}
+                  Our team is always available to address any concerns and
+                  continuously enhance your experience.
+                </li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="lg:text-xl tex-base text-text">
+          <AccordionItem
+            value="item-3"
+            className="border border-gray-700 rounded-lg overflow-hidden  bg-[#222] shadow-2xl"
+          >
+            <AccordionTrigger className="lg:text-xl text-base text-white px-4 py-3">
               Do you have a free trial?
             </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              Yes, we do have a free trial in timed mode of our quiz. A logged
-              in user can play a demo exam for the first time to test himself.
+            <AccordionContent className="list-disc lg:text-lg text-sm text-gray-300 bg-gray-800 p-4 rounded-b-lg">
+              <ul className="space-y-2 pl-5">
+                <li>
+                  <span className="font-semibold text-blue-400">
+                    Reliable AI Technology –
+                  </span>{" "}
+                  Our AI generates quizzes based on verified sources to ensure
+                  accuracy and engagement.
+                </li>
+                <li>
+                  <span className="font-semibold text-green-400">
+                    Privacy & Security –
+                  </span>{" "}
+                  We follow strict data protection policies and never share your
+                  personal information with third parties.
+                </li>
+                <li>
+                  <span className="font-semibold text-yellow-400">
+                    Active Support –
+                  </span>{" "}
+                  Our team is always available to address any concerns and
+                  continuously enhance your experience.
+                </li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
+          <AccordionItem
+            value="item-4"
+            className="border border-gray-700 rounded-lg overflow-hidden  bg-[#222] shadow-2xl"
+          >
+            <AccordionTrigger className="lg:text-xl text-base text-white px-4 py-3">
               What kind of people can use this app?
             </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              <li>Students can prepare for a programming related challenge.</li>
-              <li>Self learners can improve their coding skill.</li>
-              <li>Professionals can seek deep knowledge about AI.</li>
-              <li>
-                Training program can asses their students through this web app.
-              </li>
+            <AccordionContent className="list-disc lg:text-lg text-sm text-gray-300 bg-gray-800 p-4 rounded-b-lg">
+              <ul className="space-y-2 pl-5">
+                <li>
+                  <span className="font-semibold text-blue-400">
+                    Reliable AI Technology –
+                  </span>{" "}
+                  Our AI generates quizzes based on verified sources to ensure
+                  accuracy and engagement.
+                </li>
+                <li>
+                  <span className="font-semibold text-green-400">
+                    Privacy & Security –
+                  </span>{" "}
+                  We follow strict data protection policies and never share your
+                  personal information with third parties.
+                </li>
+                <li>
+                  <span className="font-semibold text-yellow-400">
+                    Active Support –
+                  </span>{" "}
+                  Our team is always available to address any concerns and
+                  continuously enhance your experience.
+                </li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="item-5">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
+          <AccordionItem
+            value="item-5"
+            className="border border-gray-700 rounded-lg overflow-hidden  bg-[#222] shadow-2xl"
+          >
+            <AccordionTrigger className="lg:text-xl text-base text-white px-4 py-3">
               Do we have the premium version of BrainZap?
             </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              Yes, for all the users we have some premium quizzes for better
-              user experience.
+            <AccordionContent className="list-disc lg:text-lg text-sm text-gray-300 bg-gray-800 p-4 rounded-b-lg">
+              <ul className="space-y-2 pl-5">
+                <li>
+                  <span className="font-semibold text-blue-400">
+                    Reliable AI Technology –
+                  </span>{" "}
+                  Our AI generates quizzes based on verified sources to ensure
+                  accuracy and engagement.
+                </li>
+                <li>
+                  <span className="font-semibold text-green-400">
+                    Privacy & Security –
+                  </span>{" "}
+                  We follow strict data protection policies and never share your
+                  personal information with third parties.
+                </li>
+                <li>
+                  <span className="font-semibold text-yellow-400">
+                    Active Support –
+                  </span>{" "}
+                  Our team is always available to address any concerns and
+                  continuously enhance your experience.
+                </li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
