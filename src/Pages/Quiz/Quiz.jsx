@@ -21,7 +21,6 @@ const Quiz = ({ questions }) => {
   const handleSubmit = () => {
     // Save selected answers in localStorage
     localStorage.setItem("userAnswers", JSON.stringify(selectedOptions));
-    console.log(selectedOptions);
     // Redirect to the result page using navigate
     navigate(`/quiz/${category}/answer`);
   };
