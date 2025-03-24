@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { ImGithub } from "react-icons/im";
 import { useNavigate } from 'react-router-dom';
 
-const SocialLogin = ({ onLoginSuccess, onLoginError }) => {
+const SocialLogin = ({ onLoginError }) => {
     const navigate = useNavigate();
     const { signInWithGoogle, signInWithGithub } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState({
@@ -20,12 +20,7 @@ const SocialLogin = ({ onLoginSuccess, onLoginError }) => {
         try {
             const result = await method();
             console.log(result.user);
-            
-            // Call the success handler if provided
-            if (onLoginSuccess) {
-                onLoginSuccess(result.user);
-            }
-            
+            console.log("User logged in")
             navigate('/');
         } catch (error) {
             console.error(`${provider} sign-in error:`, error.message);

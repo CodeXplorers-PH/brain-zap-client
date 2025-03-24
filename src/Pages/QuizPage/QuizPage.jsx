@@ -24,8 +24,7 @@ const QuizPage = () => {
 
     async function fetchQuestions() {
       setLoading(true);
-      const endpoint = `https://brain-zap-server.vercel.app/generate_quiz?topic=${category}&difficulty=medium`;
-
+      const endpoint = `http://localhost:5000/generate_quiz?topic=${category}&difficulty=medium`;
       try {
         const response = await axios.get(endpoint);
         const generatedQuiz = response.data;
