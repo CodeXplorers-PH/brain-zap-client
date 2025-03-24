@@ -29,7 +29,7 @@ const Faq = () => {
         <Accordion
           type="single"
           collapsible
-          className="w-[80%] lg:w-3/4 mx-auto bg-white/10 backdrop-blur-lg text-white  p-8 mt-12 rounded-xl "
+          className="w-[80%] lg:w-3/4 space-y-5 mx-auto bg-white/10 backdrop-blur-lg text-white  p-8 mt-12 rounded-xl "
         >
           <AccordionItem
             value="item-1"
