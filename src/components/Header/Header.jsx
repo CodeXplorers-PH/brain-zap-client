@@ -10,7 +10,7 @@ const Header = () => {
   // Nav items
   const Navs = [
     { path: "/", pathName: "Home" },
-    { path: "/features", pathName: "Features" },
+    // { path: "/features", pathName: "Features" },
     { path: "/start-quiz", pathName: "Start Quiz" },
     { path: "/pricing", pathName: "Pricing" },
     { path: "/blog", pathName: "Blog" },

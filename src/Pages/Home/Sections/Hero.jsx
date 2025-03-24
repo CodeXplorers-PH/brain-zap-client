@@ -16,7 +16,7 @@ const Hero = () => {
         }}
       >
         <div className="">
-          <div className="wrapper z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-10 pt-36 lg:pt-48">
+          <div className="wrapper z-20 relative justify-between gap-14 items-center flex-col lg:flex-row !max-w-[1240px] pb-20 lg:pb-10 pt-36 lg:pt-80">
             <div className="w-full text-center flex flex-col items-center lg:items-center space-y-4">
               <div className="flex flex-col items-center lg:items-start">
                 <Heading

@@ -16,7 +16,7 @@ import I15 from "@/assets/marquee/15.svg";
 
 const HeroMarquee = () => {
   return (
-    <div className="wrapper pb-40 flex-col">
+    <div className="wrapper py-40 flex-col">
       <Marquee
         direction="left"
         className="p-5 border rounded-xl border-huf-purple/20 bg-white/35"
