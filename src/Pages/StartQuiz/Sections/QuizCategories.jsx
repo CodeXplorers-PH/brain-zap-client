@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 
 const categories = [
   {
@@ -176,10 +177,12 @@ const QuizCategories = () => {
               transition-all duration-300 hover:scale-105 hover:border-white/50"
           >
             <h2 className="text-xl font-bold text-gray-600 flex items-center gap-2">
-              {category.icon} {category.title}
+              {category?.icon} {category?.title}
             </h2>
             <p className="text-gray-200 mt-2">{category.description}</p>
-            <Button className={"mt-4"}>{category.buttonText}</Button>
+            <Link to={`/quiz/${category?.title.toLowerCase()}`}>
+              <Button className={"mt-4"}>{category.buttonText}</Button>
+            </Link>
           </div>
         ))}
       </div>

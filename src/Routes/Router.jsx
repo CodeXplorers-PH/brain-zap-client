@@ -7,6 +7,8 @@ import Pricing from "@/Pages/Pricing/Pricing";
 import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
 import Signup from "@/Pages/Auth/Signup";
 import { createBrowserRouter } from "react-router-dom";
+import QuizPage from "@/Pages/QuizPage/QuizPage";
+import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 import Contact from "@/Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
@@ -28,7 +30,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/start-quiz",
-        element: <StartQuiz /> /* Quiz Page */,
+        element: <StartQuiz /> /* Start Quiz Page */,
       },
       {
         path: "/contact",
@@ -41,6 +43,14 @@ export const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup /> /* Signup Page */,
+      },
+      {
+        path: "/quiz/:category",
+        element: <QuizPage /> /* Quiz Page */,
+      },
+      {
+        path: "/quiz/:category/answer",
+        element: <QuizAnswer /> /* Quiz Answer Page */,
       },
       {
         path: "*",

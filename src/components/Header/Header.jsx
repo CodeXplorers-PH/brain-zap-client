@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
@@ -17,7 +17,6 @@ const Header = () => {
     { path: "/contact", pathName: "Contact" },
   ];
 
-
   return (
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
       <div className="navbar bg-base-100/60 backdrop-blur-md rounded-full shadow-lg max-w-6xl w-full px-6">
@@ -33,11 +32,13 @@ const Header = () => {
           <ul className="menu menu-horizontal">
             {Navs.map((navlink, index) => (
               <li key={`navlink-${index}`}>
-                <Link 
-                  to={navlink.path} 
-                  className="font-medium mx-1 hover:bg-transparent hover:text-primary"
+                <Link
+                  to={navlink.path}
+                  className="font-medium mx-1 relative overflow-hidden group"
                 >
                   {navlink.pathName}
+                  {/* Underline animation */}
+                  <span className="absolute left-0 bottom-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
               </li>
             ))}
@@ -49,16 +50,28 @@ const Header = () => {
           {/* Mobile menu hamburger - navigation only */}
           <div className="dropdown dropdown-end lg:hidden mr-2">
             <div tabIndex={0} role="button" className="btn btn-ghost">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
+                />
               </svg>
             </div>
-            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
               {Navs.map((navlink, index) => (
                 <li key={`navlink-dropdown-${index}`}>
-                  <Link to={navlink.path}>
-                    {navlink.pathName}
-                  </Link>
+                  <Link to={navlink.path}>{navlink.pathName}</Link>
                 </li>
               ))}
             </ul>
@@ -68,18 +81,27 @@ const Header = () => {
           {user ? (
             // User Profile Dropdown
             <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
                 <div className="w-10 rounded-full">
                   {user.photoURL ? (
                     <img alt="User avatar" src={user.photoURL} />
                   ) : (
                     <div className="bg-primary text-primary-content flex items-center justify-center h-full">
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                      {user.displayName
+                        ? user.displayName.charAt(0).toUpperCase()
+                        : user.email.charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
               </div>
-              <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+              <ul
+                tabIndex={0}
+                className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+              >
                 <li className="font-medium text-sm opacity-70 px-4 py-1 non-interactive">
                   {user.displayName || user.email}
                 </li>
