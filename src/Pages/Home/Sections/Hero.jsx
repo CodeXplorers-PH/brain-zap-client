@@ -1,7 +1,6 @@
 import Button, { ButtonLightClass } from "@/components/ui/Button";
 import Heading from "@/components/ui/Heading";
 import HeroMarquee from "@/components/ui/HeroMarquee";
-import P from "@/components/ui/P";
 import { Link } from "react-router-dom";
 
 const Hero = () => {

@@ -1,12 +1,12 @@
 import React from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { featuresData } from "@/data/Features";
-
-import featuresImg from "@/assets/img/features.webp";
+import featureBg from "../../../assets/img/feature.png";
+import { motion } from "framer-motion";
 
 const Features = () => {
   return (
-    <section className="flex-section bg-[#090909] pt-20 pb-60 relative">
+    <section className="flex-section bg-[#090909] pt-16 pb-60 relative">
       <div className="wrapper flex-col">
         {/* Heading */}
         <SectionHeading
@@ -20,7 +20,7 @@ const Features = () => {
             {featuresData.map((quiz) => (
               <div
                 key={quiz.id}
-                className="bg-white/10 backdrop-blur-lg text-white rounded-2xl p-2 transform transition-all duration-300 hover:scale-105 hover:shadow-[0px_0px_20px_rgba(255,255,255,0.2)] border border-white/20"
+                className="bg-white/10 backdrop-blur-lg text-white rounded-2xl p-3 transform transition-all duration-300 hover:scale-105 hover:shadow-[0px_0px_20px_rgba(255,255,255,0.2)] border border-white/20"
               >
                 <div className="bg-white/30 backdrop-blur-md size-10 p-1.5 rounded-md">
                   <img
@@ -37,9 +37,18 @@ const Features = () => {
             ))}
           </div>
 
-          {/* Animation */}
-          <div className="order-1 md:order-2 hidden lg:block">
-            <img src={featuresImg} alt="" />
+          <div className="relative flex items-center justify-center ">
+            {/* Gradient Background Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-orange-400 opacity-30 blur-2xl" />
+
+            {/* Image Container */}
+            <div className="relative z-10 p-4 rounded-full  bg-opacity-50">
+              <img
+                src={featureBg} // Replace with your image path
+                alt="BrainZap Logo"
+                className=" drop-shadow-2xl"
+              />
+            </div>
           </div>
         </div>
       </div>
