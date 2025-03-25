@@ -1,101 +1,149 @@
+import React from 'react';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Lottie from "lottie-react";
-import animationData from "../../../assets/animation/faq.json";
+import { Shield, Rocket, Star, Users, BadgeCheck, Zap } from "lucide-react";
 
 const Faq = () => {
   return (
-    <section className="bg-[#F6F5F1] pt-20 pb-32 relative">
-      {/* Heading */}
-      <SectionHeading
-        heading="FAQ"
-        subHeading="Everything You Need to Know About BrainZap, How Our AI Creates Engaging Quizzes"
-      />
-      <div>
-        {/* FAQ animation */}
-        <div className="absolute lg:right-20 right-0 lg:top-37 top-45">
-          <Lottie
-            style={{ width: 100, height: 100 }}
-            animationData={animationData}
-            loop={true}
-          />
+    <section className="bg-neutral text-neutral-content py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Hero Heading */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-neutral-content/80 max-w-2xl mx-auto">
+            Get the insights you need to understand how BrainZap revolutionizes your learning experience with AI-powered quizzes.
+          </p>
         </div>
-        {/* Accordion */}
-        <Accordion
-          type="single"
-          collapsible
-          className="w-[80%] lg:w-3/4 mx-auto bg-white p-8 mt-12 rounded-xl "
-        >
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
-              How do I know I can trust BrainZap?
-            </AccordionTrigger>
-            <AccordionContent className="list-disc lg:text-lg text-sm text-text">
-              <li>
-                Reliable AI Technology – Our AI generates quizzes based on
-                verified sources to ensure accuracy and engagement.
-              </li>
-              <li>
-                Privacy & Security – We follow strict data protection policies
-                and never share your personal information with third parties.
-              </li>
-              <li>
-                Active Support – Our team is always available to address any
-                concerns and continuously enhance your experience.
-              </li>
-            </AccordionContent>
-          </AccordionItem>
 
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
-              How will you keep my data private?
-            </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              This platform can ensure you that, your data is fully secure with
-              the organization. Only you can access your data. After successful
-              login we verify the users credentials with the cookies.
-            </AccordionContent>
-          </AccordionItem>
+        {/* Accordion Container */}
+        <div className="max-w-4xl mx-auto">
+          <Accordion
+            type="single"
+            collapsible
+            className="space-y-6 bg-neutral-focus rounded-2xl p-6 lg:p-10"
+          >
+            <AccordionItem
+              value="item-1"
+              className="border-b border-neutral-600 pb-4"
+            >
+              <AccordionTrigger className="text-xl text-neutral-content transition-colors flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Shield className="" />
+                  <span>How do I know I can trust BrainZap?</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="text-neutral-content/80 space-y-4 pt-4">
+                <div className="flex items-start space-x-3">
+                  <BadgeCheck className="text-green-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-green-400">AI-Powered Precision</span> – 
+                    Our cutting-edge AI analyzes verified sources to create engaging, 
+                    accurate quizzes that challenge and enlighten you.
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Shield className="text-blue-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-blue-400">Ironclad Privacy</span> – 
+                    We take data protection seriously. Your personal information 
+                    is encrypted and never shared with third parties.
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Zap className="text-yellow-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-yellow-400">24/7 Support</span> – 
+                    Our dedicated team is always ready to help, ensuring you have 
+                    the best possible experience with BrainZap.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="lg:text-xl tex-base text-text">
-              Do you have a free trial?
-            </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              Yes, we do have a free trial in timed mode of our quiz. A logged
-              in user can play a demo exam for the first time to test himself.
-            </AccordionContent>
-          </AccordionItem>
+            <AccordionItem
+              value="item-2"
+              className="border-b border-neutral-600 pb-4"
+            >
+              <AccordionTrigger className="text-xl text-neutral-content transition-colors flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Users className="" />
+                  <span>Who can use BrainZap?</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="text-neutral-content/80 space-y-4 pt-4">
+                <div className="flex items-start space-x-3">
+                  <Star className="text-blue-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-blue-400">Lifelong Learners</span> – 
+                    Perfect for students, professionals, and anyone passionate about 
+                    continuous learning and knowledge expansion.
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Rocket className="text-green-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-green-400">Skill Development</span> – 
+                    Whether you're preparing for exams, want to explore new topics, 
+                    or simply enjoy challenging yourself, BrainZap is for you.
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <BadgeCheck className="text-purple-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-purple-400">No Barriers</span> – 
+                    Our intuitive interface makes learning accessible to everyone, 
+                    regardless of age, background, or expertise level.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
-              What kind of people can use this app?
-            </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              <li>Students can prepare for a programming related challenge.</li>
-              <li>Self learners can improve their coding skill.</li>
-              <li>Professionals can seek deep knowledge about AI.</li>
-              <li>
-                Training program can asses their students through this web app.
-              </li>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="item-5">
-            <AccordionTrigger className="lg:text-xl text-base text-text">
-              Do we have the premium version of BrainZap?
-            </AccordionTrigger>
-            <AccordionContent className="lg:text-lg text-sm text-text">
-              Yes, for all the users we have some premium quizzes for better
-              user experience.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+            <AccordionItem
+              value="item-3"
+              className="border-b border-neutral-600 pb-4"
+            >
+              <AccordionTrigger className="text-xl text-neutral-content transition-colors flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Rocket className="" />
+                  <span>Do you offer a free trial?</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="text-neutral-content/80 space-y-4 pt-4">
+                <div className="flex items-start space-x-3">
+                  <Zap className="text-blue-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-blue-400">Absolutely!</span> – 
+                    We offer a generous free tier that lets you experience the 
+                    magic of AI-generated quizzes without any commitment.
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Star className="text-green-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-green-400">No Credit Card Required</span> – 
+                    Start exploring, learning, and challenging yourself instantly 
+                    with zero financial risk.
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <BadgeCheck className="text-yellow-500 mt-1 flex-shrink-0" />
+                  <p>
+                    <span className="font-bold text-yellow-400">Upgrade Anytime</span> – 
+                    When you're ready to unlock premium features, upgrading is 
+                    quick, easy, and packed with value.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </div>
     </section>
   );

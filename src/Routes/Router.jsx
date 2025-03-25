@@ -2,8 +2,14 @@
 import Layout from "@/Layouts/Layout";
 import Blog from "@/Pages/Blog/Blog";
 import Home from "@/Pages/Home/Home";
+import Login from "@/Pages/Auth/Login";
 import Pricing from "@/Pages/Pricing/Pricing";
+import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
+import Signup from "@/Pages/Auth/Signup";
 import { createBrowserRouter } from "react-router-dom";
+import QuizPage from "@/Pages/QuizPage/QuizPage";
+import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
+import Contact from "@/Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +27,30 @@ export const router = createBrowserRouter([
       {
         path: "/blog",
         element: <Blog /> /* Blog Page */,
+      },
+      {
+        path: "/start-quiz",
+        element: <StartQuiz /> /* Start Quiz Page */,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/login",
+        element: <Login /> /* Login Page */,
+      },
+      {
+        path: "/signup",
+        element: <Signup /> /* Signup Page */,
+      },
+      {
+        path: "/quiz/:category",
+        element: <QuizPage /> /* Quiz Page */,
+      },
+      {
+        path: "/quiz/:category/answer",
+        element: <QuizAnswer /> /* Quiz Answer Page */,
       },
       {
         path: "*",

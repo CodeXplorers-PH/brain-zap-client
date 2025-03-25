@@ -15,7 +15,7 @@ const Button = ({ variant, className, children, ...props }) => {
 export default Button;
 
 export const ButtonLightClass =
-  'font-semibold hover:!bg-gray-300 focus:!ring-gray-300 !text-gray-700 !from-gray-300 !border-gray-300 via-white !to-gray-300/50';
+  'font-semibold hover:!bg-gray-300 focus:!ring-gray-300 !text-gray-700 !from-gray-300 !border-gray-300 via-white !to-gray-300/50 !rounded-md transition-all duration-300 hover:scale-105 hover:shadow-lg';
 
 export const ButtonYellowClass =
   'font-semibold hover:!bg-yellow focus:!ring-yellow !text-gray-700 !from-yellow !border-yellow via-yellow/30 !to-yellow/50';
