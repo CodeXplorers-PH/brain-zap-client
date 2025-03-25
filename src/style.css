@@ -14,10 +14,10 @@
 button {
   cursor: pointer;
 }
-p {
+/* p {
   color: white;
   font-weight: 500;
-}
+} */
 .wrapper {
   max-width: 1440px;
   width: 100%;

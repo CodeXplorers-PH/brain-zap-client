@@ -4,7 +4,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 const HowItWorks = () => {
   return (
     <section className="bg-gray-100 py-16">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 text-black">
         {/* Heading */}
         <SectionHeading
           heading="How BRAINZAP Works"
@@ -33,7 +33,7 @@ const HowItWorks = () => {
             <h3 className="text-xl font-semibold mb-2">
               TAKE QUIZZES IN YOUR LANGUAGE
             </h3>
-            <p className=" mt-4">
+            <p className="mt-4">
               Choose quizzes based on your language preferences to assess your
               skills.
             </p>

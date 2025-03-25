@@ -49,7 +49,7 @@ const Hero = () => {
                 insights to boost your knowledge and confidence.
               </p>
               <div className="flex gap-5 items-center flex-wrap justify-center">
-                <Link to={`/quiz`}>
+                <Link to={`/start-quiz`}>
                   <Button
                     className={
                       "bg-gradient-to-r from-blue-500 to-teal-400 text-white font-bold rounded-lg text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
