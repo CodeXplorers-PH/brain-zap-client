@@ -16,19 +16,20 @@ import I15 from "@/assets/marquee/15.svg";
 
 const HeroMarquee = () => {
   return (
-    <div className="wrapper py-40 flex-col">
-      <Marquee
-        direction="left"
-        className="p-5 border rounded-xl border-huf-purple/20 bg-white/35"
-      >
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-xs uppercase text-gray-500 font-medium mb-4 text-center">
+        Trusted by teams at
+      </div>
+      <Marquee autoFill speed={40} pauseOnHover>
         {HeroMarqueeData.map((img, index) => (
-          <img
-            key={index}
-            src={img}
-            width={130}
-            alt={`Marquee ${index + 1}`}
-            className="mx-5 invert-100 max-h-10 hover:opacity-100 cursor-pointer transition-all"
-          />
+          <div key={index} className="mx-8 flex items-center">
+            <img
+              src={img}
+              width={130}
+              alt={`Marquee ${index + 1}`}
+              className="max-h-8 opacity-80 hover:opacity-100 cursor-pointer transition-opacity grayscale hover:grayscale-0"
+            />
+          </div>
         ))}
       </Marquee>
     </div>

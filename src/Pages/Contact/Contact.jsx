@@ -1,151 +1,195 @@
-import Button from "@/components/ui/Button";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { useState } from "react";
 
 const Contact = () => {
-  return (
-    <>
-      <section className="bg-[#090909]">
-        {/* Section heading */}
-        <div className="pt-40 pb-8 text-center">
-          <h1 className="text-5xl font-bold text-center">
-            <span className="bg-gradient-to-r from-pink-400 to-green-400 bg-clip-text text-transparent">
-              Contact Us
-            </span>
-          </h1>
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    message: ''
+  });
 
-          <p className="text-gray-300 mt-2 z-10 w-[70%] mx-auto">
-            Get in touch with us! Whether you have questions, feedback, or
-            collaboration ideas, we're here to help. Reach out and let’s connect
-            to create something amazing together!
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log(formData);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 pt-40 pb-20 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
+            Get In Touch
+          </h1>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Whether you have questions, feedback, or collaboration ideas, we're here to help. 
+            Reach out and let's create something amazing together!
           </p>
         </div>
-        <div className="py-12">
-          {/* Section contact info */}
-          <div className="lg:w-3/4 w-11/12 mx-auto flex lg:flex-row flex-col justify-between gap-5">
-            <div className="p-10 flex flex-col justify-center items-center gap-4 bg-white/10 backdrop-blur-lg text-white rounded-2xl lg:w-1/3 w-full transform transition-all duration-300 hover:scale-105 hover:shadow-[0px_0px_20px_rgba(255,255,255,0.2)] border border-white/20">
-              {/* Phone Icon with Animation */}
-              <div className="p-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg animate-bounce">
-                <Phone className="text-white text-3xl" />
+
+        {/* Contact Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          {/* Phone Card */}
+          <div className="group relative overflow-hidden rounded-xl bg-gray-800/50 border border-gray-700 p-8 transition-all duration-300 hover:border-purple-500 hover:shadow-lg hover:-translate-y-1">
+            <div className="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/10 rounded-full transition-all duration-500 group-hover:scale-150"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                <Phone className="text-white w-6 h-6" />
               </div>
-
-              {/* Phone Numbers */}
-              <p className="text-lg font-semibold tracking-wide hover:text-pink-400 transition duration-300">
-                +8801739255837
-              </p>
-              <p className="text-lg font-semibold tracking-wide hover:text-purple-400 transition duration-300">
-                +880156918531
-              </p>
-            </div>
-
-            <div className="p-10 flex flex-col justify-center items-center gap-4 bg-white/10 backdrop-blur-lg border border-white/20 text-white rounded-2xl lg:w-1/3 w-full transform transition-all duration-300 hover:scale-105 hover:shadow-[0px_0px_20px_rgba(255,255,255,0.3)]">
-              {/* Mail Icon with a Gradient Background */}
-              <div className="p-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg animate-bounce">
-                <Mail className="text-white text-3xl" />
+              <h3 className="text-xl font-bold text-white mb-3">Call Us</h3>
+              <div className="space-y-2">
+                <a href="tel:+8801739255837" className="block text-gray-400 hover:text-purple-400 transition-colors">
+                  +880 1739 255837
+                </a>
+                <a href="tel:+8801569185310" className="block text-gray-400 hover:text-purple-400 transition-colors">
+                  +880 1569 185310
+                </a>
               </div>
-
-              {/* Email Addresses */}
-              <p className="text-lg font-medium tracking-wide transition duration-300 hover:text-blue-400 cursor-pointer">
-                code@xplorers.com
-              </p>
-              <p className="text-lg font-medium tracking-wide transition duration-300 hover:text-teal-400 cursor-pointer">
-                zamanahbab007@gmail.com
-              </p>
-            </div>
-
-            <div className="p-10 flex flex-col justify-center items-center gap-4 bg-white/10 backdrop-blur-lg border border-white/20 text-white rounded-2xl lg:w-1/3 w-full transform transition-all duration-300 hover:scale-105 hover:shadow-[0px_0px_20px_rgba(255,255,255,0.3)]">
-              {/* Map Pin Icon with Gradient Background */}
-              <div className="p-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg animate-bounce">
-                <MapPin className="text-white text-3xl" />
-              </div>
-
-              {/* Location Text */}
-              <p className="text-lg font-medium tracking-wide transition duration-300 hover:text-orange-400 cursor-pointer">
-                Mirpur, Dhaka
-              </p>
             </div>
           </div>
 
-          {/* Section form */}
-          <div className="p-10 bg-white/10 backdrop-blur-lg border border-white/20 text-white lg:w-3/4 w-11/12 mx-auto rounded-2xl mt-6 shadow-lg">
-            {/* Heading */}
-            <h2 className="text-center text-3xl font-bold text-white">
-              Send Us a Message
-            </h2>
+          {/* Email Card */}
+          <div className="group relative overflow-hidden rounded-xl bg-gray-800/50 border border-gray-700 p-8 transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:-translate-y-1">
+            <div className="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/10 rounded-full transition-all duration-500 group-hover:scale-150"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center mb-6">
+                <Mail className="text-white w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">Email Us</h3>
+              <div className="space-y-2">
+                <a href="mailto:code@xplorers.com" className="block text-gray-400 hover:text-blue-400 transition-colors">
+                  code@xplorers.com
+                </a>
+                <a href="mailto:zamanahbab007@gmail.com" className="block text-gray-400 hover:text-blue-400 transition-colors">
+                  zamanahbab007@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
 
-            {/* Name & Email */}
-            <div className="flex lg:flex-row flex-col justify-between gap-6 mt-6 font-medium">
-              <div className="flex flex-col w-full">
-                <label htmlFor="name" className="mb-2 text-lg">
-                  Name
+          {/* Location Card */}
+          <div className="group relative overflow-hidden rounded-xl bg-gray-800/50 border border-gray-700 p-8 transition-all duration-300 hover:border-emerald-500 hover:shadow-lg hover:-translate-y-1">
+            <div className="absolute -right-10 -top-10 w-32 h-32 bg-emerald-500/10 rounded-full transition-all duration-500 group-hover:scale-150"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center mb-6">
+                <MapPin className="text-white w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">Visit Us</h3>
+              <p className="text-gray-400 hover:text-emerald-400 transition-colors">
+                Mirpur, Dhaka, Bangladesh
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Form */}
+        <div className="rounded-xl bg-gray-800/50 border border-gray-700 p-8 md:p-10 backdrop-blur-sm">
+          <h2 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-8">
+            Send Us a Message
+          </h2>
+          
+          <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label htmlFor="name" className="block text-gray-300 mb-2 font-medium">
+                  Your Name
                 </label>
                 <input
-                  className="border border-white/30 bg-white/10 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                   type="text"
+                  id="name"
                   name="name"
-                  placeholder="Enter your name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                  placeholder="John Doe"
+                  required
                 />
               </div>
-              <div className="flex flex-col w-full">
-                <label htmlFor="email" className="mb-2 text-lg">
-                  Email
+              <div>
+                <label htmlFor="email" className="block text-gray-300 mb-2 font-medium">
+                  Email Address
                 </label>
                 <input
-                  className="border border-white/30 bg-white/10 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                   type="email"
+                  id="email"
                   name="email"
-                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                  placeholder="john@example.com"
+                  required
                 />
               </div>
             </div>
 
-            {/* Phone & Company Name */}
-            <div className="flex lg:flex-row flex-col justify-between gap-6 mt-6 font-medium">
-              <div className="flex flex-col w-full">
-                <label htmlFor="phone" className="mb-2 text-lg">
-                  Phone
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label htmlFor="phone" className="block text-gray-300 mb-2 font-medium">
+                  Phone Number
                 </label>
                 <input
-                  className="border border-white/30 bg-white/10 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  type="text"
+                  type="tel"
+                  id="phone"
                   name="phone"
-                  placeholder="Enter your phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                  placeholder="+880 1234 567890"
                 />
               </div>
-              <div className="flex flex-col w-full">
-                <label htmlFor="company" className="mb-2 text-lg">
-                  Company Name
+              <div>
+                <label htmlFor="company" className="block text-gray-300 mb-2 font-medium">
+                  Company (Optional)
                 </label>
                 <input
-                  className="border border-white/30 bg-white/10 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                   type="text"
+                  id="company"
                   name="company"
-                  placeholder="Enter your company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                  placeholder="Your Company"
                 />
               </div>
             </div>
 
-            {/* Message */}
-            <div className="flex flex-col w-full font-medium mt-6">
-              <label htmlFor="message" className="mb-2 text-lg">
-                Message
+            <div className="mb-8">
+              <label htmlFor="message" className="block text-gray-300 mb-2 font-medium">
+                Your Message
               </label>
               <textarea
-                className="border border-white/30 bg-white/10 p-4 rounded-lg h-[150px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Enter your message"
+                id="message"
                 name="message"
+                value={formData.message}
+                onChange={handleChange}
+                rows="5"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                placeholder="How can we help you?"
+                required
               ></textarea>
             </div>
 
-            {/* Submit Button */}
-            <div className="mt-6">
-              <button className="w-full p-4 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-bold rounded-lg text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                Submit
-              </button>
-            </div>
-          </div>
+            <button
+              type="submit"
+              className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 flex items-center justify-center space-x-2"
+            >
+              <span>Send Message</span>
+              <Send className="w-5 h-5" />
+            </button>
+          </form>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 };
 

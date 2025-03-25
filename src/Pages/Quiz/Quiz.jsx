@@ -1,67 +1,69 @@
-import Button from "@/components/ui/Button";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+const optionLabels = ["A.", "B.", "C.", "D."];
+
 const Quiz = ({ questions }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
-  const { category } = useParams(); // Using category from URL params
+  const { category } = useParams();
   const navigate = useNavigate();
 
-  //   User selected options
   const handleOptionSelect = (questionIndex, option) => {
-    setSelectedOptions({
-      ...selectedOptions,
+    setSelectedOptions(prev => ({
+      ...prev,
       [questionIndex]: option,
-    });
+    }));
   };
 
-  // Labels for options
-  const optionLabels = ["A.", "B.", "C.", "D."];
-
   const handleSubmit = () => {
-    // Save selected answers in localStorage
+    if (Object.keys(selectedOptions).length !== questions.length) {
+      alert(`Please answer all ${questions.length} questions before submitting.`);
+      return;
+    }
+    
     localStorage.setItem("userAnswers", JSON.stringify(selectedOptions));
-    // Redirect to the result page using navigate
     navigate(`/quiz/${category}/answer`);
   };
 
   return (
-    <div className="space-y-6 p-4 container mx-auto">
-      {questions.length === 0 ? (
-        <p className="text-center text-xl font-semibold">
-          No questions available.
-        </p>
-      ) : (
-        questions.map((q, index) => (
-          <div
-            key={index}
-            className="bg-white/30 shadow-xl rounded-lg overflow-hidden p-6 hover:shadow-lg transition-shadow duration-300"
-          >
-            <h3 className="text-xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-purple-500 to-purple-800">
-              {`Question ${index + 1}: ${q.question}`}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {q.options.map((option, i) => (
-                <button
-                  key={i}
-                  className={`p-4 rounded-md transition-colors duration-200 flex items-center border border-black/20 ${
-                    selectedOptions[index] === option
-                      ? "bg-purple-900/20 text-black border-purple-500"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-                  onClick={() => handleOptionSelect(index, option)}
-                >
-                  <span className="mr-2 font-semibold">{optionLabels[i]}</span>
-                  {option}
-                </button>
-              ))}
-            </div>
+    <div className="max-w-4xl mx-auto space-y-8">
+      {questions.map((q, index) => (
+        <div 
+          key={index} 
+          className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all"
+        >
+          <h3 className="text-xl font-semibold text-white mb-4">
+            <span className="text-purple-400">Q{index + 1}:</span> {q.question}
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {q.options.map((option, i) => (
+              <button
+                key={i}
+                className={`p-4 text-left rounded-lg transition-all flex items-start border ${
+                  selectedOptions[index] === option
+                    ? 'border-purple-500 bg-purple-900/30'
+                    : 'border-gray-700 bg-gray-800 hover:bg-gray-700'
+                }`}
+                onClick={() => handleOptionSelect(index, option)}
+              >
+                <span className="font-mono text-purple-400 mr-3 mt-0.5">{optionLabels[i]}</span>
+                <span className="text-gray-200">{option}</span>
+              </button>
+            ))}
           </div>
-        ))
-      )}
-      <div className="w-full">
-        <button className="w-full px-10 py-[7px] flex focus:ring-2 ring-offset-2 focus:ring-huf-purple justify-center group items-center gap-2 rounded-full bg-gradient-to-r hover:bg-purple-950 transition-all from-huf-purple via-huf-purple/70 to-huf-purple/80 border border-huf-purple text-white" onClick={handleSubmit}>
-          Submit
+        </div>
+      ))}
+      
+      <div className="sticky bottom-6 bg-gray-900/80 backdrop-blur-md p-4 rounded-xl border border-gray-700 shadow-xl">
+        <button 
+          onClick={handleSubmit}
+          className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-white font-bold hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
+          disabled={Object.keys(selectedOptions).length !== questions.length}
+        >
+          {Object.keys(selectedOptions).length === questions.length 
+            ? "Submit Answers" 
+            : `Answered ${Object.keys(selectedOptions).length}/${questions.length} questions`}
         </button>
       </div>
     </div>
