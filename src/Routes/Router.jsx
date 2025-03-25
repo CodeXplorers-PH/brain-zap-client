@@ -10,11 +10,13 @@ import { createBrowserRouter } from "react-router-dom";
 import QuizPage from "@/Pages/QuizPage/QuizPage";
 import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 import Contact from "@/Pages/Contact/Contact";
+import Error from "@/Pages/404/Error";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />, // Default Outlet
+    errorElement: <Error />,
     children: [
       {
         path: "/",
