@@ -8,7 +8,7 @@ const testimonialData = [
     age: 28,
     location: "San Francisco, CA",
     image: "https://static.vecteezy.com/system/resources/thumbnails/048/747/985/small_2x/a-young-woman-with-long-brown-hair-is-wearing-a-black-blazer-and-white-shirt-looking-directly-at-the-camera-photo.jpg",
-    feedback: "BrainZap has completely transformed my learning experience. The AI-powered quizzes adapt perfectly to my skill level, making studying efficient I've seen remarkable improvements in my knowledge retention and confidence.",
+    feedback: "BrainZap has completely transformed my learning experience. The AI-powered quizzes adapt perfectly to my skill level, making studying efficient and engaging. I've seen remarkable improvements in my knowledge retention and confidence.",
     rating: 5
   },
   {
@@ -26,7 +26,7 @@ const testimonialData = [
     age: 22,
     location: "Austin, TX",
     image: "https://img.freepik.com/free-photo/confident-young-businesswoman-standing-with-her-arm-crossed-against-gray-backdrop_23-2148029501.jpg",
-    feedback: "I was struggling with consistent learning until I found BrainZap. The platform's intelligent assessment and engaging quiz format make learning feel less like a chore and more like an exciting challenge. Highly recommended!",
+    feedback: "I was struggling with consistent learning until I found BrainZap. The platform's intelligent assessment and engaging ai generated quiz format make learning feel less like a chore and more like an exciting challenge. Highly recommended!",
     rating: 5
   }
 ];
