@@ -4,7 +4,7 @@ import FreeTrial from './Sections/FreeTrial';
 
 const Pricing = () => {
     return (
-        <div className='bg-gradient-to-br from-huf-purple/40 to-sky-200/20'>
+        <div className='bg-gray-900 min-h-screen'>
             <PricingPlan />
             <FreeTrial />
         </div>

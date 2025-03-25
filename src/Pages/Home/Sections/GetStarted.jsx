@@ -1,59 +1,76 @@
 import React from 'react';
-import SectionHeading from '@/components/ui/SectionHeading';
-import { Link } from 'react-router-dom';
-import Button, { ButtonYellowClass } from '@/components/ui/Button';
-import { getStartData } from '@/data/GetStarted';
-import { ChevronRight } from 'lucide-react';
+import { 
+  UserPlus, 
+  Brain, 
+  Rocket, 
+  Target, 
+  TrendingUp, 
+  Shield 
+} from 'lucide-react';
 
-const GetStarted = () => {
+const Started = () => {
+  const startSteps = [
+    {
+      icon: <UserPlus className="w-12 h-12 text-primary-content" />,
+      title: "Create Your Account",
+      description: "Sign up in seconds with our streamlined, secure registration process.",
+      gradient: "from-purple-500 to-indigo-600"
+    },
+    {
+      icon: <Brain className="w-12 h-12 text-primary-content" />,
+      title: "Personalize Your Profile",
+      description: "Tell us about your learning goals, interests, and skill levels.",
+      gradient: "from-teal-500 to-blue-600"
+    },
+    {
+      icon: <Rocket className="w-12 h-12 text-primary-content" />,
+      title: "Start Your Learning Journey",
+      description: "Dive into AI-powered quizzes tailored just for you, anytime, anywhere.",
+      gradient: "from-pink-500 to-rose-600"
+    }
+  ];
+
   return (
-    <section className="flex-section bg-wheat pt-10 pb-20">
-      <div className="wrapper flex-col">
-        {/* Heading */}
-        <SectionHeading
-          heading="How to Get Started"
-          subHeading="Follow These Simple Steps to Start Creating Your AI-Powered Quizzes Today!"
-        />
-
-        {/* Get Started button */}
-        <div className="my-8 flex justify-center">
-          <Link to="/pricing">
-            <Button className={`!py-3 ${ButtonYellowClass}`}>
-              Get Started Now{' '}
-              <ChevronRight
-                strokeWidth={1.5}
-                className="absolute opacity-0 transition-all group-hover:translate-x-20 ml-2 group-hover:opacity-100"
-              />
-            </Button>
-          </Link>
+    <section className="bg-neutral text-neutral-content py-16 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Hero Heading */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+            Get Started in 3 Simple Steps
+          </h2>
+          <p className="text-neutral-content/80 max-w-2xl mx-auto">
+            Embark on your personalized learning adventure with BrainZap. Our intuitive platform makes starting your educational journey effortless and exciting.
+          </p>
         </div>
 
-        {/* Cards */}
-        <div className="flex flex-wrap justify-center gap-5">
-          {getStartData.map((data, index) => (
-            <div
-              className={`w-full md:w-[calc(50%-10px)] lg:w-[calc(33.33%-13.33px)] p-8 md:p-9 rounded-3xl relative ${
-                index === 0
-                  ? 'bg-[#D2F2D2]'
-                  : index === 1
-                  ? 'bg-yellow'
-                  : 'bg-[#AFDDFF]'
-              }`}
-              key={data.id}
+        {/* Start Steps */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {startSteps.map((step, index) => (
+            <div 
+              key={step.title} 
+              className={`relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br ${step.gradient} transform transition-all hover:scale-105`}
             >
-              <div
-                className={`bg-white/30 w-1/2 h-28 rounded-bl-[100%] absolute top-0 right-0`}
-              ></div>
-
-              <img className="w-24 aspect-square" src={data.image} alt="" />
-              <h5 className="text-xl font-bold my-5">{data.title}</h5>
-              <p>{data.description}</p>
+              <div className="absolute inset-0 bg-black opacity-20"></div>
+              <div className="relative p-8 text-white">
+                <div className="mb-6 flex justify-center">
+                  {step.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-center mb-4">
+                  Step {index + 1}: {step.title}
+                </h3>
+                <p className="text-center opacity-80">
+                  {step.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>
+
+        {/* Call to Action */}
+        
       </div>
     </section>
   );
 };
 
-export default GetStarted;
+export default Started;

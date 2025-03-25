@@ -135,9 +135,14 @@ const categories = [
 
 const QuizCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+  const categoryColors = {
+    "Web Development": "from-indigo-600 to-purple-600",
+    "Backend Development": "from-blue-600 to-cyan-500",
+    "Mobile Development": "from-emerald-500 to-teal-600",
+    "Database Management": "from-amber-500 to-orange-500",
+    "General Programming": "from-violet-600 to-indigo-500"
   };
 
   const filteredCategories =
@@ -146,44 +151,78 @@ const QuizCategories = () => {
       : categories.filter((category) => category.type === selectedCategory);
 
   return (
-    <div className="p-6">
-      {/* Heading */}
-      <h1 className="text-3xl md:text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-950 mb-10">
-        Select Your Preferred Programming Language
-      </h1>
+    <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">
+      <div className="text-center mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 mb-3">
+          Choose Your Quiz
+        </h1>
+        <p className="text-gray-400 max-w-2xl mx-auto">
+          Select a category to test your programming knowledge with our interactive quizzes
+        </p>
+      </div>
 
       {/* Category Filter */}
-      <div className="mb-6 flex justify-end">
-        <select
-          className="p-3 bg-purple-900/10 border border-gray-300 rounded-lg"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-        >
-          <option value="All">All Categories</option>
-          <option value="Web Development">Web Development</option>
-          <option value="Backend Development">Backend Development</option>
-          <option value="Mobile Development">Mobile Development</option>
-          <option value="Database Management">Database Management</option>
-          <option value="General Programming">General Programming</option>
-        </select>
+      <div className="mb-8 flex justify-center">
+        <div className="relative">
+          <select
+            className="appearance-none pl-4 pr-10 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all cursor-pointer"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="All">All Categories</option>
+            {Object.keys(categoryColors).map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       {/* Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCategories.map((category, index) => (
-          <div
+          <Link 
+            to={`/quiz/${category.title.toLowerCase()}`}
             key={index}
-            className="relative p-6 rounded-lg shadow-lg bg-white/10 backdrop-blur-lg border border-white/20 
-              transition-all duration-300 hover:scale-105 hover:border-white/50"
+            className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
+            onMouseEnter={() => setHoveredCard(index)}
+            onMouseLeave={() => setHoveredCard(null)}
           >
-            <h2 className="text-xl font-bold text-gray-600 flex items-center gap-2">
-              {category?.icon} {category?.title}
-            </h2>
-            <p className="text-gray-200 mt-2">{category.description}</p>
-            <Link to={`/quiz/${category?.title.toLowerCase()}`}>
-              <Button className={"mt-4"}>{category.buttonText}</Button>
-            </Link>
-          </div>
+            {/* Gradient Accent */}
+            <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${categoryColors[category.type]}`}></div>
+            
+            {/* Content */}
+            <div className="p-6">
+              <div className="flex items-start">
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center mr-4 bg-gradient-to-br ${categoryColors[category.type]} text-white`}>
+                  <span className="text-xl font-bold">{category.title.charAt(0)}</span>
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">
+                    {category.title}
+                  </h2>
+                  <p className="text-gray-400 mt-1 text-sm">{category.type}</p>
+                </div>
+              </div>
+              <p className="text-gray-300 mt-4 text-sm">{category.description}</p>
+              
+              <div className="mt-6 flex justify-between items-center">
+                <div></div>
+                <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white transition-colors">
+                  Start Quiz
+                </button>
+              </div>
+            </div>
+            
+            {/* Hover Effect */}
+            {hoveredCard === index && (
+              <div className={`absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-r ${categoryColors[category.type]}`}></div>
+            )}
+          </Link>
         ))}
       </div>
     </div>

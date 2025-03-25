@@ -146,8 +146,8 @@ p {
 
 @theme {
   /* Fonts  */
-  --font-primary: "Poppins", sans-serif;
-  --font-secondary: "Goudy Bookletter 1911", serif;
+  --font-primary: "Inter Tight", sans-serif;
+  --font-secondary: "Outfit", serif;
 
   /* Color */
   --color-text: #2e2a42e6;
