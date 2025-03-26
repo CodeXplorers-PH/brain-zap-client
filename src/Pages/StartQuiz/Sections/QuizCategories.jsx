@@ -142,7 +142,7 @@ const QuizCategories = () => {
     "Backend Development": "from-blue-600 to-cyan-500",
     "Mobile Development": "from-emerald-500 to-teal-600",
     "Database Management": "from-amber-500 to-orange-500",
-    "General Programming": "from-violet-600 to-indigo-500"
+    "General Programming": "from-violet-600 to-indigo-500",
   };
 
   const filteredCategories =
@@ -157,7 +157,8 @@ const QuizCategories = () => {
           Choose Your Quiz
         </h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Select a category to test your programming knowledge with our interactive quizzes
+          Select a category to test your programming knowledge with our
+          interactive quizzes
         </p>
       </div>
 
@@ -170,13 +171,25 @@ const QuizCategories = () => {
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
             <option value="All">All Categories</option>
-            {Object.keys(categoryColors).map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+            {Object.keys(categoryColors).map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </div>
         </div>
@@ -185,7 +198,7 @@ const QuizCategories = () => {
       {/* Categories Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCategories.map((category, index) => (
-          <Link 
+          <Link
             to={`/quiz/${category.title.toLowerCase()}`}
             key={index}
             className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
@@ -193,13 +206,23 @@ const QuizCategories = () => {
             onMouseLeave={() => setHoveredCard(null)}
           >
             {/* Gradient Accent */}
-            <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${categoryColors[category.type]}`}></div>
-            
+            <div
+              className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${
+                categoryColors[category.type]
+              }`}
+            ></div>
+
             {/* Content */}
             <div className="p-6">
               <div className="flex items-start">
-                <div className={`w-12 h-12 rounded-lg flex items-center justify-center mr-4 bg-gradient-to-br ${categoryColors[category.type]} text-white`}>
-                  <span className="text-xl font-bold">{category.title.charAt(0)}</span>
+                <div
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center mr-4 bg-gradient-to-br ${
+                    categoryColors[category.type]
+                  } text-white`}
+                >
+                  <span className="text-xl font-bold">
+                    {category.title.charAt(0)}
+                  </span>
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">
@@ -208,8 +231,10 @@ const QuizCategories = () => {
                   <p className="text-gray-400 mt-1 text-sm">{category.type}</p>
                 </div>
               </div>
-              <p className="text-gray-300 mt-4 text-sm">{category.description}</p>
-              
+              <p className="text-gray-300 mt-4 text-sm">
+                {category.description}
+              </p>
+
               <div className="mt-6 flex justify-between items-center">
                 <div></div>
                 <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white transition-colors">
@@ -217,10 +242,14 @@ const QuizCategories = () => {
                 </button>
               </div>
             </div>
-            
+
             {/* Hover Effect */}
             {hoveredCard === index && (
-              <div className={`absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-r ${categoryColors[category.type]}`}></div>
+              <div
+                className={`absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-r ${
+                  categoryColors[category.type]
+                }`}
+              ></div>
             )}
           </Link>
         ))}
