@@ -1,21 +1,24 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const QuizAnswer = () => {
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const [correctAnswers, setCorrectAnswers] = useState({});
-  const [loading, setLoading] = useState(true); // Loading state
-  const { category } = useParams(); // Get quiz category from URL
-  const [feedback, setFeedback] = useState(null); // Store AI feedback
-  const [isFetchingFeedback, setIsFetchingFeedback] = useState(false); // Loading state for feedback
+  const [loading, setLoading] = useState(true);
+  const { category } = useParams();
+  const [feedback, setFeedback] = useState(null);
+  const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false);
 
   const navigate = useNavigate();
+  const optionLabels = ['A.', 'B.', 'C.', 'D.'];
 
   useEffect(() => {
     const fetchResults = () => {
       const storedQuiz = localStorage.getItem(`quiz_${category}`);
-      const storedAnswers = localStorage.getItem("userAnswers");
+      const storedAnswers = localStorage.getItem('userAnswers');
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -25,17 +28,24 @@ const QuizAnswer = () => {
           setQuestions(parsedQuiz);
           setUserAnswers(parsedAnswers);
 
-          // Extract correct answers
+          // Calculate score
+          let correctCount = 0;
           const answers = {};
           parsedQuiz.forEach((q, index) => {
             answers[index] = q.answer;
+            if (parsedAnswers[index] === q.answer) {
+              correctCount++;
+            }
           });
+
           setCorrectAnswers(answers);
+          setScore(Math.round((correctCount / parsedQuiz.length) * 100));
+          setShowScore(true);
         } catch (error) {
-          console.error("Error parsing localStorage data:", error);
+          console.error('Error parsing localStorage data:', error);
         }
       } else {
-        console.warn("Quiz data or user answers not found in localStorage.");
+        console.warn('Quiz data or user answers not found in localStorage.');
       }
 
       setLoading(false);
@@ -46,39 +56,39 @@ const QuizAnswer = () => {
   }, [category]);
 
   const handleQuizAgain = () => {
-    localStorage.clear(`quiz_${category}`);
-    localStorage.clear("userAnswers");
-
-    navigate("/start-quiz");
+    localStorage.removeItem(`quiz_${category}`);
+    localStorage.removeItem('userAnswers');
+    navigate('/start-quiz');
   };
 
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem(`quiz_${category}`);
-    const storedAnswers = localStorage.getItem("userAnswers");
+    const storedAnswers = localStorage.getItem('userAnswers');
 
     if (!storedQuiz || !storedAnswers) {
-      alert("No quiz data found!");
+      alert('No quiz data found!');
       return;
     }
 
     const quizData = JSON.parse(storedQuiz);
     const userAnswers = JSON.parse(storedAnswers);
 
-    const payload = {
-      quizData,
-      userAnswers,
-    };
-
     setIsFetchingFeedback(true);
 
     try {
-      const response = await fetch("http://localhost:5000/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        'https://brain-zap-server.vercel.app/feedback',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            quizData,
+            userAnswers,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -87,44 +97,115 @@ const QuizAnswer = () => {
       const result = await response.json();
       setFeedback(result);
     } catch (error) {
-      console.error("Error fetching AI feedback:", error);
-      alert("Failed to fetch feedback from AI.");
+      console.error('Error fetching AI feedback:', error);
+      alert('Failed to fetch feedback from AI.');
     } finally {
       setIsFetchingFeedback(false);
     }
   };
 
-  const optionLabels = ["A.", "B.", "C.", "D."];
+  if (loading) {
+    return (
+      <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+          <p className="text-gray-400 text-xl">Loading your results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
+        <div className="text-center p-8 bg-gray-800/50 rounded-xl border border-gray-700">
+          <h2 className="text-2xl font-bold text-gray-300 mb-4">
+            No Results Found
+          </h2>
+          <p className="text-gray-400 mb-6">
+            It seems there's nothing to show here.
+          </p>
+          <button
+            onClick={handleQuizAgain}
+            className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white hover:from-purple-700 hover:to-blue-700 transition-colors"
+          >
+            Take a Quiz
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-gradient-to-br from-huf-purple/40 to-sky-200/20 pt-40 pb-20">
-      <h1 className="text-3xl md:text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-950 mb-10">
-        Quiz Results & Correct Answers
-      </h1>
-      <div className="space-y-6 p-4 container mx-auto">
-        {loading ? (
-          <h1 className="text-center text-3xl font-bold text-gray-700">
-            Loading results...
-          </h1>
-        ) : questions.length === 0 ? (
-          <p className="text-center text-xl font-semibold">Nothing to Show</p>
-        ) : (
-          questions.map((q, index) => {
-            const userSelected = userAnswers[index]; // User's answer
-            const correctAnswer = correctAnswers[index]; // Correct answer
+    <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Score Banner */}
+        {showScore && (
+          <div
+            className={`mb-10 p-6 rounded-xl border ${
+              score >= 70
+                ? 'border-green-500/30 bg-green-900/10'
+                : score >= 40
+                ? 'border-yellow-500/30 bg-yellow-900/10'
+                : 'border-red-500/30 bg-red-900/10'
+            } text-center`}
+          >
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Your Score:{' '}
+              <span
+                className={
+                  score >= 70
+                    ? 'text-green-400'
+                    : score >= 40
+                    ? 'text-yellow-400'
+                    : 'text-red-400'
+                }
+              >
+                {score}%
+              </span>
+            </h2>
+            <p className="text-gray-300">
+              {score >= 70
+                ? 'Excellent work!'
+                : score >= 40
+                ? 'Good effort!'
+                : 'Keep practicing!'}{' '}
+              You answered{' '}
+              {
+                Object.values(userAnswers).filter(
+                  (ans, i) => ans === correctAnswers[i]
+                ).length
+              }{' '}
+              out of {questions.length} questions correctly.
+            </p>
+          </div>
+        )}
 
+        {/* Questions List */}
+        <div className="space-y-6">
+          {questions.map((q, index) => {
+            const userSelected = userAnswers[index];
+            const correctAnswer = correctAnswers[index];
             const isCorrect = userSelected === correctAnswer;
             const isWrong = userSelected && userSelected !== correctAnswer;
 
             return (
               <div
                 key={index}
-                className="bg-white/30 shadow-xl rounded-lg overflow-hidden p-6 hover:shadow-lg transition-shadow duration-300"
+                className={`rounded-xl p-6 border ${
+                  isCorrect
+                    ? 'border-green-500/30 bg-green-900/10'
+                    : isWrong
+                    ? 'border-red-500/30 bg-red-900/10'
+                    : 'border-gray-700 bg-gray-800/50'
+                }`}
               >
-                <h3 className="text-xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-purple-500 to-purple-800">
-                  {`Question ${index + 1}: ${q.question}`}
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  <span className="text-purple-400">Q{index + 1}:</span>{' '}
+                  {q.question}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {q.options.map((option, i) => {
                     const isSelected = userSelected === option;
                     const isCorrectOption = correctAnswer === option;
@@ -132,96 +213,113 @@ const QuizAnswer = () => {
                     return (
                       <div
                         key={i}
-                        className={`p-4 rounded-md transition-colors duration-200 flex items-center border border-black/20 ${
-                          isSelected
-                            ? isCorrect
-                              ? "border border-green-500 "
-                              : "border border-red-500 "
+                        className={`p-4 rounded-lg flex items-start border ${
+                          isSelected && isCorrect
+                            ? 'border-green-500 bg-green-900/30'
+                            : isSelected && isWrong
+                            ? 'border-red-500 bg-red-900/30'
                             : isCorrectOption
-                            ? "border border-green-500 "
-                            : "bg-gray-100"
+                            ? 'border-green-500 bg-green-900/30'
+                            : 'border-gray-700 bg-gray-800'
                         }`}
                       >
-                        <span className="mr-2 font-semibold">
+                        <span
+                          className={`font-mono mr-3 mt-0.5 ${
+                            isCorrectOption ? 'text-green-400' : 'text-gray-400'
+                          }`}
+                        >
                           {optionLabels[i]}
                         </span>
-                        {option}
+                        <span className="text-gray-200">{option}</span>
                       </div>
                     );
                   })}
                 </div>
-                {isCorrect && (
-                  <p className="mt-2 font-semibold text-green-600">
-                    ✅ Correct Answer!
-                  </p>
-                )}
-                {isWrong && (
-                  <p className="mt-2 font-semibold text-red-600">
-                    ❌ Incorrect! The correct answer is:{" "}
-                    <span className="text-green-700 font-bold">
-                      {correctAnswer}
-                    </span>
-                  </p>
-                )}
+
+                <div className="mt-4">
+                  {isCorrect ? (
+                    <p className="text-green-400 flex items-center">
+                      <span className="mr-2">✓</span> Correct answer!
+                    </p>
+                  ) : isWrong ? (
+                    <p className="text-red-400">
+                      <span className="mr-2">✗</span> The correct answer was:{' '}
+                      <span className="text-green-400 font-medium">
+                        {correctAnswer}
+                      </span>
+                    </p>
+                  ) : null}
+                </div>
               </div>
             );
-          })
-        )}
+          })}
+        </div>
 
-        <div className="flex flex-col md:flex-row gap-5">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-10">
           <button
             onClick={handleGetFeedback}
             disabled={isFetchingFeedback}
-            className="w-full px-10 py-[7px] flex focus:ring-2 ring-offset-2 focus:ring-huf-purple justify-center group items-center gap-2 rounded-full bg-gradient-to-r hover:bg-purple-950 transition-all from-huf-purple via-huf-purple/70 to-huf-purple/80 border border-huf-purple text-white"
+            className={`flex-1 py-4 rounded-xl font-bold transition-all ${
+              isFetchingFeedback
+                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
+            }`}
           >
-            {isFetchingFeedback ? "Generating Feedback..." : "Feedback From AI"}
+            {isFetchingFeedback ? (
+              <span className="flex items-center justify-center">
+                <span className="animate-spin mr-2">🌀</span> Generating
+                Feedback...
+              </span>
+            ) : (
+              'Get AI Feedback'
+            )}
           </button>
           <button
             onClick={handleQuizAgain}
-            className="w-full px-10 py-[7px] flex focus:ring-2 ring-offset-2 focus:ring-huf-purple justify-center group items-center gap-2 rounded-full bg-gradient-to-r hover:bg-purple-950 transition-all from-huf-purple via-huf-purple/70 to-huf-purple/80 border border-huf-purple text-white"
+            className="flex-1 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold hover:bg-gray-700 transition-all"
           >
-            Quiz Again
+            Try Another Quiz
           </button>
         </div>
+
+        {/* AI Feedback Section */}
         {feedback && (
-          <div className="bg-purple-200/10 border border-purple-500 p-4 rounded-lg shadow-md mt-6">
-            <h1 className="text-lg md:text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-950 mb-10">
+          <div className="mt-10 bg-gray-800/50 border border-gray-700 rounded-xl p-6 backdrop-blur-sm">
+            <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-6">
               AI Feedback
-            </h1>
-            {/* Display Strengths */}
-            <div>
-              <h3 className="text-lg font-semibold text-purple-800">
-                🌟 Strengths:
-              </h3>
-              <p className="text-gray-800">
-                {feedback[0] && feedback[0].Strengths
-                  ? feedback[0].Strengths
-                  : "No feedback on strengths available."}
-              </p>
-            </div>
+            </h3>
 
-            {/* Display Weaknesses */}
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold text-purple-800">
-                ⚠️ Weaknesses:
-              </h3>
-              <p className="text-gray-800">
-                {feedback[1] && feedback[1].Weaknesses
-                  ? feedback[1].Weaknesses
-                  : "No feedback on weaknesses available."}
-              </p>
-            </div>
+            <div className="space-y-6">
+              <div className="p-4 bg-green-900/10 border border-green-500/30 rounded-lg">
+                <h4 className="flex items-center text-lg font-semibold text-green-400 mb-2">
+                  <span className="mr-2">🌟</span> Strengths
+                </h4>
+                <p className="text-gray-300">
+                  {feedback[0]?.Strengths ||
+                    'No specific strengths were identified.'}
+                </p>
+              </div>
 
-            {/* Display Recommendations */}
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold text-purple-800">
-                📖 Recommendations:
-              </h3>
-              <p className="text-gray-800">
-                {feedback[2] && feedback[2].Recommendations
-                  ? feedback[2].Recommendations
-                  : "No recommendations available."}
-              </p>
+              <div className="p-4 bg-red-900/10 border border-red-500/30 rounded-lg">
+                <h4 className="flex items-center text-lg font-semibold text-red-400 mb-2">
+                  <span className="mr-2">⚠️</span> Weaknesses
+                </h4>
+                <p className="text-gray-300">
+                  {feedback[1]?.Weaknesses ||
+                    'No significant weaknesses were found.'}
+                </p>
+              </div>
+
+              <div className="p-4 bg-blue-900/10 border border-blue-500/30 rounded-lg">
+                <h4 className="flex items-center text-lg font-semibold text-blue-400 mb-2">
+                  <span className="mr-2">📚</span> Recommendations
+                </h4>
+                <p className="text-gray-300">
+                  {feedback[2]?.Recommendations ||
+                    'No specific recommendations available.'}
+                </p>
+              </div>
             </div>
           </div>
         )}
