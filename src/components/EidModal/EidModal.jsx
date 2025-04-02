@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import eidMubarak from "../../assets/lotties/EidMubarak.json";
 import Lottie from "lottie-react";
+import EidDecoration from "../EidDecoration/EidDecoration";
 
 const EidModal = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +35,7 @@ const EidModal = () => {
             exit={{ y: 100, opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
+            <EidDecoration />
             <h2 className="text-center drop-shadow-md uppercase text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 mb-3">
               Eid Mubarak!
             </h2>
