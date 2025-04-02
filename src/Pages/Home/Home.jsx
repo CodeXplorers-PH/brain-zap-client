@@ -6,11 +6,13 @@ import Testimonial from "./Sections/Testimonial";
 import HowItWorks from "./Sections/HowItWorks";
 import CTA from "./Sections/CTA";
 import EidModal from "@/components/EidModal/EidModal";
+import EidDecoration from "@/components/EidDecoration/EidDecoration";
 
 const Home = () => {
   return (
     <>
-      <EidModal></EidModal>
+      <EidDecoration />
+      <EidModal />
       <Hero />
       <Features />
       <GetStarted />
