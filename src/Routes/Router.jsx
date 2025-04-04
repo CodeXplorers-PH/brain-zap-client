@@ -11,6 +11,7 @@ import QuizPage from "@/Pages/QuizPage/QuizPage";
 import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 import Contact from "@/Pages/Contact/Contact";
 import Error from "@/Pages/404/Error";
+import Profile from "@/Pages/Profile/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup /> /* Signup Page */,
+      },
+      {
+        path: "/profile",
+        element: <Profile /> /* Profile Page */,
       },
       {
         path: "/quiz/:category",
