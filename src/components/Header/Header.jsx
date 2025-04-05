@@ -100,7 +100,11 @@ const Header = () => {
               >
                 <div className="w-10 rounded-full">
                   {user.photoURL ? (
-                    <img alt="User avatar" src={user.photoURL} />
+                    <img
+                      referrerPolicy="no-referrer"
+                      alt="User avatar"
+                      src={user.photoURL}
+                    />
                   ) : (
                     <div className="bg-purple-600 text-white flex items-center justify-center h-full">
                       {user.displayName
