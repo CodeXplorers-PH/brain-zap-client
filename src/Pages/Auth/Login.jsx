@@ -19,6 +19,10 @@ const Login = () => {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (
       errors?.submit === "Firebase: Error (auth/invalid-credential)." ||
       errors?.submit === "auth/too-many-requests"

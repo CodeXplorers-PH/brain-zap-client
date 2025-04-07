@@ -7,8 +7,12 @@ import HowItWorks from "./Sections/HowItWorks";
 import CTA from "./Sections/CTA";
 import EidModal from "@/components/EidModal/EidModal";
 import EidDecoration from "@/components/EidDecoration/EidDecoration";
+import { useEffect } from "react";
 
 const Home = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <>
       <EidDecoration />
