@@ -21,13 +21,13 @@ const CTA = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <h2 className="text-4xl font-bold mb-4">
+          <span className="text-4xl font-bold mb-4">
             Ready to{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400">
               Supercharge
             </span>{" "}
             Your Learning?
-          </h2>
+          </span>
         </motion.h2>
 
         <motion.p
@@ -35,10 +35,10 @@ const CTA = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+          <span className="text-gray-300 max-w-2xl mx-auto mb-8">
             Unlock personalized AI-powered quizzes that adapt to your learning
             style. Start your intelligent learning journey today!
-          </p>
+          </span>
           <Link to="/start-quiz">
             <button
               className="bg-gradient-to-r from-purple-600 to-pink-500 text-white 

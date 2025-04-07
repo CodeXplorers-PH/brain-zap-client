@@ -1,14 +1,17 @@
-import React from 'react';
-import PricingPlan from './Sections/PricingPlan';
-import FreeTrial from './Sections/FreeTrial';
+import React, { useEffect } from "react";
+import PricingPlan from "./Sections/PricingPlan";
+import FreeTrial from "./Sections/FreeTrial";
 
 const Pricing = () => {
-    return (
-        <div className='bg-gray-900 min-h-screen'>
-            <PricingPlan />
-            <FreeTrial />
-        </div>
-    );
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  return (
+    <div className="bg-gray-900 min-h-screen">
+      <PricingPlan />
+      <FreeTrial />
+    </div>
+  );
 };
 
 export default Pricing;
