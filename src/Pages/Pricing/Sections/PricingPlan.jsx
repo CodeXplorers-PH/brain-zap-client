@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const pricingPlans = [
   {
@@ -70,6 +71,7 @@ const pricingPlans = [
 ];
 
 const PricingPlan = () => {
+  const navigate = useNavigate();
   return (
     <div className="pt-40 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -115,6 +117,8 @@ const PricingPlan = () => {
                   ))}
                 </ul>
                 <button
+                onClick={() => navigate("/checkout", { state: { plan } })}
+
                   className={`mt-8 w-full ${plan.buttonColor} text-white py-4 px-6 rounded-xl transition-all duration-300 font-semibold text-lg shadow-md hover:shadow-lg`}
                 >
                   {plan.cta}

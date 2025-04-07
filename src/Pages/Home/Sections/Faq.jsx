@@ -1,25 +1,40 @@
-import React from 'react';
+import React from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Lottie from "lottie-react";
+import { motion } from "framer-motion";
 import { Shield, Rocket, Star, Users, BadgeCheck, Zap } from "lucide-react";
 
 const Faq = () => {
   return (
-    <section className="bg-neutral text-neutral-content py-16 px-4">
+    <section className="bg-gray-900 text-neutral-content py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Hero Heading */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-neutral-content/80 max-w-2xl mx-auto">
-            Get the insights you need to understand how BrainZap revolutionizes your learning experience with AI-powered quizzes.
-          </p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-4xl md:text-5xl font-bold text-white mb-6"
+          >
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 font-extrabold mb-4">
+              Frequently Asked Questions
+            </span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-xl text-gray-400 max-w-3xl mx-auto"
+          >
+            Get the insights you need to understand how BrainZap revolutionizes
+            your learning experience with AI-powered quizzes.
+          </motion.p>
+          <p className="text-neutral-content/80 max-w-2xl mx-auto"></p>
         </div>
 
         {/* Accordion Container */}
@@ -43,25 +58,32 @@ const Faq = () => {
                 <div className="flex items-start space-x-3">
                   <BadgeCheck className="text-green-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-green-400">AI-Powered Precision</span> – 
-                    Our cutting-edge AI analyzes verified sources to create engaging, 
-                    accurate quizzes that challenge and enlighten you.
+                    <span className="font-bold text-green-400">
+                      AI-Powered Precision
+                    </span>{" "}
+                    – Our cutting-edge AI analyzes verified sources to create
+                    engaging, accurate quizzes that challenge and enlighten you.
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <Shield className="text-blue-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-blue-400">Ironclad Privacy</span> – 
-                    We take data protection seriously. Your personal information 
-                    is encrypted and never shared with third parties.
+                    <span className="font-bold text-blue-400">
+                      Ironclad Privacy
+                    </span>{" "}
+                    – We take data protection seriously. Your personal
+                    information is encrypted and never shared with third
+                    parties.
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <Zap className="text-yellow-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-yellow-400">24/7 Support</span> – 
-                    Our dedicated team is always ready to help, ensuring you have 
-                    the best possible experience with BrainZap.
+                    <span className="font-bold text-yellow-400">
+                      24/7 Support
+                    </span>{" "}
+                    – Our dedicated team is always ready to help, ensuring you
+                    have the best possible experience with BrainZap.
                   </p>
                 </div>
               </AccordionContent>
@@ -81,25 +103,32 @@ const Faq = () => {
                 <div className="flex items-start space-x-3">
                   <Star className="text-blue-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-blue-400">Lifelong Learners</span> – 
-                    Perfect for students, professionals, and anyone passionate about 
-                    continuous learning and knowledge expansion.
+                    <span className="font-bold text-blue-400">
+                      Lifelong Learners
+                    </span>{" "}
+                    – Perfect for students, professionals, and anyone passionate
+                    about continuous learning and knowledge expansion.
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <Rocket className="text-green-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-green-400">Skill Development</span> – 
-                    Whether you're preparing for exams, want to explore new topics, 
-                    or simply enjoy challenging yourself, BrainZap is for you.
+                    <span className="font-bold text-green-400">
+                      Skill Development
+                    </span>{" "}
+                    – Whether you're preparing for exams, want to explore new
+                    topics, or simply enjoy challenging yourself, BrainZap is
+                    for you.
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <BadgeCheck className="text-purple-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-purple-400">No Barriers</span> – 
-                    Our intuitive interface makes learning accessible to everyone, 
-                    regardless of age, background, or expertise level.
+                    <span className="font-bold text-purple-400">
+                      No Barriers
+                    </span>{" "}
+                    – Our intuitive interface makes learning accessible to
+                    everyone, regardless of age, background, or expertise level.
                   </p>
                 </div>
               </AccordionContent>
@@ -119,24 +148,28 @@ const Faq = () => {
                 <div className="flex items-start space-x-3">
                   <Zap className="text-blue-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-blue-400">Absolutely!</span> – 
-                    We offer a generous free tier that lets you experience the 
+                    <span className="font-bold text-blue-400">Absolutely!</span>{" "}
+                    – We offer a generous free tier that lets you experience the
                     magic of AI-generated quizzes without any commitment.
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <Star className="text-green-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-green-400">No Credit Card Required</span> – 
-                    Start exploring, learning, and challenging yourself instantly 
-                    with zero financial risk.
+                    <span className="font-bold text-green-400">
+                      No Credit Card Required
+                    </span>{" "}
+                    – Start exploring, learning, and challenging yourself
+                    instantly with zero financial risk.
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
                   <BadgeCheck className="text-yellow-500 mt-1 flex-shrink-0" />
                   <p>
-                    <span className="font-bold text-yellow-400">Upgrade Anytime</span> – 
-                    When you're ready to unlock premium features, upgrading is 
+                    <span className="font-bold text-yellow-400">
+                      Upgrade Anytime
+                    </span>{" "}
+                    – When you're ready to unlock premium features, upgrading is
                     quick, easy, and packed with value.
                   </p>
                 </div>
