@@ -12,6 +12,7 @@ import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 import Contact from "@/Pages/Contact/Contact";
 import Error from "@/Pages/404/Error";
 import Profile from "@/Pages/Profile/Profile";
+import CheckoutPage from "@/Pages/Checkout/Checkout";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
         element: <Contact />,
       },
       {
+        path: "/checkout",
+        element: <CheckoutPage /> /* CheckoutPage Page */,
+      },
+      {
         path: "/login",
         element: <Login /> /* Login Page */,
       },
@@ -58,10 +63,6 @@ export const router = createBrowserRouter([
       {
         path: "/quiz/:category/answer",
         element: <QuizAnswer /> /* Quiz Answer Page */,
-      },
-      {
-        path: "*",
-        element: "4504",
       },
     ],
   },
