@@ -1,3 +1,4 @@
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ const QuizAnswer = () => {
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
 
+  const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const optionLabels = ['A.', 'B.', 'C.', 'D.'];
 
@@ -76,25 +78,11 @@ const QuizAnswer = () => {
     setIsFetchingFeedback(true);
 
     try {
-      const response = await fetch(
-        'https://brain-zap-server.vercel.app/feedback',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            quizData,
-            userAnswers,
-          }),
-        }
-      );
+      const { data: result } = await axiosPublic.post('/quiz_feedback', {
+        quizData,
+        userAnswers,
+      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const result = await response.json();
       setFeedback(result);
     } catch (error) {
       console.error('Error fetching AI feedback:', error);
