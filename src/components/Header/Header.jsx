@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
+import LockedErr from "../ui/LockedErr";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -19,6 +20,7 @@ const Header = () => {
 
   return (
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
+      <LockedErr/>
       <div className="navbar bg-gray-900/80 backdrop-blur-md rounded-full shadow-2xl max-w-6xl w-full px-6 border border-gray-800">
         {/* Logo Section */}
         <div className="navbar-start">
@@ -100,7 +102,11 @@ const Header = () => {
               >
                 <div className="w-10 rounded-full">
                   {user.photoURL ? (
-                    <img alt="User avatar" src={user.photoURL} />
+                    <img
+                      referrerPolicy="no-referrer"
+                      alt="User avatar"
+                      src={user.photoURL}
+                    />
                   ) : (
                     <div className="bg-purple-600 text-white flex items-center justify-center h-full">
                       {user.displayName

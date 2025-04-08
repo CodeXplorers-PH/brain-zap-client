@@ -1,8 +1,11 @@
-import useAxiosPublic from '@/hooks/useAxiosPublic';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
+import { FaSignInAlt } from 'react-icons/fa';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizAnswer = () => {
+  const { user } = useAuth();
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const [correctAnswers, setCorrectAnswers] = useState({});
@@ -309,6 +312,26 @@ const QuizAnswer = () => {
                 </p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* If not logged in */}
+        {!user && (
+          <div className="mt-16 bg-gray-800/40 border border-gray-700 backdrop-blur-lg rounded-2xl shadow-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-white mb-2">
+              You're not logged in
+            </h2>
+            <p className="text-sm text-gray-400 mb-6">
+              Sign in to save your progress and get personalized
+              recommendations.
+            </p>
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
+            >
+              <FaSignInAlt className="inline-block mr-2" />
+              Log In
+            </button>
           </div>
         )}
       </div>

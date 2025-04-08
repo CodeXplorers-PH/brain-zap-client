@@ -10,4 +10,4 @@ BRAINZAP is an interactive learning platform that uses AI to generate quizzes. I
 
 ## Live Demo
 
-You can try out the live version of BRAINZAP here: [BRAINZAP Live](https://brainzap.netlify.app/)
+You can try out the live version of BRAINZAP here: [BRAINZAP Live](https://brain-zap-99226.web.app/)
