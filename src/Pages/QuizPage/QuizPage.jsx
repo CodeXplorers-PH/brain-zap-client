@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
 import axios from 'axios';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizPage = () => {
   const { category } = useParams();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
     const localStorageKey = `quiz_${category}`;
@@ -24,10 +27,10 @@ const QuizPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(
-          `https://brain-zap-server.vercel.app/generate_quiz?topic=${category}&difficulty=medium`
+        const { data: generatedQuiz } = await axiosPublic.get(
+          `/generate_quiz?topic=${category}&difficulty=medium`
         );
-        const generatedQuiz = response.data;
+
         setQuestions(generatedQuiz);
         localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
       } catch (err) {
