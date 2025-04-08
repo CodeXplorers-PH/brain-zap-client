@@ -1,41 +1,39 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { AuthContext } from "@/provider/AuthProvider";
-import SocialLogin from "./SocialLogin";
+import React, { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import SocialLogin from './SocialLogin';
+import { useAuthContext } from '@/hooks/useAuthContext';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [strength, setStrength] = useState(0);
-  const [photoName, setPhotoName] = useState("");
+  const [photoName, setPhotoName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
 
-  const { createNewUser, setUser, updateUserProfile } = useContext(AuthContext);
+  const { createNewUser, setUser, updateUserProfile } = useAuthContext();
+  const axiosPublic = useAxiosPublic();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const validatePassword = (pass) => {
+  const validatePassword = pass => {
     const errors = {};
 
     if (pass.length < 8) {
-      errors.length = "Password must be at least 8 characters";
+      errors.length = 'Password must be at least 8 characters';
     }
     if (!/[a-z]/.test(pass)) {
-      errors.lowercase = "Password must include at least one lowercase letter";
+      errors.lowercase = 'Password must include at least one lowercase letter';
     }
     if (!/[A-Z]/.test(pass)) {
-      errors.uppercase = "Password must include at least one uppercase letter";
+      errors.uppercase = 'Password must include at least one uppercase letter';
     }
     if (!/[0-9]/.test(pass)) {
-      errors.number = "Password must include at least one number";
+      errors.number = 'Password must include at least one number';
     }
 
     return errors;
@@ -52,19 +50,19 @@ const Signup = () => {
 
     // Validate password confirmation
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     // Validate terms acceptance
     if (!termsAccepted) {
-      newErrors.terms = "You must accept the Terms and Conditions";
+      newErrors.terms = 'You must accept the Terms and Conditions';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -72,32 +70,37 @@ const Signup = () => {
     }
 
     const form = new FormData(e.target);
-    const name = form.get("name");
-    const email = form.get("email");
-    const photo = form.get("photo");
+    const { name, photo, email, password } = Object.fromEntries(form.entries());
 
     createNewUser(email, password)
-      .then((result) => {
+      .then(result => {
         const user = result.user;
         setUser(user);
         updateUserProfile({ displayName: name, photoURL: photo })
           .then(() => {
-            navigate("/");
+            // Add user to database
+            axiosPublic.post('/post_user', {
+              name,
+              photoURL: photo,
+              email,
+            });
+            // Navigate to Home page
+            navigate('/');
           })
-          .catch((err) => {
-            console.log("Error updating user profile");
+          .catch(err => {
+            console.log('Error updating user profile', err.message);
           });
       })
 
-      .catch((error) => {
+      .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
 
         // Handle Firebase authentication errors
-        if (errorCode === "auth/email-already-in-use") {
+        if (errorCode === 'auth/email-already-in-use') {
           setErrors({
-            submit: "Email already in use. Please use a different email.",
+            submit: 'Email already in use. Please use a different email.',
           });
         } else {
           setErrors({ submit: errorMessage });
@@ -105,7 +108,7 @@ const Signup = () => {
       });
   };
 
-  const calculateStrength = (pass) => {
+  const calculateStrength = pass => {
     let score = 0;
     if (!pass) return 0;
 
@@ -121,17 +124,17 @@ const Signup = () => {
     return score;
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = e => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     setStrength(calculateStrength(newPassword));
   };
 
-  const handleConfirmPasswordChange = (e) => {
+  const handleConfirmPasswordChange = e => {
     setConfirmPassword(e.target.value);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     if (e.target.files[0]) {
       setPhotoName(e.target.files[0].name);
     }
@@ -149,7 +152,7 @@ const Signup = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleTermsChange = (e) => {
+  const handleTermsChange = e => {
     setTermsAccepted(e.target.checked);
   };
 
@@ -157,19 +160,19 @@ const Signup = () => {
   const getStrengthData = () => {
     switch (strength) {
       case 0:
-        return { color: "bg-red-500", width: "0%", label: "Very weak" };
+        return { color: 'bg-red-500', width: '0%', label: 'Very weak' };
       case 1:
-        return { color: "bg-red-500", width: "20%", label: "Weak" };
+        return { color: 'bg-red-500', width: '20%', label: 'Weak' };
       case 2:
-        return { color: "bg-yellow-500", width: "40%", label: "Fair" };
+        return { color: 'bg-yellow-500', width: '40%', label: 'Fair' };
       case 3:
-        return { color: "bg-yellow-500", width: "60%", label: "Good" };
+        return { color: 'bg-yellow-500', width: '60%', label: 'Good' };
       case 4:
-        return { color: "bg-green-500", width: "80%", label: "Strong" };
+        return { color: 'bg-green-500', width: '80%', label: 'Strong' };
       case 5:
-        return { color: "bg-green-500", width: "100%", label: "Very strong" };
+        return { color: 'bg-green-500', width: '100%', label: 'Very strong' };
       default:
-        return { color: "bg-red-500", width: "0%", label: "Weak" };
+        return { color: 'bg-red-500', width: '0%', label: 'Weak' };
     }
   };
 
@@ -211,14 +214,12 @@ const Signup = () => {
         <form onSubmit={handleSubmit} className="grid gap-5">
           {/* Full Name */}
           <div className="grid gap-2">
-            <label
-              htmlFor="fullName"
-              className="text-sm font-medium text-gray-300"
-            >
+            <label htmlFor="name" className="text-sm font-medium text-gray-300">
               Full name
             </label>
             <input
               name="name"
+              id="name"
               type="text"
               placeholder="John Doe"
               className="h-12 w-full rounded-md border border-gray-700 bg-gray-700/50 px-4 py-2 text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
@@ -229,13 +230,14 @@ const Signup = () => {
           {/* Photo URL */}
           <div className="grid gap-2">
             <label
-              htmlFor="photoURL"
+              htmlFor="photo"
               className="text-sm font-medium text-gray-300"
             >
               Photo URL
             </label>
             <input
               name="photo"
+              id="photo"
               type="text"
               placeholder="https://i.ibb.co.com/..."
               className="h-12 w-full rounded-md border border-gray-700 bg-gray-700/50 px-4 py-2 text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
@@ -252,6 +254,7 @@ const Signup = () => {
             </label>
             <input
               name="email"
+              id="email"
               type="email"
               placeholder="m@example.com"
               className="h-12 w-full rounded-md border border-gray-700 bg-gray-700/50 px-4 py-2 text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
@@ -270,11 +273,12 @@ const Signup = () => {
             <div className="relative">
               <input
                 name="password"
-                type={showPassword ? "text" : "password"}
+                id="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={handlePasswordChange}
                 className={`h-12 w-full rounded-md border ${
-                  errors.password ? "border-red-500" : "border-gray-700"
+                  errors.password ? 'border-red-500' : 'border-gray-700'
                 } bg-gray-700/50 px-4 py-2 text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200`}
                 required
               />
@@ -325,10 +329,10 @@ const Signup = () => {
                     style={{
                       color:
                         strength <= 1
-                          ? "#ef4444"
+                          ? '#ef4444'
                           : strength <= 3
-                          ? "#eab308"
-                          : "#22c55e",
+                          ? '#eab308'
+                          : '#22c55e',
                     }}
                   >
                     {strengthData.label}
@@ -350,18 +354,20 @@ const Signup = () => {
           {/* Confirm Password */}
           <div className="grid gap-2">
             <label
-              htmlFor="confirmPassword"
+              htmlFor="confirm-password"
               className="text-sm font-medium text-gray-300"
             >
               Confirm password
             </label>
             <div className="relative">
               <input
-                type={showConfirmPassword ? "text" : "password"}
+                name="confirm-password"
+                id="confirm-password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
                 className={`h-12 w-full rounded-md border ${
-                  errors.confirmPassword ? "border-red-500" : "border-gray-700"
+                  errors.confirmPassword ? 'border-red-500' : 'border-gray-700'
                 } bg-gray-700/50 px-4 py-2 text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200`}
                 required
               />
@@ -407,14 +413,14 @@ const Signup = () => {
             />
             <div>
               <label htmlFor="terms" className="text-sm text-gray-400">
-                I agree to the{" "}
+                I agree to the{' '}
                 <a
                   href="#"
                   className="font-medium text-purple-400 hover:text-purple-300 hover:underline"
                 >
                   Terms of Service
-                </a>{" "}
-                and{" "}
+                </a>{' '}
+                and{' '}
                 <a
                   href="#"
                   className="font-medium text-purple-400 hover:text-purple-300 hover:underline"
@@ -451,7 +457,7 @@ const Signup = () => {
         </form>
 
         <div className="mt-8 text-center text-sm">
-          <span className="text-gray-400">Already have an account?</span>{" "}
+          <span className="text-gray-400">Already have an account?</span>{' '}
           <Link
             to="/login"
             className="font-medium text-purple-400 hover:text-purple-300 hover:underline transition-colors"
