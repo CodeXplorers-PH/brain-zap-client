@@ -1,5 +1,5 @@
-import app from '@/firebase/firebase.config';
-import React, { createContext, useEffect, useState } from 'react';
+import app from "@/firebase/firebase.config";
+import React, { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -11,8 +11,8 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
-} from 'firebase/auth';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
+} from "firebase/auth";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -34,16 +34,16 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const updateUserProfile = updatedData => {
+  const updateUserProfile = (updatedData) => {
     return updateProfile(auth.currentUser, updatedData);
   };
 
-  const passwordResetEmail = email => {
+  const passwordResetEmail = (email) => {
     return sendPasswordResetEmail(auth, email);
   };
 
   const logOut = () => {
-    localStorage.removeItem('loginAttempt');
+    localStorage.removeItem("loginAttempt");
     return signOut(auth);
   };
 
@@ -57,10 +57,10 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     axiosPublic
-      .patch('/account_lockout', {
+      .patch("/account_lockout", {
         email: user?.email,
       })
-      .then(res => {
+      .then((res) => {
         setIsLocked(res.data.isLocked);
       });
   }, [user]);
@@ -79,20 +79,20 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser || null);
 
       if (currentUser) {
         console.log(currentUser);
 
-        localStorage.removeItem('loginAttempt');
+        localStorage.removeItem("loginAttempt");
 
         const { displayName, photoURL, email } = currentUser;
 
         if (displayName && photoURL && email) {
           axiosPublic
-            .post('/post_user', { name: displayName, photoURL, email })
-            .then(data => console.log(data.data));
+            .post("/post_user", { name: displayName, photoURL, email })
+            .then((data) => console.log(data.data));
         }
       }
     });
