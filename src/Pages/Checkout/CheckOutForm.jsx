@@ -5,6 +5,9 @@ import Swal from "sweetalert2";
 const CheckOutForm = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [duration, setDuration] = useState(1);
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0); // in percentage
+  const [couponApplied, setCouponApplied] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,15 +26,106 @@ const CheckOutForm = () => {
   };
 
   const getPrice = () => {
+    let basePrice = 0;
     switch (selectedPlan) {
       case "basic":
-        return 10 * duration;
+        basePrice = 10 * duration;
+        break;
       case "standard":
-        return 25 * duration;
+        basePrice = 25 * duration;
+        break;
       case "premium":
-        return 45 * duration;
+        basePrice = 45 * duration;
+        break;
       default:
         return 0;
+    }
+
+    const discounted = basePrice - (basePrice * discount) / 100;
+    return discounted;
+  };
+
+  const handleApplyCoupon = () => {
+    const code = couponCode.trim().toLowerCase();
+
+    if (couponApplied) {
+      return Swal.fire({
+        icon: "info",
+        title: "Coupon Already Applied",
+        text: `You've already applied a ${discount}% discount.`,
+        background: "rgba(30, 30, 60, 0.85)",
+        color: "#fff",
+        backdrop: `rgba(0, 0, 0, 0.4)`,
+        customClass: {
+          popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+          title: "text-blue-400 text-lg font-semibold",
+          confirmButton:
+            "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+          htmlContainer: "text-sm text-gray-300",
+        },
+        confirmButtonText: "Okay",
+      });
+    }
+
+    if (code === "save10") {
+      setDiscount(10);
+      setCouponApplied(true);
+      Swal.fire({
+        icon: "success",
+        title: "Coupon Applied!",
+        text: "10% discount has been applied.",
+        background: "rgba(30, 30, 60, 0.85)",
+        color: "#fff",
+        backdrop: `rgba(0, 0, 0, 0.4)`,
+        customClass: {
+          popup:
+            "rounded-xl shadow-lg border border-violet-500 backdrop-blur-lg",
+          title: "text-purple-400 text-lg font-semibold",
+          confirmButton:
+            "bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-2 rounded mt-4",
+          htmlContainer: "text-sm text-gray-300",
+        },
+        confirmButtonText: "Okay",
+      });
+    } else if (code === "save25") {
+      setDiscount(25);
+      setCouponApplied(true);
+      Swal.fire({
+        icon: "success",
+        title: "Coupon Applied!",
+        text: "25% discount has been applied.",
+        background: "rgba(30, 30, 60, 0.85)",
+        color: "#fff",
+        backdrop: `rgba(0, 0, 0, 0.4)`,
+        customClass: {
+          popup:
+            "rounded-xl shadow-lg border border-violet-500 backdrop-blur-lg",
+          title: "text-purple-400 text-lg font-semibold",
+          confirmButton:
+            "bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-2 rounded mt-4",
+          htmlContainer: "text-sm text-gray-300",
+        },
+        confirmButtonText: "Okay",
+      });
+    } else {
+      setDiscount(0);
+      setCouponApplied(false);
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Coupon",
+        text: "Please enter a valid coupon code.",
+        background: "rgba(30, 30, 60, 0.85)",
+        color: "#fff",
+        backdrop: `rgba(0, 0, 0, 0.4)`,
+        customClass: {
+          popup: "rounded-xl shadow-lg border border-red-500 backdrop-blur-lg",
+          title: "text-red-400 text-lg font-semibold",
+          confirmButton:
+            "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
+          htmlContainer: "text-sm text-gray-300",
+        },
+        confirmButtonText: "Got it",
+      });
     }
   };
 
@@ -39,7 +133,6 @@ const CheckOutForm = () => {
     <section className="min-h-screen flex items-center justify-center bg-[#0e0e1c] px-4 py-32">
       <div className="w-full max-w-6xl grid md:grid-cols-2 gap-10 bg-[#151528] rounded-3xl p-8 border border-violet-700 shadow-[0_0_30px_rgba(128,0,255,0.2)]">
         {/* 🔮 Left: Category & Duration */}
-
         <div className="bg-gradient-to-b from-[#1f1f3a] to-[#1b1b33] p-6 rounded-xl text-white border border-[#2e2e5e] shadow-inner">
           <h3>
             <span className="text-2xl md:text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
@@ -49,7 +142,6 @@ const CheckOutForm = () => {
 
           <div className="space-y-6">
             {/* Plan Selector */}
-
             <div>
               <label className="block mb-2 text-sm text-indigo-400 font-semibold">
                 Plan Category
@@ -82,10 +174,37 @@ const CheckOutForm = () => {
                 <option>12</option>
               </select>
             </div>
+
+            {/* Coupon Code */}
+            <div>
+              <label className="block mb-2 text-sm text-indigo-400 font-semibold">
+                Coupon Code
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter coupon code"
+                  className="flex-grow p-3 rounded-lg bg-[#2d2d4d] text-white border border-[#3c3c5f] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyCoupon}
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold hover:from-purple-600 hover:to-blue-600 transition-all"
+                >
+                  Apply
+                </button>
+              </div>
+              {couponApplied && discount > 0 && (
+                <p className="text-green-400 text-sm mt-1">
+                  🎉 {discount}% discount applied!
+                </p>
+              )}
+            </div>
           </div>
 
           {/* 💡 Info */}
-
           <div className="mt-8 p-4 bg-[#252542] border border-[#3f3f70] rounded-lg text-sm text-gray-300">
             <p className="mb-1">
               <span className="text-yellow-400 font-semibold">💳 Tip:</span>{" "}
@@ -154,11 +273,7 @@ const CheckOutForm = () => {
             Subscribe
           </button>
 
-          <p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
+          <p>
             <span className="text-sm text-gray-400 mt-4">
               By continuing, you agree to our{" "}
               <span className="underline text-indigo-400 cursor-pointer">

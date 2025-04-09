@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Quiz from '../Quiz/Quiz';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Quiz from "../Quiz/Quiz";
+import axios from "axios";
 
 const QuizPage = () => {
   const { category } = useParams();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const localStorageKey = `quiz_${category}`;
@@ -31,8 +35,8 @@ const QuizPage = () => {
         setQuestions(generatedQuiz);
         localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
       } catch (err) {
-        console.error('Error fetching questions:', err);
-        setError('Failed to load questions. Please try again later.');
+        console.error("Error fetching questions:", err);
+        setError("Failed to load questions. Please try again later.");
       } finally {
         setLoading(false);
       }
