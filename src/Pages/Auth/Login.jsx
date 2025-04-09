@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { AuthContext } from "@/provider/AuthProvider";
 import SocialLogin from "./SocialLogin";
-import axios from "axios";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const Login = () => {
   const { userLogin, setUser, passwordResetEmail } = useContext(AuthContext);
@@ -13,6 +13,7 @@ const Login = () => {
   const [isResetting, setIsResetting] = useState(false);
 
   const emailRef = useRef();
+  const axiosPublic = useAxiosPublic();
 
   const [loginAttempt, setLoginAttempt] = useState(() => {
     return JSON.parse(localStorage.getItem("loginAttempt")) || 0;
@@ -30,7 +31,7 @@ const Login = () => {
       if (loginAttempt >= 3) {
         const newUnlockTime = Date.now() + 60 * 60 * 1000;
 
-        axios.post("https://brain-zap-server.vercel.app/account_lockout", {
+        axiosPublic.post("/account_lockout", {
           email: emailRef.current.value,
           isLocked: true,
           date: new Date(),

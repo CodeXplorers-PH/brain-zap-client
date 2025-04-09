@@ -31,7 +31,7 @@ const BlogCard = ({ title, description, publish_date, img, category }) => {
       </div>
       <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
         <span
-          className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${categoryColors[category]} mb-3`}
+          className={`inline-block w-fit px-3 py-1 text-xs font-medium rounded-full ${categoryColors[category]} mb-3`}
         >
           {category}
         </span>
