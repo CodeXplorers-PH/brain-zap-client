@@ -1,5 +1,5 @@
-import app from "@/firebase/firebase.config";
-import React, { createContext, useEffect, useState } from "react";
+import app from '@/firebase/firebase.config';
+import React, { createContext, useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -11,8 +11,8 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
-} from "firebase/auth";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+} from 'firebase/auth';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -34,16 +34,16 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const updateUserProfile = (updatedData) => {
+  const updateUserProfile = updatedData => {
     return updateProfile(auth.currentUser, updatedData);
   };
 
-  const passwordResetEmail = (email) => {
+  const passwordResetEmail = email => {
     return sendPasswordResetEmail(auth, email);
   };
 
   const logOut = () => {
-    localStorage.removeItem("loginAttempt");
+    localStorage.removeItem('loginAttempt');
     return signOut(auth);
   };
 
@@ -69,28 +69,30 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser || null);
 
       if (currentUser) {
-        console.log(currentUser);
-
-        localStorage.removeItem("loginAttempt");
-
-        axiosPublic
-          .patch("/account_lockout", {
-            email: currentUser?.email,
-          })
-          .then((res) => {
-            setIsLocked(res.data.isLocked);
-          });
+        localStorage.removeItem('loginAttempt');
 
         const { displayName, photoURL, email } = currentUser;
 
+        // Check is account locked or not
+        axiosPublic
+          .patch('/account_lockout', {
+            email: email,
+          })
+          .then(res => {
+            setIsLocked(res.data.isLocked);
+          });
+
+        // Save user data in database
         if (displayName && photoURL && email) {
-          axiosPublic
-            .post("/post_user", { name: displayName, photoURL, email })
-            .then((data) => console.log(data.data));
+          axiosPublic.post('/post_user', {
+            name: displayName,
+            photoURL,
+            email,
+          });
         }
       }
     });
