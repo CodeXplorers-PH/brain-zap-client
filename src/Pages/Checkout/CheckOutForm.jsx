@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useNavigate } from "react-router-dom";
 
 const CheckOutForm = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -20,6 +21,7 @@ const CheckOutForm = () => {
   const { user } = useAuth();
   const [couponApplied, setCouponApplied] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -116,8 +118,7 @@ const CheckOutForm = () => {
           usedCoupon: couponCode,
         };
         const res = await axiosPublic.patch("/payment", paymentInfo);
-        if (res.data?.paymentResult?.insertedId) {
-          console.log(res.data?.paymentResult?.insertedId);
+        if (res.data?.message) {
           Swal.fire({
             position: "middel-center",
             icon: "success",
@@ -134,10 +135,9 @@ const CheckOutForm = () => {
               htmlContainer: "text-sm text-gray-300",
             },
             showConfirmButton: false,
-            timer: 1500,
+            timer: 2500,
           });
-        } else {
-          console.log("HERE: ", res.data);
+          navigate("/profile");
         }
       }
     }
