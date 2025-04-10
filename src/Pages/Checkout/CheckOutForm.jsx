@@ -1,20 +1,46 @@
 import { useEffect, useState } from "react";
-import { CardElement } from "@stripe/react-stripe-js";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import Swal from "sweetalert2";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useAuth from "@/hooks/useAuth";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const CheckOutForm = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [duration, setDuration] = useState(1);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0); // in percentage
+  const [error, setError] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
+  const [transectionId, setTransectionId] = useState("");
+  const stripe = useStripe();
+  const elements = useElements();
+  // const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
+  const { user } = useAuth();
   const [couponApplied, setCouponApplied] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleSubmit = (e) => {
+  // Client Secret
+  useEffect(() => {
+    if (totalPrice > 0) {
+      axiosPublic
+        .post("/create-payment-intent", { price: totalPrice })
+        .then((res) => {
+          // console.log(res.data.clientSecret);
+          setClientSecret(res.data.clientSecret);
+        });
+    }
+  }, [axiosPublic, totalPrice]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // If plan and duration not selected
     if (!selectedPlan || !duration) {
       Swal.fire({
         icon: "warning",
@@ -32,7 +58,89 @@ const CheckOutForm = () => {
       });
       return;
     }
-    Swal.fire("Payment feature coming soon!");
+
+    // If strip and elements empty
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const card = elements.getElement(CardElement);
+
+    if (card === null) {
+      return;
+    }
+
+    // Stripe payment method set
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    // If transection get any error
+    if (error) {
+      console.log("payment error : ", error);
+      setError(error.message);
+    } else {
+      console.log("payment method: ", paymentMethod);
+      setError("");
+    }
+
+    // payment confrim
+    const { paymentIntent, error: confirmError } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            email: user?.email || "Anonymous",
+            name: user?.displayName || "Anonymous",
+          },
+        },
+      });
+
+    if (confirmError) {
+      console.log("confirm error:", confirmError);
+    } else {
+      console.log("payment intent", paymentIntent);
+      if (paymentIntent.status === "succeeded") {
+        setTransectionId(paymentIntent.id);
+        // now save the paymentInfo in the database
+        const paymentInfo = {
+          email: user?.email,
+          TotalPrice: totalPrice,
+          subscription: selectedPlan,
+          PaymentDate: new Date(),
+          subscriptionLastTime: new Date(
+            new Date().getTime() + 30 * 24 * 60 * 60 * 1000 * duration
+          ),
+          transectionId: paymentIntent.id,
+          usedCoupon: couponCode,
+        };
+        const res = await axiosPublic.patch("/payment", paymentInfo);
+        if (res.data?.paymentResult?.insertedId) {
+          console.log(res.data?.paymentResult?.insertedId);
+          Swal.fire({
+            position: "middel-center",
+            icon: "success",
+            title: "Thank you. You Payment is Successful",
+            background: "rgba(30, 30, 60, 0.85)",
+            color: "#fff",
+            backdrop: `rgba(0, 0, 0, 0.4)`,
+            customClass: {
+              popup:
+                "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+              title: "text-blue-400 text-lg font-semibold",
+              confirmButton:
+                "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+              htmlContainer: "text-sm text-gray-300",
+            },
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          console.log("HERE: ", res.data);
+        }
+      }
+    }
   };
 
   // Get Price Code
@@ -52,9 +160,13 @@ const CheckOutForm = () => {
         return 0;
     }
 
-    const discounted = basePrice - (basePrice * discount) / 100;
-    return discounted;
+    return basePrice - (basePrice * discount) / 100;
   };
+
+  useEffect(() => {
+    const price = getPrice();
+    setTotalPrice(price);
+  }, [selectedPlan, duration, discount]);
 
   // Coupon Discount
   const handleApplyCoupon = () => {
@@ -78,7 +190,6 @@ const CheckOutForm = () => {
         confirmButtonText: "Okay",
       });
     }
-
     // Coupon Codes
     if (code === "brainzap10") {
       setDiscount(10);
@@ -254,7 +365,7 @@ const CheckOutForm = () => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
                   TOTAL
                 </span>
-                <span>$ {getPrice().toFixed(2)}</span>
+                <span>$ {totalPrice.toFixed(2)}</span>
               </p>
             </div>
           </div>
