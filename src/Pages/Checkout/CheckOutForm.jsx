@@ -19,23 +19,34 @@ const CheckOutForm = () => {
       Swal.fire({
         icon: "warning",
         title: "Please select a plan and duration",
+        background: "rgba(30, 30, 60, 0.85)",
+        color: "#fff",
+        backdrop: `rgba(0, 0, 0, 0.4)`,
+        customClass: {
+          popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+          title: "text-blue-400 text-lg font-semibold",
+          confirmButton:
+            "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+          htmlContainer: "text-sm text-gray-300",
+        },
       });
       return;
     }
     Swal.fire("Payment feature coming soon!");
   };
 
+  // Get Price Code
   const getPrice = () => {
     let basePrice = 0;
     switch (selectedPlan) {
-      case "basic":
-        basePrice = 10 * duration;
+      case "free":
+        basePrice = 0;
         break;
-      case "standard":
-        basePrice = 25 * duration;
+      case "pro":
+        basePrice = 9.99 * duration;
         break;
-      case "premium":
-        basePrice = 45 * duration;
+      case "elite":
+        basePrice = 14.99 * duration;
         break;
       default:
         return 0;
@@ -45,6 +56,7 @@ const CheckOutForm = () => {
     return discounted;
   };
 
+  // Coupon Discount
   const handleApplyCoupon = () => {
     const code = couponCode.trim().toLowerCase();
 
@@ -67,33 +79,14 @@ const CheckOutForm = () => {
       });
     }
 
-    if (code === "save10") {
+    // Coupon Codes
+    if (code === "brainzap10") {
       setDiscount(10);
       setCouponApplied(true);
       Swal.fire({
         icon: "success",
         title: "Coupon Applied!",
         text: "10% discount has been applied.",
-        background: "rgba(30, 30, 60, 0.85)",
-        color: "#fff",
-        backdrop: `rgba(0, 0, 0, 0.4)`,
-        customClass: {
-          popup:
-            "rounded-xl shadow-lg border border-violet-500 backdrop-blur-lg",
-          title: "text-purple-400 text-lg font-semibold",
-          confirmButton:
-            "bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-2 rounded mt-4",
-          htmlContainer: "text-sm text-gray-300",
-        },
-        confirmButtonText: "Okay",
-      });
-    } else if (code === "save25") {
-      setDiscount(25);
-      setCouponApplied(true);
-      Swal.fire({
-        icon: "success",
-        title: "Coupon Applied!",
-        text: "25% discount has been applied.",
         background: "rgba(30, 30, 60, 0.85)",
         color: "#fff",
         backdrop: `rgba(0, 0, 0, 0.4)`,
@@ -152,9 +145,9 @@ const CheckOutForm = () => {
                 onChange={(e) => setSelectedPlan(e.target.value)}
               >
                 <option value="">-- Select Plan --</option>
-                <option value="basic">🔥 Basic ($10/month)</option>
-                <option value="standard">⚡ Standard ($25/month)</option>
-                <option value="premium">🚀 Premium ($45/month)</option>
+                <option value="free"> Free Zap ($0/month)</option>
+                <option value="pro">Zap Pro ($9.99/month)</option>
+                <option value="elite">Zap Elite ($14.99/month)</option>
               </select>
             </div>
 

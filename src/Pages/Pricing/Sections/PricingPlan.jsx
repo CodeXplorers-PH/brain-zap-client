@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 
 const pricingPlans = [
   {
-    title: "Monthly Plan",
-    description: "Flexible monthly access",
-    price: "$19.99",
+    title: "Free Zap",
+    description: "Kickstart your brain journey for free",
+    price: "$0.00",
     features: [
       "Access to all AI-powered quizzes",
       "Level-based questions",
@@ -26,14 +26,15 @@ const pricingPlans = [
     glowColor: "shadow-amber-500/10",
   },
   {
-    title: "Quarterly Plan",
-    description: "Save 20% with quarterly billing",
-    price: "$15.99",
+    title: "Zap Pro",
+    description: "Step up your game with smart insights",
+    price: "$9.99",
     features: [
       "Access to all AI-powered quizzes",
       "Level-based questions",
-      "24/7 AI tutor support",
+      "Personalized Questions",
       "Progress tracking & analytics",
+      "24/7 AI tutor support",
     ],
     cta: "Choose This Plan",
     popular: true,
@@ -49,15 +50,16 @@ const pricingPlans = [
     glowColor: "shadow-emerald-500/10",
   },
   {
-    title: "Annual Plan",
-    description: "Best value with 4 months free",
-    price: "$12.99",
+    title: "Zap Elite",
+    description: "Next-level learning. Learn like never before.",
+    price: "$14.99",
     features: [
       "Access to all AI-powered quizzes",
       "Level-based questions",
-      "24/7 AI tutor support",
+      "Personalized Questions",
       "Progress tracking & analytics",
       "Personalized learning path",
+      "24/7 AI tutor support",
     ],
     cta: "Choose This Plan",
     popular: false,

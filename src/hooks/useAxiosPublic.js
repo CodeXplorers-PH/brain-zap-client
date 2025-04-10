@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
 const axiosPublic = axios.create({
-baseURL: "https://brain-zap-server.vercel.app",
+  baseURL: import.meta.env.VITE_ServerUrl,
 });
+
 const useAxiosPublic = () => {
   return axiosPublic;
 };

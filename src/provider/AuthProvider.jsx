@@ -12,7 +12,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import axios from "axios";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -23,6 +23,8 @@ const githubProvider = new GithubAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
+
+  const axiosPublic = useAxiosPublic();
 
   const createNewUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -54,8 +56,8 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    axios
-      .patch("https://brain-zap-server.vercel.app/account_lockout", {
+    axiosPublic
+      .patch("/account_lockout", {
         email: user?.email,
       })
       .then((res) => {
@@ -78,9 +80,20 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setUser(currentUser || null);
+
       if (currentUser) {
+        console.log(currentUser);
+
         localStorage.removeItem("loginAttempt");
+
+        const { displayName, photoURL, email } = currentUser;
+
+        if (displayName && photoURL && email) {
+          axiosPublic
+            .post("/post_user", { name: displayName, photoURL, email })
+            .then((data) => console.log(data.data));
+        }
       }
     });
     return () => {
