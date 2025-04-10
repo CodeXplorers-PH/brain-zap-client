@@ -55,16 +55,6 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, githubProvider);
   };
 
-  useEffect(() => {
-    axiosPublic
-      .patch("/account_lockout", {
-        email: user?.email,
-      })
-      .then((res) => {
-        setIsLocked(res.data.isLocked);
-      });
-  }, [user]);
-
   const authInfo = {
     user,
     setUser,
@@ -86,6 +76,14 @@ const AuthProvider = ({ children }) => {
         console.log(currentUser);
 
         localStorage.removeItem("loginAttempt");
+
+        axiosPublic
+          .patch("/account_lockout", {
+            email: currentUser?.email,
+          })
+          .then((res) => {
+            setIsLocked(res.data.isLocked);
+          });
 
         const { displayName, photoURL, email } = currentUser;
 
