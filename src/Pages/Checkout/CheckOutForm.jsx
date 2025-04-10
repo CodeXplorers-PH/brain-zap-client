@@ -80,10 +80,10 @@ const CheckOutForm = () => {
 
     // If transection get any error
     if (error) {
-      console.log("payment error : ", error);
+      // console.log("payment error : ", error);
       setError(error.message);
     } else {
-      console.log("payment method: ", paymentMethod);
+      // console.log("payment method: ", paymentMethod);
       setError("");
     }
 
@@ -100,9 +100,9 @@ const CheckOutForm = () => {
       });
 
     if (confirmError) {
-      console.log("confirm error:", confirmError);
+      // console.log("confirm error:", confirmError);
     } else {
-      console.log("payment intent", paymentIntent);
+      // console.log("payment intent", paymentIntent);
       if (paymentIntent.status === "succeeded") {
         setTransectionId(paymentIntent.id);
         // now save the paymentInfo in the database
@@ -147,13 +147,13 @@ const CheckOutForm = () => {
   const getPrice = () => {
     let basePrice = 0;
     switch (selectedPlan) {
-      case "free":
+      case "Free":
         basePrice = 0;
         break;
-      case "pro":
+      case "Pro":
         basePrice = 9.99 * duration;
         break;
-      case "elite":
+      case "Elite":
         basePrice = 14.99 * duration;
         break;
       default:
@@ -256,9 +256,9 @@ const CheckOutForm = () => {
                 onChange={(e) => setSelectedPlan(e.target.value)}
               >
                 <option value="">-- Select Plan --</option>
-                <option value="free"> Free Zap ($0/month)</option>
-                <option value="pro">Zap Pro ($9.99/month)</option>
-                <option value="elite">Zap Elite ($14.99/month)</option>
+                <option value="Free"> Free Zap ($0/month)</option>
+                <option value="Pro">Zap Pro ($9.99/month)</option>
+                <option value="Elite">Zap Elite ($14.99/month)</option>
               </select>
             </div>
 
