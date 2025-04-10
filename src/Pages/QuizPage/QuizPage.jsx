@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
-import axios from 'axios';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizPage = () => {
@@ -11,6 +10,12 @@ const QuizPage = () => {
   const [error, setError] = useState(null);
 
   const axiosPublic = useAxiosPublic();
+
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+
+  const difficulty = queryParams.get('difficulty');
+  const quizzesNumber = queryParams.get('quizzesNumber');
 
   useEffect(() => {
     const localStorageKey = `quiz_${category}`;
@@ -28,7 +33,7 @@ const QuizPage = () => {
       setError(null);
       try {
         const { data: generatedQuiz } = await axiosPublic.get(
-          `/generate_quiz?topic=${category}&difficulty=medium`
+          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
         );
 
         setQuestions(generatedQuiz);

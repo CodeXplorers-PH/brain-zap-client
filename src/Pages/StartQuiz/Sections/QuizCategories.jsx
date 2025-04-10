@@ -1,6 +1,5 @@
-import Button from '@/components/ui/Button';
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HyperText } from '@/components/magicui/hyper-text';
 import PersonalizedQuiz from './PersonalizedQuiz';
@@ -138,6 +137,8 @@ const categories = [
 
 const QuizCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [difficulty, setDifficulty] = useState('medium');
+  const [quizzesNumber, setQuizzesNumber] = useState(10);
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const categoryColors = {
@@ -178,7 +179,10 @@ const QuizCategories = () => {
       </div>
 
       {/* Personalized Quiz */}
-      <PersonalizedQuiz />
+      <PersonalizedQuiz
+        setDifficulty={setDifficulty}
+        setQuizzesNumber={setQuizzesNumber}
+      />
 
       {/* Category Filter */}
       <motion.div
@@ -229,7 +233,7 @@ const QuizCategories = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
             <Link
-              to={`/quiz/${category.title.toLowerCase()}`}
+              to={`/quiz/${category.title.toLowerCase()}?difficulty=${difficulty}}&quizzesNumber=${quizzesNumber}`}
               key={index}
               className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
               onMouseEnter={() => setHoveredCard(index)}
