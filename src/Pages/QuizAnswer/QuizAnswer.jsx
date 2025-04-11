@@ -119,12 +119,12 @@ const QuizAnswer = () => {
     }
 
     const quizData = JSON.parse(storedQuiz);
-    const userAnswersto = JSON.parse(storedAnswers);
+    const userAnswers = JSON.parse(storedAnswers);
 
     setIsFetchingFeedback(true);
 
     try {
-      const { data: result } = axiosPublic.post("/quiz_feedback", {
+      const { data: result } = await axiosPublic.post("/quiz_feedback", {
         quizData,
         userAnswers,
       });
@@ -143,6 +143,7 @@ const QuizAnswer = () => {
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
           <p className="text-gray-400 text-xl">Loading your results...</p>
         </div>
+        ;
       </div>;
     }
 
