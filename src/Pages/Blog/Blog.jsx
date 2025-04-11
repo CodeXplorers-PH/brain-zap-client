@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { FiSearch, FiArrowRight } from "react-icons/fi";
-import { motion } from "framer-motion";
 import { blogs } from "@/data/Blogs";
 
 const BlogCard = ({ title, description, publish_date, img, category, id }) => {
@@ -22,12 +21,7 @@ const BlogCard = ({ title, description, publish_date, img, category, id }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="group relative h-full overflow-hidden rounded-xl border border-gray-800 bg-gray-800/50 hover:border-gray-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
-    >
+    <div className="group relative h-full overflow-hidden rounded-xl border border-gray-800 bg-gray-800/50 hover:border-gray-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10">
       <div className="h-48 overflow-hidden">
         <img
           src={img}
@@ -67,7 +61,7 @@ const BlogCard = ({ title, description, publish_date, img, category, id }) => {
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -101,37 +95,19 @@ const Blog = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4"
-          >
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
             Brain Zap Insights
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="text-xl text-gray-400 max-w-3xl mx-auto"
-          >
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Expert articles to expand your knowledge and sharpen your skills
-          </motion.p>
+          </p>
         </div>
 
         {/* Search and Filter */}
         <div className="max-w-3xl mx-auto mb-16">
           {/* Search */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="relative mb-8"
-          >
+          <div className="relative mb-8">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiSearch className="h-5 w-5 text-gray-500" />
             </div>
@@ -146,16 +122,10 @@ const Blog = () => {
               }}
               aria-label="Search articles"
             />
-          </motion.div>
+          </div>
 
           {/* Categories */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-3"
-          >
+          <div className="flex flex-wrap justify-center gap-3">
             {uniqueCategories.map((category) => (
               <button
                 key={category}
@@ -173,7 +143,7 @@ const Blog = () => {
                 {category}
               </button>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Blog Posts */}
@@ -192,9 +162,7 @@ const Blog = () => {
             ))}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <div
             className="text-center py-20 border border-gray-800 rounded-xl bg-gray-800/30"
           >
             <h3 className="text-xl font-medium text-gray-400 mb-2">
@@ -203,16 +171,12 @@ const Blog = () => {
             <p className="text-gray-500">
               Try adjusting your search or filter criteria
             </p>
-          </motion.div>
+          </div>
         )}
 
         {/* Load More Button */}
         {filteredBlogs.length > 0 && visibleBlogs < blogs.length && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+          <div
             className="mt-16 text-center"
           >
             <button
@@ -222,7 +186,7 @@ const Blog = () => {
             >
               Load More Articles
             </button>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
