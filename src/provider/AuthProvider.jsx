@@ -23,6 +23,7 @@ const githubProvider = new GithubAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const axiosPublic = useAxiosPublic();
 
@@ -66,6 +67,7 @@ const AuthProvider = ({ children }) => {
     signInWithGoogle,
     signInWithGithub,
     isLocked,
+    loading
   };
 
   useEffect(() => {
@@ -95,6 +97,7 @@ const AuthProvider = ({ children }) => {
           });
         }
       }
+      setLoading(false);
     });
     return () => {
       unsubscribe();
