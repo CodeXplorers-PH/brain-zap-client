@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import Swal from "sweetalert2";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { useNavigate } from "react-router-dom";
@@ -147,9 +146,6 @@ const CheckOutForm = () => {
   const getPrice = () => {
     let basePrice = 0;
     switch (selectedPlan) {
-      case "Free":
-        basePrice = 0;
-        break;
       case "Pro":
         basePrice = 9.99 * duration;
         break;
@@ -171,6 +167,26 @@ const CheckOutForm = () => {
   // Coupon Discount
   const handleApplyCoupon = () => {
     const code = couponCode.trim().toLowerCase();
+
+    if (!code) {
+      return Swal.fire({
+        icon: "warning",
+        title: "No Coupon Entered",
+        text: "Please enter a coupon code before applying.",
+        background: "rgba(30, 30, 60, 0.85)",
+        color: "#fff",
+        backdrop: `rgba(0, 0, 0, 0.4)`,
+        customClass: {
+          popup:
+            "rounded-xl shadow-lg border border-yellow-500 backdrop-blur-lg",
+          title: "text-yellow-300 text-lg font-semibold",
+          confirmButton:
+            "bg-yellow-600 hover:bg-yellow-700 text-white font-bold px-6 py-2 rounded mt-4",
+          htmlContainer: "text-sm text-gray-300",
+        },
+        confirmButtonText: "Okay",
+      });
+    }
 
     if (couponApplied) {
       return Swal.fire({
@@ -256,7 +272,6 @@ const CheckOutForm = () => {
                 onChange={(e) => setSelectedPlan(e.target.value)}
               >
                 <option value="">-- Select Plan --</option>
-                <option value="Free"> Free Zap ($0/month)</option>
                 <option value="Pro">Zap Pro ($9.99/month)</option>
                 <option value="Elite">Zap Elite ($14.99/month)</option>
               </select>
@@ -320,7 +335,6 @@ const CheckOutForm = () => {
             </p>
           </div>
         </div>
-
         {/* 💳 Right: Payment Summary */}
         <form
           onSubmit={handleSubmit}
@@ -341,6 +355,7 @@ const CheckOutForm = () => {
                 For {duration} month{duration > 1 ? "s" : ""}
               </p>
             </div>
+            {error && <p className="text-red-500"> {error} </p>}
             <div className="bg-[#2c2c4d] p-4 rounded-lg border border-[#3f3f70] mb-6">
               <CardElement
                 options={{
@@ -373,6 +388,7 @@ const CheckOutForm = () => {
           <button
             type="submit"
             className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+            disabled={!stripe || !clientSecret}
           >
             Subscribe
           </button>
