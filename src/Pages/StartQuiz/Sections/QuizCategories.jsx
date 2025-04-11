@@ -1,175 +1,175 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { HyperText } from '@/components/magicui/hyper-text';
-import PersonalizedQuiz from './PersonalizedQuiz';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { HyperText } from "@/components/magicui/hyper-text";
+import PersonalizedQuiz from "./PersonalizedQuiz";
 
 const categories = [
   {
-    title: 'JavaScript',
-    link: 'javascript',
-    description: 'Test your knowledge of JavaScript fundamentals and concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🟨',
-    type: 'Web Development',
+    title: "JavaScript",
+    link: "javascript",
+    description: "Test your knowledge of JavaScript fundamentals and concepts.",
+    buttonText: "Start Quiz",
+    icon: "🟨",
+    type: "Web Development",
   },
   {
-    title: 'React',
-    link: 'react',
+    title: "React",
+    link: "react",
     description:
-      'Learn and test your React skills with quizzes on components, hooks, and more.',
-    buttonText: 'Start Quiz',
-    icon: '⚛️',
-    type: 'Web Development',
+      "Learn and test your React skills with quizzes on components, hooks, and more.",
+    buttonText: "Start Quiz",
+    icon: "⚛️",
+    type: "Web Development",
   },
   {
-    title: 'HTML',
-    link: 'html',
-    description: 'Test your knowledge of HTML basics and advanced concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🌐',
-    type: 'Web Development',
+    title: "HTML",
+    link: "html",
+    description: "Test your knowledge of HTML basics and advanced concepts.",
+    buttonText: "Start Quiz",
+    icon: "🌐",
+    type: "Web Development",
   },
   {
-    title: 'CSS',
-    link: 'css',
-    description: 'Challenge yourself with CSS styling and layout concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🎨',
-    type: 'Web Development',
+    title: "CSS",
+    link: "css",
+    description: "Challenge yourself with CSS styling and layout concepts.",
+    buttonText: "Start Quiz",
+    icon: "🎨",
+    type: "Web Development",
   },
   {
-    title: 'Python',
-    link: 'python',
+    title: "Python",
+    link: "python",
     description:
-      'Dive into Python programming with fun and interactive quizzes.',
-    buttonText: 'Start Quiz',
-    icon: '🐍',
-    type: 'Backend Development',
+      "Dive into Python programming with fun and interactive quizzes.",
+    buttonText: "Start Quiz",
+    icon: "🐍",
+    type: "Backend Development",
   },
   {
-    title: 'Node.js',
-    link: 'node-js',
+    title: "Node.js",
+    link: "node-js",
     description:
-      'Test your Node.js skills with backend server programming concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🟩',
-    type: 'Backend Development',
+      "Test your Node.js skills with backend server programming concepts.",
+    buttonText: "Start Quiz",
+    icon: "🟩",
+    type: "Backend Development",
   },
   {
-    title: 'Java',
-    link: 'java',
+    title: "Java",
+    link: "java",
     description:
-      'Assess your Java skills with object-oriented programming questions.',
-    buttonText: 'Start Quiz',
-    icon: '☕',
-    type: 'Backend Development',
+      "Assess your Java skills with object-oriented programming questions.",
+    buttonText: "Start Quiz",
+    icon: "☕",
+    type: "Backend Development",
   },
   {
-    title: 'C#',
-    link: 'c-sharp',
+    title: "C#",
+    link: "c-sharp",
     description:
-      'Test your C# skills, from .NET development to game programming.',
-    buttonText: 'Start Quiz',
-    icon: '🎮',
-    type: 'Backend Development',
+      "Test your C# skills, from .NET development to game programming.",
+    buttonText: "Start Quiz",
+    icon: "🎮",
+    type: "Backend Development",
   },
   {
-    title: 'Swift',
-    link: 'swift',
+    title: "Swift",
+    link: "swift",
     description:
-      'Challenge yourself with Swift programming for iOS development.',
-    buttonText: 'Start Quiz',
-    icon: '🍏',
-    type: 'Mobile Development',
+      "Challenge yourself with Swift programming for iOS development.",
+    buttonText: "Start Quiz",
+    icon: "🍏",
+    type: "Mobile Development",
   },
   {
-    title: 'Kotlin',
-    link: 'kotlin',
+    title: "Kotlin",
+    link: "kotlin",
     description:
-      'Evaluate your Kotlin expertise for Android and backend development.',
-    buttonText: 'Start Quiz',
-    icon: '📱',
-    type: 'Mobile Development',
+      "Evaluate your Kotlin expertise for Android and backend development.",
+    buttonText: "Start Quiz",
+    icon: "📱",
+    type: "Mobile Development",
   },
   {
-    title: 'C++',
-    link: 'c-plus-plus',
+    title: "C++",
+    link: "c-plus-plus",
     description:
-      'Challenge yourself with C++ questions covering algorithms & logic.',
-    buttonText: 'Start Quiz',
-    icon: '💻',
-    type: 'General Programming',
+      "Challenge yourself with C++ questions covering algorithms & logic.",
+    buttonText: "Start Quiz",
+    icon: "💻",
+    type: "General Programming",
   },
   {
-    title: 'Go',
-    link: 'go-lang',
+    title: "Go",
+    link: "go-lang",
     description:
-      'Improve your Go (Golang) expertise with performance-based questions.',
-    buttonText: 'Start Quiz',
-    icon: '🐹',
-    type: 'General Programming',
+      "Improve your Go (Golang) expertise with performance-based questions.",
+    buttonText: "Start Quiz",
+    icon: "🐹",
+    type: "General Programming",
   },
   {
-    title: 'Rust',
-    link: 'rust',
-    description: 'Test your memory-safe programming knowledge in Rust.',
-    buttonText: 'Start Quiz',
-    icon: '🦀',
-    type: 'General Programming',
+    title: "Rust",
+    link: "rust",
+    description: "Test your memory-safe programming knowledge in Rust.",
+    buttonText: "Start Quiz",
+    icon: "🦀",
+    type: "General Programming",
   },
   {
-    title: 'PHP',
-    link: 'php',
-    description: 'Test your PHP skills for server-side web development.',
-    buttonText: 'Start Quiz',
-    icon: '🐘',
-    type: 'Web Development',
+    title: "PHP",
+    link: "php",
+    description: "Test your PHP skills for server-side web development.",
+    buttonText: "Start Quiz",
+    icon: "🐘",
+    type: "Web Development",
   },
   {
-    title: 'Ruby',
-    link: 'ruby',
-    description: 'Improve your Ruby knowledge, including Rails development.',
-    buttonText: 'Start Quiz',
-    icon: '💎',
-    type: 'Web Development',
+    title: "Ruby",
+    link: "ruby",
+    description: "Improve your Ruby knowledge, including Rails development.",
+    buttonText: "Start Quiz",
+    icon: "💎",
+    type: "Web Development",
   },
   {
-    title: 'SQL',
-    link: 'sql',
-    description: 'Enhance your database management skills with SQL quizzes.',
-    buttonText: 'Start Quiz',
-    icon: '🗄️',
-    type: 'Database Management',
+    title: "SQL",
+    link: "sql",
+    description: "Enhance your database management skills with SQL quizzes.",
+    buttonText: "Start Quiz",
+    icon: "🗄️",
+    type: "Database Management",
   },
   {
-    title: 'Shell Scripting',
-    link: 'shell-scripting',
-    description: 'Test your Bash and Shell scripting automation skills.',
-    buttonText: 'Start Quiz',
-    icon: '📜',
-    type: 'General Programming',
+    title: "Shell Scripting",
+    link: "shell-scripting",
+    description: "Test your Bash and Shell scripting automation skills.",
+    buttonText: "Start Quiz",
+    icon: "📜",
+    type: "General Programming",
   },
 ];
 
 const QuizCategories = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [difficulty, setDifficulty] = useState('medium');
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [difficulty, setDifficulty] = useState("medium");
   const [quizzesNumber, setQuizzesNumber] = useState(10);
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const categoryColors = {
-    'Web Development': 'from-indigo-600 to-purple-600',
-    'Backend Development': 'from-blue-600 to-cyan-500',
-    'Mobile Development': 'from-emerald-500 to-teal-600',
-    'Database Management': 'from-amber-500 to-orange-500',
-    'General Programming': 'from-violet-600 to-indigo-500',
+    "Web Development": "from-indigo-600 to-purple-600",
+    "Backend Development": "from-blue-600 to-cyan-500",
+    "Mobile Development": "from-emerald-500 to-teal-600",
+    "Database Management": "from-amber-500 to-orange-500",
+    "General Programming": "from-violet-600 to-indigo-500",
   };
 
   const filteredCategories =
-    selectedCategory === 'All'
+    selectedCategory === "All"
       ? categories
-      : categories.filter(category => category.type === selectedCategory);
+      : categories.filter((category) => category.type === selectedCategory);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">
