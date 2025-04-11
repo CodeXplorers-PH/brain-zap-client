@@ -17,8 +17,10 @@ const QuizPage = () => {
   const difficulty = queryParams.get('difficulty');
   const quizzesNumber = queryParams.get('quizzesNumber');
 
+  console.log(difficulty, quizzesNumber);
+
   useEffect(() => {
-    const localStorageKey = `quiz_${category}`;
+    const localStorageKey = `quiz_questions`;
     const storedQuiz = localStorage.getItem(localStorageKey);
 
     if (storedQuiz) {
@@ -45,7 +47,7 @@ const QuizPage = () => {
         setLoading(false);
       }
     }
-  }, [category]);
+  }, [category, difficulty, quizzesNumber]);
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">

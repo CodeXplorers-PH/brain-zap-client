@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HyperText } from '@/components/magicui/hyper-text';
@@ -7,6 +7,7 @@ import PersonalizedQuiz from './PersonalizedQuiz';
 const categories = [
   {
     title: 'JavaScript',
+    link: 'javascript',
     description: 'Test your knowledge of JavaScript fundamentals and concepts.',
     buttonText: 'Start Quiz',
     icon: '🟨',
@@ -14,6 +15,7 @@ const categories = [
   },
   {
     title: 'React',
+    link: 'react',
     description:
       'Learn and test your React skills with quizzes on components, hooks, and more.',
     buttonText: 'Start Quiz',
@@ -22,6 +24,7 @@ const categories = [
   },
   {
     title: 'HTML',
+    link: 'html',
     description: 'Test your knowledge of HTML basics and advanced concepts.',
     buttonText: 'Start Quiz',
     icon: '🌐',
@@ -29,6 +32,7 @@ const categories = [
   },
   {
     title: 'CSS',
+    link: 'css',
     description: 'Challenge yourself with CSS styling and layout concepts.',
     buttonText: 'Start Quiz',
     icon: '🎨',
@@ -36,6 +40,7 @@ const categories = [
   },
   {
     title: 'Python',
+    link: 'python',
     description:
       'Dive into Python programming with fun and interactive quizzes.',
     buttonText: 'Start Quiz',
@@ -44,6 +49,7 @@ const categories = [
   },
   {
     title: 'Node.js',
+    link: 'node-js',
     description:
       'Test your Node.js skills with backend server programming concepts.',
     buttonText: 'Start Quiz',
@@ -52,6 +58,7 @@ const categories = [
   },
   {
     title: 'Java',
+    link: 'java',
     description:
       'Assess your Java skills with object-oriented programming questions.',
     buttonText: 'Start Quiz',
@@ -60,6 +67,7 @@ const categories = [
   },
   {
     title: 'C#',
+    link: 'c-sharp',
     description:
       'Test your C# skills, from .NET development to game programming.',
     buttonText: 'Start Quiz',
@@ -68,6 +76,7 @@ const categories = [
   },
   {
     title: 'Swift',
+    link: 'swift',
     description:
       'Challenge yourself with Swift programming for iOS development.',
     buttonText: 'Start Quiz',
@@ -76,6 +85,7 @@ const categories = [
   },
   {
     title: 'Kotlin',
+    link: 'kotlin',
     description:
       'Evaluate your Kotlin expertise for Android and backend development.',
     buttonText: 'Start Quiz',
@@ -84,6 +94,7 @@ const categories = [
   },
   {
     title: 'C++',
+    link: 'c-plus-plus',
     description:
       'Challenge yourself with C++ questions covering algorithms & logic.',
     buttonText: 'Start Quiz',
@@ -92,6 +103,7 @@ const categories = [
   },
   {
     title: 'Go',
+    link: 'go-lang',
     description:
       'Improve your Go (Golang) expertise with performance-based questions.',
     buttonText: 'Start Quiz',
@@ -100,6 +112,7 @@ const categories = [
   },
   {
     title: 'Rust',
+    link: 'rust',
     description: 'Test your memory-safe programming knowledge in Rust.',
     buttonText: 'Start Quiz',
     icon: '🦀',
@@ -107,6 +120,7 @@ const categories = [
   },
   {
     title: 'PHP',
+    link: 'php',
     description: 'Test your PHP skills for server-side web development.',
     buttonText: 'Start Quiz',
     icon: '🐘',
@@ -114,6 +128,7 @@ const categories = [
   },
   {
     title: 'Ruby',
+    link: 'ruby',
     description: 'Improve your Ruby knowledge, including Rails development.',
     buttonText: 'Start Quiz',
     icon: '💎',
@@ -121,6 +136,7 @@ const categories = [
   },
   {
     title: 'SQL',
+    link: 'sql',
     description: 'Enhance your database management skills with SQL quizzes.',
     buttonText: 'Start Quiz',
     icon: '🗄️',
@@ -128,6 +144,7 @@ const categories = [
   },
   {
     title: 'Shell Scripting',
+    link: 'shell-scripting',
     description: 'Test your Bash and Shell scripting automation skills.',
     buttonText: 'Start Quiz',
     icon: '📜',
@@ -179,49 +196,18 @@ const QuizCategories = () => {
       </div>
 
       {/* Personalized Quiz */}
-      <PersonalizedQuiz
-        setDifficulty={setDifficulty}
-        setQuizzesNumber={setQuizzesNumber}
-      />
-
-      {/* Category Filter */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <div className="mb-8 flex justify-center">
-          <div className="relative">
-            <select
-              className="appearance-none pl-4 pr-10 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all cursor-pointer"
-              value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
-            >
-              <option value="All">All Categories</option>
-              {Object.keys(categoryColors).map(cat => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <PersonalizedQuiz
+          categoryColors={categoryColors}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          setDifficulty={setDifficulty}
+          setQuizzesNumber={setQuizzesNumber}
+        />
       </motion.div>
 
       {/* Categories Grid */}
@@ -233,7 +219,7 @@ const QuizCategories = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
             <Link
-              to={`/quiz/${category.title.toLowerCase()}?difficulty=${difficulty}}&quizzesNumber=${quizzesNumber}`}
+              to={`/quiz/${category.link}?difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`}
               key={index}
               className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
               onMouseEnter={() => setHoveredCard(index)}

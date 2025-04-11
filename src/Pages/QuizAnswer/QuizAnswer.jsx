@@ -22,7 +22,7 @@ const QuizAnswer = () => {
 
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem(`quiz_${category}`);
+      const storedQuiz = localStorage.getItem(`quiz_questions`);
       const storedAnswers = localStorage.getItem('userAnswers');
 
       if (storedQuiz && storedAnswers) {
@@ -61,13 +61,13 @@ const QuizAnswer = () => {
   }, [category]);
 
   const handleQuizAgain = () => {
-    localStorage.removeItem(`quiz_${category}`);
+    localStorage.removeItem(`quiz_questions`);
     localStorage.removeItem('userAnswers');
     navigate('/start-quiz');
   };
 
   const handleGetFeedback = async () => {
-    const storedQuiz = localStorage.getItem(`quiz_${category}`);
+    const storedQuiz = localStorage.getItem(`quiz_questions`);
     const storedAnswers = localStorage.getItem('userAnswers');
 
     if (!storedQuiz || !storedAnswers) {
