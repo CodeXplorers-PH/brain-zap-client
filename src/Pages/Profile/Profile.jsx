@@ -25,6 +25,7 @@ const Profile = () => {
   const [userQuizHistory, setUserQuizHistory] = useState([]);
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   console.log(xpPoints);
+  console.log(userInfo);
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -299,6 +300,19 @@ const Profile = () => {
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
             )}
           </button>
+          <button
+            className={`py-3 px-4 font-medium relative ${
+              activeTab === "transecHistory"
+                ? "text-purple-400"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
+            onClick={() => setActiveTab("transecHistory")}
+          >
+            Transection History
+            {activeTab === "transecHistory" && (
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
+            )}
+          </button>
         </div>
 
         {/* Profile Content */}
@@ -496,6 +510,59 @@ const Profile = () => {
             <p className="text-gray-400">
               Account settings and preferences would be displayed here.
             </p>
+          </div>
+        )}
+
+        {/* Transection history */}
+        {activeTab === "transecHistory" && (
+          <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
+            <h2 className="text-xl font-semibold text-white text-left mb-4">
+              Transection History
+            </h2>
+            {user && userInfo?.transectionId.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-700">
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                       Type
+                      </th>
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Transection ID
+                      </th>
+                      <th className="text-right py-3 text-gray-400 font-medium">
+                        Valid Till
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-700/50">
+                      <td className="py-3 text-white text-left">
+                        {userInfo?.subscription}
+                      </td>
+                      <td className="py-3 text-white text-left">
+                        {userInfo?.transectionId}
+                      </td>
+                      <td className="py-3 text-right text-white">
+                        {format(
+                          new Date(userInfo?.subscriptionLastTime),
+                          "MMMM dd, yyyy"
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  Transaction History
+                </h2>
+                <p className="text-gray-400">
+                  Your Transaction History would be displayed here.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
