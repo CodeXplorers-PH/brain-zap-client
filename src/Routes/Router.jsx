@@ -14,6 +14,7 @@ import Error from "@/Pages/404/Error";
 import Profile from "@/Pages/Profile/Profile";
 import CheckoutPage from "@/Pages/Checkout/Checkout";
 import BlogDetail from "@/Pages/Blog/BlogDetail";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -39,7 +40,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/start-quiz",
-        element: <StartQuiz /> /* Start Quiz Page */,
+        element: (
+          <PrivateRoute>
+            <StartQuiz />
+          </PrivateRoute>
+        ) /* Start Quiz Page */,
       },
       {
         path: "/contact",
@@ -47,7 +52,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <CheckoutPage /> /* CheckoutPage Page */,
+        element: (
+          <PrivateRoute>
+            <CheckoutPage />
+          </PrivateRoute>
+        ) /* CheckoutPage Page */,
       },
       {
         path: "/login",
@@ -59,15 +68,27 @@ export const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile /> /* Profile Page */,
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ) /* Profile Page */,
       },
       {
         path: "/quiz/:category",
-        element: <QuizPage /> /* Quiz Page */,
+        element: (
+          <PrivateRoute>
+            <QuizPage />
+          </PrivateRoute>
+        ) /* Quiz Page */,
       },
       {
         path: "/quiz/:category/answer",
-        element: <QuizAnswer /> /* Quiz Answer Page */,
+        element: (
+          <PrivateRoute>
+            <QuizAnswer />
+          </PrivateRoute>
+        ) /* Quiz Answer Page */,
       },
     ],
   },

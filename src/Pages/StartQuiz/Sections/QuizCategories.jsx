@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { HyperText } from "@/components/magicui/hyper-text";
 import PersonalizedQuiz from "./PersonalizedQuiz";
 
 const categories = [
@@ -174,33 +172,19 @@ const QuizCategories = () => {
   return (
     <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">
       <div className="text-center mb-12">
-        <motion.h1
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <HyperText className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 mb-3">
-            Choose Your Quiz
-          </HyperText>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
+        <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 mb-3">
+          Choose Your Quiz
+        </h1>
+        <p>
           <span className="text-gray-400 max-w-2xl mx-auto">
             Select a category to test your programming knowledge with our
             interactive quizzes
           </span>
-        </motion.p>
+        </p>
       </div>
 
       {/* Personalized Quiz */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
+      <div>
         <PersonalizedQuiz
           categoryColors={categoryColors}
           selectedCategory={selectedCategory}
@@ -208,14 +192,10 @@ const QuizCategories = () => {
           setDifficulty={setDifficulty}
           setQuizzesNumber={setQuizzesNumber}
         />
-      </motion.div>
+      </div>
 
       {/* Categories Grid */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
+      <div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
             <Link
@@ -279,7 +259,7 @@ const QuizCategories = () => {
             </Link>
           ))}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

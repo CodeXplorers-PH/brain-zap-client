@@ -1,12 +1,74 @@
-import { useState, useEffect } from "react";
-import { FiSearch, FiPlus } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiSearch, FiArrowRight } from "react-icons/fi";
+import { blogs } from "@/data/Blogs";
 import useAuth from "@/hooks/useAuth";
-import axios from "axios";
-import BlogCard from "../../components/Blog/BlogCard";
-import CreatePostModal from "../../components/Blog/CreatePostModal";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import CreatePostModal from "@/components/Blog/CreatePostModal";
+import { Link } from "react-router-dom";
+const API_BASE_URL = import.meta.env.VITE_ServerUrl;
+const BlogCard = ({ title, description, publish_date, img, category, id }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-// Set base URL for API calls
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const categoryColors = {
+    Technology: "bg-purple-900/50 text-purple-400/80",
+    Science: "bg-blue-900/50 text-blue-400/80",
+    Health: "bg-emerald-900/50 text-emerald-400/80",
+    Business: "bg-amber-900/50 text-amber-400/80",
+    Entertainment: "bg-pink-900/50 text-pink-400/80",
+    Sports: "bg-red-900/50 text-red-400/80",
+    Education: "bg-indigo-900/50 text-indigo-400/80",
+    Lifestyle: "bg-green-900/50 text-green-400/80",
+    Travel: "bg-cyan-900/50 text-cyan-400/80",
+    Food: "bg-orange-900/50 text-orange-400/80",
+  };
+
+
+  return (
+    <div className="group relative h-full overflow-hidden rounded-xl border border-gray-800 bg-gray-800/50 hover:border-gray-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10">
+      <div className="h-48 overflow-hidden">
+        <img
+          src={img}
+          alt={title}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
+        <span
+          className={`inline-block w-fit px-3 py-1 text-xs font-medium rounded-full ${
+            categoryColors[category] || "bg-gray-700 text-gray-300"
+          } mb-3`}
+        >
+          {category}
+        </span>
+        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors line-clamp-2">
+          {title}
+        </h3>
+        <p className="text-gray-400 mb-4 line-clamp-3 flex-grow">
+          {description}
+        </p>
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-sm text-gray-500">
+            {new Date(publish_date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+          <Link to={`/blogs/${id}`}
+            className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center transition-colors"
+            aria-label={`Read more about ${title}`}
+          >
+            Read More
+            <FiArrowRight className="ml-1" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +80,7 @@ const Blog = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState("all"); // "all", "my"
   const [error, setError] = useState(null);
+  const axiosPublic = useAxiosPublic();
 
   const { user } = useAuth();
   const isAuthenticated = !!user;
@@ -36,7 +99,7 @@ const Blog = () => {
 
       console.log("Fetching blogs with params:", params);
       
-      const response = await axios.get(`${API_BASE_URL}/blogs`, {
+      const response = await axiosPublic.get(`${API_BASE_URL}/blogs`, {
         params,
         withCredentials: true,
       });
@@ -232,8 +295,10 @@ const Blog = () => {
               />
             ))}
           </div>
-        ) : !isLoading && (
-          <div className="text-center py-20 border border-gray-800 rounded-xl bg-gray-800/30">
+        ) : (
+          <div
+            className="text-center py-20 border border-gray-800 rounded-xl bg-gray-800/30"
+          >
             <h3 className="text-xl font-medium text-gray-400 mb-2">
               No posts found
             </h3>
@@ -242,30 +307,9 @@ const Blog = () => {
                 ? "You haven't created any posts yet. Create your first post!"
                 : "Try adjusting your search or filter criteria"}
             </p>
-            {viewMode === "my" && isAuthenticated && (
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-500 transition-colors"
-              >
-                Create Post
-              </button>
-            )}
           </div>
         )}
 
-        {/* Load More Button */}
-        {filteredBlogs.length > 0 && filteredBlogs.length < totalBlogs && (
-          <div className="mt-16 text-center">
-            <button
-              onClick={loadMore}
-              className="px-8 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white font-medium hover:bg-gray-700 transition-colors hover:shadow-lg hover:shadow-purple-500/10"
-              aria-label="Load more posts"
-              disabled={isLoading}
-            >
-              {isLoading ? "Loading..." : "Load More Posts"}
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Create Post Modal */}
