@@ -73,7 +73,7 @@ const Profile = () => {
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
-    lastActive: "3 hours ago",
+    lastActive: "Now",
   };
 
   const handleSaveProfile = async () => {
