@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
-import { FaSignInAlt } from "react-icons/fa";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
+import { FaSignInAlt } from 'react-icons/fa';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -15,7 +15,6 @@ const QuizAnswer = () => {
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
-
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const optionLabels = ["A.", "B.", "C.", "D."];
@@ -35,7 +34,7 @@ const QuizAnswer = () => {
   useEffect(() => {
     const fetchResults = () => {
       const storedQuiz = localStorage.getItem(`quiz_${category}`);
-      const storedAnswers = localStorage.getItem("userAnswers");
+      const storedAnswers = localStorage.getItem('userAnswers');
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -81,15 +80,36 @@ const QuizAnswer = () => {
     return () => clearTimeout(timer);
   }, [category]);
 
+  useEffect(() => {
+    const hasPosted = localStorage.getItem(`history_posted`);
+
+    if (user && score && questions.length > 0 && !hasPosted) {
+      axiosPublic
+        .post("/quiz_history", {
+          email: user?.email,
+          date: new Date(),
+          category: category,
+          score: score,
+        })
+        .then((res) => {
+          console.log("History saved:", res.data);
+          localStorage.setItem(`history_posted`, "true");
+        })
+        .catch((err) => {
+          console.log("Error saving history:", err);
+        });
+    }
+  }, [user, score, category, questions]);
+
   const handleQuizAgain = () => {
     localStorage.removeItem(`quiz_${category}`);
-    localStorage.removeItem("userAnswers");
-    navigate("/start-quiz");
+    localStorage.removeItem('userAnswers');
+    navigate('/start-quiz');
   };
 
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem(`quiz_${category}`);
-    const storedAnswers = localStorage.getItem("userAnswers");
+    const storedAnswers = localStorage.getItem('userAnswers');
 
     if (!storedQuiz || !storedAnswers) {
       alert("No quiz data found!");

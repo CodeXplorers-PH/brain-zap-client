@@ -1,44 +1,35 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/provider/AuthProvider";
-import {
-  Edit2,
-  Mail,
-  Calendar,
-  Award,
-  Clock,
-  FileText,
-  Save,
-  X,
-} from "lucide-react";
+import { Edit2, Mail, Calendar, Award, Clock, FileText, Save, X } from 'lucide-react';
 
 const Profile = () => {
-  const { user, updateUserProfile } = useContext(AuthContext);
-  const [activeTab, setActiveTab] = useState("profile");
-  const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [totalPoints, setTotalPoints] = useState(0);
-  // Form state
-  const [displayName, setDisplayName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
+    const { user, updateUserProfile } = useContext(AuthContext);
+    const [activeTab, setActiveTab] = useState('profile');
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    
+    // Form state
+    const [displayName, setDisplayName] = useState('');
+    const [photoURL, setPhotoURL] = useState('');
 
-  // Update local state when user data changes
-  useEffect(() => {
-    if (user) {
-      setDisplayName(user.displayName || "");
-      setPhotoURL(user.photoURL || "");
-    }
-  }, [user]);
+    // Update local state when user data changes
+    useEffect(() => {
+        if (user) {
+            setDisplayName(user.displayName || '');
+            setPhotoURL(user.photoURL || '');
+        }
+    }, [user]);
 
-  // Sample stats - replace with actual data from your application
-  const stats = {
-    quizzesTaken: 27,
-    totalPoints: totalPoints,
-    avgScore: 85,
-    memberSince: user?.metadata?.creationTime
-      ? new Date(user.metadata.creationTime).toLocaleDateString()
-      : new Date().toLocaleDateString(),
-    lastActive: "3 hours ago",
-  };
+    // Sample stats - replace with actual data from your application
+    const stats = {
+        quizzesTaken: 27,
+        totalPoints: 1240,
+        avgScore: 85,
+        memberSince: user?.metadata?.creationTime 
+            ? new Date(user.metadata.creationTime).toLocaleDateString() 
+            : new Date().toLocaleDateString(),
+        lastActive: '3 hours ago'
+    };
 
   const handleSaveProfile = async () => {
     try {
@@ -70,387 +61,297 @@ const Profile = () => {
     setIsEditing(false);
   };
 
-  const getInitials = () => {
-    if (displayName && displayName.trim()) {
-      return displayName.trim().charAt(0).toUpperCase();
-    }
-    if (user?.email) {
-      return user.email.charAt(0).toUpperCase();
-    }
-    return "U";
-  };
-
-  useEffect(() => {
-    if (user?.email) {
-      fetch(`/${import.meta.env.VITE_ServerUrl}/xp_points?email=${user.email}`)
-        .then((res) => res.json())
-        .then((data) => setTotalPoints(data.xp || 0))
-        .catch((err) => console.error("Error fetching XP:", err));
-    }
-  }, [user]);
-
-  // Function to update XP after completing a quiz
-  const updateXP = async (newXP) => {
-    try {
-      setLoading(true);
-
-      // Send new XP to backend (update the points)
-      const response = await fetch(
-        `/${import.meta.env.VITE_ServerUrl}/xp_points`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: user?.email,
-            xp: newXP,
-          }),
+    const getInitials = () => {
+        if (displayName && displayName.trim()) {
+            return displayName.trim().charAt(0).toUpperCase();
         }
-      );
+        if (user?.email) {
+            return user.email.charAt(0).toUpperCase();
+        }
+        return 'U';
+    };
 
-      if (!response.ok) {
-        throw new Error("Failed to update XP points");
-      }
-
-      // Fetch the updated XP
-      const data = await response.json();
-      setTotalPoints(data.xp || 0); // Update the XP in local state
-      const newXP = totalPoints + newXP;
-      updateXP(newXP);
-    } catch (error) {
-      console.error("Error updating XP:", error);
-      alert("Failed to update XP points. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Assuming this is called after quiz completion
-
-  return (
-    <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
-      <div className="max-w-4xl mx-auto">
-        {/* Profile Header */}
-        <div className="bg-gray-800/80 backdrop-blur-md rounded-2xl border border-gray-700 shadow-xl p-6 md:p-8 mb-6">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Avatar */}
-            <div className="relative">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-purple-600 shadow-lg">
-                {photoURL ? (
-                  <img
-                    src={photoURL}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
-                    {getInitials()}
-                  </div>
+    return (
+        <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
+            <div className="max-w-4xl mx-auto">
+                {/* Profile Header */}
+                <div className="bg-gray-800/80 backdrop-blur-md rounded-2xl border border-gray-700 shadow-xl p-6 md:p-8 mb-6">
+                    <div className="flex flex-col md:flex-row items-center gap-6">
+                        {/* Avatar */}
+                        <div className="relative">
+                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-purple-600 shadow-lg">
+                                {photoURL ? (
+                                    <img 
+                                        src={photoURL} 
+                                        alt="Profile" 
+                                        className="w-full h-full object-cover"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                ) : (
+                                    <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
+                                        {getInitials()}
+                                    </div>
+                                )}
+                            </div>
+                            <button 
+                                onClick={() => setIsEditing(true)}
+                                className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-lg transition-all duration-200"
+                            >
+                                <Edit2 size={16} />
+                            </button>
+                        </div>
+                        
+                        {/* User Info */}
+                        <div className="text-center md:text-left flex-1">
+                            {isEditing ? (
+                                <div className="mb-4">
+                                    <div className="mb-4">
+                                        <label htmlFor="displayName" className="text-sm font-medium text-gray-300 block mb-1">
+                                            Display Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="displayName"
+                                            value={displayName}
+                                            onChange={(e) => setDisplayName(e.target.value)}
+                                            placeholder="Display Name"
+                                            className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white focus:border-purple-500 focus:outline-none"
+                                        />
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <label htmlFor="photoURL" className="text-sm font-medium text-gray-300 block mb-1">
+                                            Photo URL
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="photoURL"
+                                            value={photoURL}
+                                            onChange={(e) => setPhotoURL(e.target.value)}
+                                            placeholder="https://i.ibb.co.com/..."
+                                            className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white focus:border-purple-500 focus:outline-none"
+                                        />
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-center md:justify-start text-gray-400 mt-2">
+                                        <Mail size={16} className="mr-2" />
+                                        <span>{user?.email || "user@example.com"}</span>
+                                    </div>
+                                    <div className="flex items-center justify-center md:justify-start gap-2 mt-3">
+                                        <button
+                                            onClick={handleSaveProfile}
+                                            disabled={loading}
+                                            className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        >
+                                            <Save size={16} className="mr-2" />
+                                            {loading ? 'Saving...' : 'Save Changes'}
+                                        </button>
+                                        <button
+                                            onClick={cancelEditing}
+                                            disabled={loading}
+                                            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center"
+                                        >
+                                            <X size={16} className="mr-2" />
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
+                                        {user?.displayName || "BrainZapper"}
+                                    </h1>
+                                    <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
+                                        <Mail size={16} className="mr-2" />
+                                        <span>{user?.email || "user@example.com"}</span>
+                                    </div>
+                                </>
+                            )}
+                            
+                            {/* Stats Summary - Only show when not editing */}
+                            {!isEditing && (
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                                    <div className="bg-gray-700/50 rounded-lg p-3">
+                                        <p className="text-gray-400 text-sm">Quizzes Taken</p>
+                                        <p className="text-white font-bold text-xl">{stats.quizzesTaken}</p>
+                                    </div>
+                                    <div className="bg-gray-700/50 rounded-lg p-3">
+                                        <p className="text-gray-400 text-sm">Total Points</p>
+                                        <p className="text-white font-bold text-xl">{stats.totalPoints}</p>
+                                    </div>
+                                    <div className="bg-gray-700/50 rounded-lg p-3 col-span-2 md:col-span-1">
+                                        <p className="text-gray-400 text-sm">Average Score</p>
+                                        <p className="text-white font-bold text-xl">{stats.avgScore}%</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Rest of the component remains the same */}
+                {/* Tabs Navigation */}
+                <div className="flex border-b border-gray-700 mb-6">
+                    <button 
+                        className={`py-3 px-4 font-medium relative ${
+                            activeTab === 'profile' 
+                                ? 'text-purple-400' 
+                                : 'text-gray-400 hover:text-gray-300'
+                        }`}
+                        onClick={() => setActiveTab('profile')}
+                    >
+                        Profile
+                        {activeTab === 'profile' && (
+                            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
+                        )}
+                    </button>
+                    <button 
+                        className={`py-3 px-4 font-medium relative ${
+                            activeTab === 'history' 
+                                ? 'text-purple-400' 
+                                : 'text-gray-400 hover:text-gray-300'
+                        }`}
+                        onClick={() => setActiveTab('history')}
+                    >
+                        Quiz History
+                        {activeTab === 'history' && (
+                            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
+                        )}
+                    </button>
+                    <button 
+                        className={`py-3 px-4 font-medium relative ${
+                            activeTab === 'settings' 
+                                ? 'text-purple-400' 
+                                : 'text-gray-400 hover:text-gray-300'
+                        }`}
+                        onClick={() => setActiveTab('settings')}
+                    >
+                        Settings
+                        {activeTab === 'settings' && (
+                            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
+                        )}
+                    </button>
+                </div>
+                
+                {/* Profile Content */}
+                {activeTab === 'profile' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* About Section */}
+                        <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
+                            <h2 className="text-xl font-semibold text-white mb-4">About</h2>
+                            <div className="space-y-4">
+                                <div className="flex items-center">
+                                    <Calendar size={18} className="text-purple-400 mr-3" />
+                                    <div>
+                                        <p className="text-gray-400 text-sm">Member Since</p>
+                                        <p className="text-white">{stats.memberSince}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center">
+                                    <Clock size={18} className="text-purple-400 mr-3" />
+                                    <div>
+                                        <p className="text-gray-400 text-sm">Last Active</p>
+                                        <p className="text-white">{stats.lastActive}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center">
+                                    <Award size={18} className="text-purple-400 mr-3" />
+                                    <div>
+                                        <p className="text-gray-400 text-sm">Subscription</p>
+                                        <p className="text-white">Free Plan</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Achievement Section */}
+                        <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
+                            <h2 className="text-xl font-semibold text-white mb-4">Achievements</h2>
+                            <div className="space-y-4">
+                                <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
+                                    <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
+                                        <Award size={24} className="text-purple-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-medium">Quiz Master</p>
+                                        <p className="text-gray-400 text-sm">Completed 25+ quizzes</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
+                                    <div className="bg-gray-600/20 p-2 rounded-lg mr-3">
+                                        <FileText size={24} className="text-gray-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-medium">Perfect Score</p>
+                                        <p className="text-gray-400 text-sm">Get 100% on any quiz (0/1)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Recent Performance */}
+                        <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 md:col-span-2">
+                            <h2 className="text-xl font-semibold text-white mb-4">Recent Performance</h2>
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="border-b border-gray-700">
+                                            <th className="text-left py-3 text-gray-400 font-medium">Quiz</th>
+                                            <th className="text-left py-3 text-gray-400 font-medium">Date</th>
+                                            <th className="text-right py-3 text-gray-400 font-medium">Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr className="border-b border-gray-700/50">
+                                            <td className="py-3 text-white">Science Quiz #5</td>
+                                            <td className="py-3 text-gray-400">Apr 2, 2025</td>
+                                            <td className="py-3 text-right">
+                                                <span className="bg-green-500/20 text-green-400 py-1 px-2 rounded-md">92%</span>
+                                            </td>
+                                        </tr>
+                                        <tr className="border-b border-gray-700/50">
+                                            <td className="py-3 text-white">History Challenge</td>
+                                            <td className="py-3 text-gray-400">Mar 28, 2025</td>
+                                            <td className="py-3 text-right">
+                                                <span className="bg-yellow-500/20 text-yellow-400 py-1 px-2 rounded-md">78%</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-3 text-white">Math Trivia</td>
+                                            <td className="py-3 text-gray-400">Mar 25, 2025</td>
+                                            <td className="py-3 text-right">
+                                                <span className="bg-green-500/20 text-green-400 py-1 px-2 rounded-md">85%</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="mt-4 text-center">
+                                <button className="text-purple-400 hover:text-purple-300 text-sm font-medium">
+                                    View All History →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 )}
-              </div>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-lg transition-all duration-200"
-              >
-                <Edit2 size={16} />
-              </button>
+                
+                {/* Placeholder for other tabs */}
+                {activeTab === 'history' && (
+                    <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
+                        <h2 className="text-xl font-semibold text-white mb-2">Quiz History</h2>
+                        <p className="text-gray-400">Complete quiz history would be displayed here.</p>
+                    </div>
+                )}
+                
+                {activeTab === 'settings' && (
+                    <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
+                        <h2 className="text-xl font-semibold text-white mb-2">Account Settings</h2>
+                        <p className="text-gray-400">Account settings and preferences would be displayed here.</p>
+                    </div>
+                )}
             </div>
-
-            {/* User Info */}
-            <div className="text-center md:text-left flex-1">
-              {isEditing ? (
-                <div className="mb-4">
-                  <div className="mb-4">
-                    <label
-                      htmlFor="displayName"
-                      className="text-sm font-medium text-gray-300 block mb-1"
-                    >
-                      Display Name
-                    </label>
-                    <input
-                      type="text"
-                      id="displayName"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder="Display Name"
-                      className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white focus:border-purple-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label
-                      htmlFor="photoURL"
-                      className="text-sm font-medium text-gray-300 block mb-1"
-                    >
-                      Photo URL
-                    </label>
-                    <input
-                      type="text"
-                      id="photoURL"
-                      value={photoURL}
-                      onChange={(e) => setPhotoURL(e.target.value)}
-                      placeholder="https://i.ibb.co.com/..."
-                      className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white focus:border-purple-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-center md:justify-start text-gray-400 mt-2">
-                    <Mail size={16} className="mr-2" />
-                    <span>{user?.email || "user@example.com"}</span>
-                  </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 mt-3">
-                    <button
-                      onClick={handleSaveProfile}
-                      disabled={loading}
-                      className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${
-                        loading ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      <Save size={16} className="mr-2" />
-                      {loading ? "Saving..." : "Save Changes"}
-                    </button>
-                    <button
-                      onClick={cancelEditing}
-                      disabled={loading}
-                      className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center"
-                    >
-                      <X size={16} className="mr-2" />
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
-                    {user?.displayName || "BrainZapper"}
-                  </h1>
-                  <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
-                    <Mail size={16} className="mr-2" />
-                    <span>{user?.email || "user@example.com"}</span>
-                  </div>
-                </>
-              )}
-
-              {/* Stats Summary - Only show when not editing */}
-              {!isEditing && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                  <div className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-gray-400 text-sm">Quizzes Taken</p>
-                    <p className="text-white font-bold text-xl">
-                      {stats.quizzesTaken}
-                    </p>
-                  </div>
-                  <div className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-gray-400 text-sm">Total Points</p>
-                    <p className="text-white font-bold text-xl">
-                      {totalPoints}
-                    </p>
-                  </div>
-                  <div className="bg-gray-700/50 rounded-lg p-3 col-span-2 md:col-span-1">
-                    <p className="text-gray-400 text-sm">Average Score</p>
-                    <p className="text-white font-bold text-xl">
-                      {stats.avgScore}%
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
-
-        {/* Rest of the component remains the same */}
-        {/* Tabs Navigation */}
-        <div className="flex border-b border-gray-700 mb-6">
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "profile"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
-            onClick={() => setActiveTab("profile")}
-          >
-            Profile
-            {activeTab === "profile" && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "history"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
-            onClick={() => setActiveTab("history")}
-          >
-            Quiz History
-            {activeTab === "history" && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "settings"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
-            onClick={() => setActiveTab("settings")}
-          >
-            Settings
-            {activeTab === "settings" && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-        </div>
-
-        {/* Profile Content */}
-        {activeTab === "profile" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* About Section */}
-            <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">About</h2>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <Calendar size={18} className="text-purple-400 mr-3" />
-                  <div>
-                    <p className="text-gray-400 text-sm">Member Since</p>
-                    <p className="text-white">{stats.memberSince}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Clock size={18} className="text-purple-400 mr-3" />
-                  <div>
-                    <p className="text-gray-400 text-sm">Last Active</p>
-                    <p className="text-white">{stats.lastActive}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Award size={18} className="text-purple-400 mr-3" />
-                  <div>
-                    <p className="text-gray-400 text-sm">Subscription</p>
-                    <p className="text-white">Free Plan</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Achievement Section */}
-            <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Achievements
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-                  <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                    <Award size={24} className="text-purple-400" />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">Quiz Master</p>
-                    <p className="text-gray-400 text-sm">
-                      Completed 25+ quizzes
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-                  <div className="bg-gray-600/20 p-2 rounded-lg mr-3">
-                    <FileText size={24} className="text-gray-400" />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">Perfect Score</p>
-                    <p className="text-gray-400 text-sm">
-                      Get 100% on any quiz (0/1)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent Performance */}
-            <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 md:col-span-2">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Recent Performance
-              </h2>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-700">
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Quiz
-                      </th>
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Date
-                      </th>
-                      <th className="text-right py-3 text-gray-400 font-medium">
-                        Score
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-700/50">
-                      <td className="py-3 text-white">Science Quiz #5</td>
-                      <td className="py-3 text-gray-400">Apr 2, 2025</td>
-                      <td className="py-3 text-right">
-                        <span className="bg-green-500/20 text-green-400 py-1 px-2 rounded-md">
-                          92%
-                        </span>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-700/50">
-                      <td className="py-3 text-white">History Challenge</td>
-                      <td className="py-3 text-gray-400">Mar 28, 2025</td>
-                      <td className="py-3 text-right">
-                        <span className="bg-yellow-500/20 text-yellow-400 py-1 px-2 rounded-md">
-                          78%
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 text-white">Math Trivia</td>
-                      <td className="py-3 text-gray-400">Mar 25, 2025</td>
-                      <td className="py-3 text-right">
-                        <span className="bg-green-500/20 text-green-400 py-1 px-2 rounded-md">
-                          85%
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="mt-4 text-center">
-                <button className="text-purple-400 hover:text-purple-300 text-sm font-medium">
-                  View All History →
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Placeholder for other tabs */}
-        {activeTab === "history" && (
-          <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
-            <h2 className="text-xl font-semibold text-white mb-2">
-              Quiz History
-            </h2>
-            <p className="text-gray-400">
-              Complete quiz history would be displayed here.
-            </p>
-          </div>
-        )}
-
-        {activeTab === "settings" && (
-          <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
-            <h2 className="text-xl font-semibold text-white mb-2">
-              Account Settings
-            </h2>
-            <p className="text-gray-400">
-              Account settings and preferences would be displayed here.
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Profile;
