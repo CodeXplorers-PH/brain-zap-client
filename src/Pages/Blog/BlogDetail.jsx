@@ -12,7 +12,7 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/blogs/${id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_ServerUrl}/blogs/${id}`, {
           withCredentials: true,
         });
         setBlog(response.data.blog);

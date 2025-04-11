@@ -39,7 +39,7 @@ const BlogCard = ({
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/blogs/${id}/like`,
+        `${import.meta.env.VITE_ServerUrl}/blogs/${id}/like`,
         { userId: user.uid },
         { withCredentials: true }
       );
