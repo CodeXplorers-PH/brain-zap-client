@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const optionLabels = ["A.", "B.", "C.", "D."];
+const optionLabels = ['A.', 'B.', 'C.', 'D.'];
 
 const Quiz = ({ questions }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -17,24 +17,26 @@ const Quiz = ({ questions }) => {
 
   const handleSubmit = () => {
     if (Object.keys(selectedOptions).length !== questions.length) {
-      alert(`Please answer all ${questions.length} questions before submitting.`);
+      alert(
+        `Please answer all ${questions.length} questions before submitting.`
+      );
       return;
     }
 
-    localStorage.setItem("userAnswers", JSON.stringify(selectedOptions));
+    localStorage.setItem('userAnswers', JSON.stringify(selectedOptions));
     navigate(`/quiz/${category}/answer`);
   };
 
   // 🧠 Helper to render question + code
-  const renderFormattedQuestion = (question) => {
-    const parts = question.split("```");
+  const renderFormattedQuestion = question => {
+    const parts = question.split('```');
 
     return (
       <>
         <p className="text-white whitespace-pre-wrap">{parts[0]}</p>
         {parts[1] && (
           <pre className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto text-sm my-2">
-            <code>{parts[1].split("\n").slice(1).join("\n")}</code>
+            <code>{parts[1].split('\n').slice(1).join('\n')}</code>
           </pre>
         )}
       </>
@@ -50,7 +52,9 @@ const Quiz = ({ questions }) => {
         >
           <h3 className="text-xl font-semibold text-white mb-4">
             <span className="text-purple-400">Q{index + 1}:</span>
-            <div className="mt-2 space-y-2">{renderFormattedQuestion(q.question)}</div>
+            <div className="mt-2 space-y-2">
+              {renderFormattedQuestion(q.question)}
+            </div>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -64,7 +68,9 @@ const Quiz = ({ questions }) => {
                 }`}
                 onClick={() => handleOptionSelect(index, option)}
               >
-                <span className="font-mono text-purple-400 mr-3 mt-0.5">{optionLabels[i]}</span>
+                <span className="font-mono text-purple-400 mr-3 mt-0.5">
+                  {optionLabels[i]}
+                </span>
                 <span className="text-gray-200">{option}</span>
               </button>
             ))}
@@ -79,8 +85,10 @@ const Quiz = ({ questions }) => {
           disabled={Object.keys(selectedOptions).length !== questions.length}
         >
           {Object.keys(selectedOptions).length === questions.length
-            ? "Submit Answers"
-            : `Answered ${Object.keys(selectedOptions).length}/${questions.length} questions`}
+            ? 'Submit Answers'
+            : `Answered ${Object.keys(selectedOptions).length}/${
+                questions.length
+              } questions`}
         </button>
       </div>
     </div>

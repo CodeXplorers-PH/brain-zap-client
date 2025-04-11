@@ -18,6 +18,8 @@ const QuizPage = () => {
   const quizzesNumber = queryParams.get('quizzesNumber');
 
   useEffect(() => {
+    let abortController = new AbortController();
+
     const localStorageKey = `quiz_questions`;
     const storedQuiz = localStorage.getItem(localStorageKey);
 
@@ -25,10 +27,10 @@ const QuizPage = () => {
       setQuestions(JSON.parse(storedQuiz));
       setLoading(false);
     } else {
-      fetchQuestions();
+      fetchQuestions(abortController.signal);
     }
 
-    async function fetchQuestions() {
+    async function fetchQuestions(signal) {
       setLoading(true);
       setError(null);
       try {
@@ -36,15 +38,27 @@ const QuizPage = () => {
           `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
         );
 
-        setQuestions(generatedQuiz);
-        localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
+        if (!signal.aborted) {
+          setQuestions(generatedQuiz);
+          localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
+        }
       } catch (err) {
-        console.error('Error fetching questions:', err);
-        setError('Failed to load questions. Please try again later.');
+        if (err.name === 'AbortError') {
+          console.log('Fetch request was aborted.');
+        } else {
+          console.error('Error fetching questions:', err);
+          setError('Failed to load questions. Please try again later.');
+        }
       } finally {
-        setLoading(false);
+        if (!signal.aborted) {
+          setLoading(false);
+        }
       }
     }
+
+    return () => {
+      abortController.abort();
+    };
   }, [category, difficulty, quizzesNumber]);
 
   return (
