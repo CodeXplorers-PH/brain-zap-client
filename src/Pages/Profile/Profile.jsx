@@ -22,7 +22,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const [userInfo, setUserInfo] = useState(null);
-  const [userQuizHistory, setUserQuizHistory] = useState(null);
+  const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
+  console.log(xpPoints);
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -39,7 +41,10 @@ const Profile = () => {
   useEffect(() => {
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
-      .then((res) => setUserQuizHistory(res.data))
+      .then((res) => {
+        setUserQuizHistory(res.data);
+        console.log(res.data);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -63,7 +68,7 @@ const Profile = () => {
   // Sample stats - replace with actual data from your application
   const stats = {
     quizzesTaken: 27,
-    totalPoints: 1240,
+    totalPoints: xpPoints,
     avgScore: 85,
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
