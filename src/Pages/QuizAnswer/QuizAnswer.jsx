@@ -102,12 +102,12 @@ const QuizAnswer = () => {
     }
 
     const quizData = JSON.parse(storedQuiz);
-    const userAnswers = JSON.parse(storedAnswers);
+    const userAnswersto = JSON.parse(storedAnswers);
 
     setIsFetchingFeedback(true);
 
     try {
-      const { data: result } = await axiosPublic.post("/quiz_feedback", {
+      const { data: result } = axiosPublic.post("/quiz_feedback", {
         quizData,
         userAnswers,
       });
@@ -119,10 +119,10 @@ const QuizAnswer = () => {
     } finally {
       setIsFetchingFeedback(false);
     }
-  };
+  
 
   if (loading) {
-    return (
+    (
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
@@ -133,7 +133,7 @@ const QuizAnswer = () => {
   }
 
   if (questions.length === 0) {
-    return (
+    (
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center p-8 bg-gray-800/50 rounded-xl border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-300 mb-4">
@@ -152,6 +152,7 @@ const QuizAnswer = () => {
       </div>
     );
   }
+  
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
