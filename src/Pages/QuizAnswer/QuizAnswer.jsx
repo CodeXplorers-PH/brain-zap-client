@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import useAuth from '@/hooks/useAuth';
-import { FaSignInAlt } from 'react-icons/fa';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaSignInAlt } from "react-icons/fa";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import useAuth from "@/hooks/useAuth";
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -19,22 +19,11 @@ const QuizAnswer = () => {
   const navigate = useNavigate();
   const optionLabels = ["A.", "B.", "C.", "D."];
 
-  const awardXpToUser = async (email, xp) => {
-    try {
-      await axiosPublic.post("/update_xp", {
-        email,
-        xp,
-        category, // optional: can track which category the XP was earned in
-      });
-      console.log(`✅ Awarded ${xp} XP to ${user?.email}`);
-    } catch (err) {
-      console.error("❌ Failed to award XP:", err);
-    }
-  };
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem(`quiz_${category}`);
-      const storedAnswers = localStorage.getItem('userAnswers');
+      const storedQuiz = localStorage.getItem("quiz_questions");
+      const storedAnswers = localStorage.getItem("userAnswers");
+      const hasPosted = localStorage.getItem("history_posted");
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -44,7 +33,6 @@ const QuizAnswer = () => {
           setQuestions(parsedQuiz);
           setUserAnswers(parsedAnswers);
 
-          // Calculate score
           let correctCount = 0;
           const answers = {};
           parsedQuiz.forEach((q, index) => {
@@ -54,17 +42,30 @@ const QuizAnswer = () => {
             }
           });
 
+          const finalScore = Math.round(
+            (correctCount / parsedQuiz.length) * 100
+          );
+
           setCorrectAnswers(answers);
-          setScore(Math.round((correctCount / parsedQuiz.length) * 100));
+          setScore(finalScore);
           setShowScore(true);
 
-          // XP update
-
-          if (user && user.email) {
-            const xpEarned = correctCount * Math.floor(Math.random() * 10) + 1;
-            awardXpToUser(user.email, xpEarned);
-            console.log(user?.email);
-            console.log("User xp", xpEarned);
+          // Post History if not posted yet
+          if (user && !hasPosted) {
+            axiosPublic
+              .post("/quiz_history", {
+                email: user?.email,
+                date: new Date(),
+                category: category,
+                score: finalScore,
+              })
+              .then((res) => {
+                console.log("History saved:", res.data);
+                localStorage.setItem("history_posted", "true");
+              })
+              .catch((err) => {
+                console.log("Error saving history:", err);
+              });
           }
         } catch (error) {
           console.error("Error parsing localStorage data:", error);
@@ -78,7 +79,7 @@ const QuizAnswer = () => {
 
     const timer = setTimeout(fetchResults, 500);
     return () => clearTimeout(timer);
-  }, [category]);
+  }, [axiosPublic, category, user]);
 
   useEffect(() => {
     const hasPosted = localStorage.getItem(`history_posted`);
@@ -103,13 +104,14 @@ const QuizAnswer = () => {
 
   const handleQuizAgain = () => {
     localStorage.removeItem(`quiz_${category}`);
-    localStorage.removeItem('userAnswers');
-    navigate('/start-quiz');
+    localStorage.setItem("userAnswers", false);
+    localStorage.removeItem(`history_posted`);
+    navigate("/start-quiz");
   };
 
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem(`quiz_${category}`);
-    const storedAnswers = localStorage.getItem('userAnswers');
+    const storedAnswers = localStorage.getItem("userAnswers");
 
     if (!storedQuiz || !storedAnswers) {
       alert("No quiz data found!");
