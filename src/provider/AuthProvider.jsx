@@ -23,6 +23,7 @@ const githubProvider = new GithubAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const axiosPublic = useAxiosPublic();
 
@@ -66,40 +67,48 @@ const AuthProvider = ({ children }) => {
     signInWithGoogle,
     signInWithGithub,
     isLocked,
+    loading
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      setUser(currentUser || null);
 
+
+  useEffect(() => {
+    setLoading(true);
+    
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser || null);
+  
       if (currentUser) {
         localStorage.removeItem('loginAttempt');
-
+  
         const { displayName, photoURL, email } = currentUser;
-
-        // Check is account locked or not
-        axiosPublic
-          .patch('/account_lockout', {
+  
+        try {
+          // Wait for account lock check
+          const res = await axiosPublic.patch('/account_lockout', {
             email: email,
-          })
-          .then(res => {
-            setIsLocked(res.data.isLocked);
           });
-
-        // Save user data in database
-        if (displayName && photoURL && email) {
-          axiosPublic.post('/post_user', {
-            name: displayName,
-            photoURL,
-            email,
-          });
+          setIsLocked(res.data.isLocked);
+  
+          // Wait for user save
+          if (displayName && photoURL && email) {
+            await axiosPublic.post('/post_user', {
+              name: displayName,
+              photoURL,
+              email,
+            });
+          }
+        } catch (err) {
+          console.error("Auth side effects failed:", err);
         }
       }
+  
+      setLoading(false); 
     });
-    return () => {
-      unsubscribe();
-    };
+  
+    return () => unsubscribe();
   }, []);
+  
 
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

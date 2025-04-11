@@ -13,6 +13,7 @@ import {
   Crown,
 } from "lucide-react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { format } from "date-fns";
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -21,6 +22,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const [userInfo, setUserInfo] = useState(null);
+  const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
+  console.log(xpPoints);
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -33,6 +37,18 @@ const Profile = () => {
       setPhotoURL(user.photoURL || "");
     }
   }, [user]);
+
+  useEffect(() => {
+    axiosPublic
+      .get(`/quiz_history/${user?.email}`)
+      .then((res) => {
+        setUserQuizHistory(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user]);
 
   useEffect(() => {
     if (!user?.email) return; // Prevent running if email is not loaded yet
@@ -52,7 +68,7 @@ const Profile = () => {
   // Sample stats - replace with actual data from your application
   const stats = {
     quizzesTaken: 27,
-    totalPoints: 1240,
+    totalPoints: xpPoints,
     avgScore: 85,
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
@@ -310,7 +326,9 @@ const Profile = () => {
                   <Award size={18} className="text-purple-400 mr-3" />
                   <div>
                     <p className="text-gray-400 text-sm">Subscription</p>
-                    <p className="text-white">{userInfo?.subscription || "Free"}</p>
+                    <p className="text-white">
+                      {userInfo?.subscription || "Free"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -367,39 +385,39 @@ const Profile = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-700/50">
-                      <td className="py-3 text-white">Science Quiz #5</td>
-                      <td className="py-3 text-gray-400">Apr 2, 2025</td>
-                      <td className="py-3 text-right">
-                        <span className="bg-green-500/20 text-green-400 py-1 px-2 rounded-md">
-                          92%
-                        </span>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-700/50">
-                      <td className="py-3 text-white">History Challenge</td>
-                      <td className="py-3 text-gray-400">Mar 28, 2025</td>
-                      <td className="py-3 text-right">
-                        <span className="bg-yellow-500/20 text-yellow-400 py-1 px-2 rounded-md">
-                          78%
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 text-white">Math Trivia</td>
-                      <td className="py-3 text-gray-400">Mar 25, 2025</td>
-                      <td className="py-3 text-right">
-                        <span className="bg-green-500/20 text-green-400 py-1 px-2 rounded-md">
-                          85%
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
+                  {userQuizHistory?.slice(0, 5)?.map((quiz, index) => (
+                    <tbody key={index}>
+                      <tr className="border-b border-gray-700/50">
+                        <td className="py-3 text-white">
+                          {quiz?.category?.charAt(0).toUpperCase() +
+                            quiz?.category?.slice(1)}
+                        </td>
+                        <td className="py-3 text-gray-400">
+                          {format(new Date(quiz?.date), "EEEE, MMMM dd, yyyy")}
+                        </td>
+                        <td className="py-3 text-right">
+                          <span
+                            className={`${
+                              quiz.score >= 80
+                                ? "bg-green-500/20 text-green-400"
+                                : quiz.score >= 50
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : "bg-red-500/20 text-red-400"
+                            } py-1 px-2 rounded-md`}
+                          >
+                            {quiz.score}%
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  ))}
                 </table>
               </div>
               <div className="mt-4 text-center">
-                <button className="text-purple-400 hover:text-purple-300 text-sm font-medium">
+                <button
+                  onClick={() => setActiveTab("history")}
+                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                >
                   View All History →
                 </button>
               </div>
@@ -410,12 +428,63 @@ const Profile = () => {
         {/* Placeholder for other tabs */}
         {activeTab === "history" && (
           <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
-            <h2 className="text-xl font-semibold text-white mb-2">
+            <h2 className="text-xl font-semibold text-white text-left mb-4">
               Quiz History
             </h2>
-            <p className="text-gray-400">
-              Complete quiz history would be displayed here.
-            </p>
+            {user && userQuizHistory?.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-700">
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Quiz
+                      </th>
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Date
+                      </th>
+                      <th className="text-right py-3 text-gray-400 font-medium">
+                        Score
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {userQuizHistory.map((quiz, index) => (
+                      <tr key={index} className="border-b border-gray-700/50">
+                        <td className="py-3 text-white text-left">
+                          {quiz?.category?.charAt(0).toUpperCase() +
+                            quiz?.category?.slice(1)}
+                        </td>
+                        <td className="py-3 text-gray-400 text-left">
+                          {format(new Date(quiz?.date), "EEEE, MMMM dd, yyyy")}
+                        </td>
+                        <td className="py-3 text-right">
+                          <span
+                            className={`${
+                              quiz.score >= 80
+                                ? "bg-green-500/20 text-green-400"
+                                : quiz.score >= 50
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : "bg-red-500/20 text-red-400"
+                            } py-1 px-2 rounded-md`}
+                          >
+                            {quiz.score}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  Quiz History
+                </h2>
+                <p className="text-gray-400">
+                  Complete quiz history would be displayed here.
+                </p>
+              </div>
+            )}
           </div>
         )}
 

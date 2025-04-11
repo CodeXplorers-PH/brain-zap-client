@@ -7,7 +7,6 @@ const Quiz = ({ questions }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const { category } = useParams();
   const navigate = useNavigate();
-
   const handleOptionSelect = (questionIndex, option) => {
     setSelectedOptions(prev => ({
       ...prev,
@@ -24,6 +23,7 @@ const Quiz = ({ questions }) => {
     }
 
     localStorage.setItem('userAnswers', JSON.stringify(selectedOptions));
+    localStorage.removeItem(`history_posted`);
     navigate(`/quiz/${category}/answer`);
   };
 
