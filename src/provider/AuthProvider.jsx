@@ -12,6 +12,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -21,6 +22,10 @@ const githubProvider = new GithubAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const axiosPublic = useAxiosPublic();
 
   const createNewUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -39,6 +44,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logOut = () => {
+    localStorage.removeItem('loginAttempt');
     return signOut(auth);
   };
 
@@ -60,16 +66,49 @@ const AuthProvider = ({ children }) => {
     passwordResetEmail,
     signInWithGoogle,
     signInWithGithub,
+    isLocked,
+    loading
   };
 
+
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      setUser(currentUser);
+    setLoading(true);
+    
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser || null);
+  
+      if (currentUser) {
+        localStorage.removeItem('loginAttempt');
+  
+        const { displayName, photoURL, email } = currentUser;
+  
+        try {
+          // Wait for account lock check
+          const res = await axiosPublic.patch('/account_lockout', {
+            email: email,
+          });
+          setIsLocked(res.data.isLocked);
+  
+          // Wait for user save
+          if (displayName && photoURL && email) {
+            await axiosPublic.post('/post_user', {
+              name: displayName,
+              photoURL,
+              email,
+            });
+          }
+        } catch (err) {
+          console.error("Auth side effects failed:", err);
+        }
+      }
+  
+      setLoading(false); 
     });
-    return () => {
-      unsubscribe();
-    };
+  
+    return () => unsubscribe();
   }, []);
+  
 
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

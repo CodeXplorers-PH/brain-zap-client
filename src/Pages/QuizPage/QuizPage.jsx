@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
-import axios from 'axios';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizPage = () => {
   const { category } = useParams();
@@ -9,35 +9,57 @@ const QuizPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const axiosPublic = useAxiosPublic();
+
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+
+  const difficulty = queryParams.get('difficulty');
+  const quizzesNumber = queryParams.get('quizzesNumber');
+
   useEffect(() => {
-    const localStorageKey = `quiz_${category}`;
+    let abortController = new AbortController();
+
+    const localStorageKey = `quiz_questions`;
     const storedQuiz = localStorage.getItem(localStorageKey);
 
     if (storedQuiz) {
       setQuestions(JSON.parse(storedQuiz));
       setLoading(false);
     } else {
-      fetchQuestions();
+      fetchQuestions(abortController.signal);
     }
 
-    async function fetchQuestions() {
+    async function fetchQuestions(signal) {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(
-          `https://brain-zap-server.vercel.app/generate_quiz?topic=${category}&difficulty=medium`
+        const { data: generatedQuiz } = await axiosPublic.get(
+          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
         );
-        const generatedQuiz = response.data;
-        setQuestions(generatedQuiz);
-        localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
+
+        if (!signal.aborted) {
+          setQuestions(generatedQuiz);
+          localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
+        }
       } catch (err) {
-        console.error('Error fetching questions:', err);
-        setError('Failed to load questions. Please try again later.');
+        if (err.name === 'AbortError') {
+          console.log('Fetch request was aborted.');
+        } else {
+          console.error('Error fetching questions:', err);
+          setError('Failed to load questions. Please try again later.');
+        }
       } finally {
-        setLoading(false);
+        if (!signal.aborted) {
+          setLoading(false);
+        }
       }
     }
-  }, [category]);
+
+    return () => {
+      abortController.abort();
+    };
+  }, [category, difficulty, quizzesNumber]);
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
