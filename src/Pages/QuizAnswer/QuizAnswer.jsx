@@ -103,32 +103,33 @@ const QuizAnswer = () => {
   }, [user, score, category, questions]);
 
   const handleQuizAgain = () => {
-    localStorage.removeItem(`quiz_${category}`);
-    localStorage.setItem("userAnswers", false);
-    localStorage.removeItem(`history_posted`);
+    localStorage.removeItem("quiz_questions");
+    localStorage.removeItem("userAnswers");
+    localStorage.removeItem("history_posted");
     navigate("/start-quiz");
   };
+  
 
   const handleGetFeedback = async () => {
-    const storedQuiz = localStorage.getItem(`quiz_${category}`);
+    const storedQuiz = localStorage.getItem("quiz_questions");
     const storedAnswers = localStorage.getItem("userAnswers");
-
+  
     if (!storedQuiz || !storedAnswers) {
       alert("No quiz data found!");
       return;
     }
-
+  
     const quizData = JSON.parse(storedQuiz);
-    const userAnswers = JSON.parse(storedAnswers);
-
+    const parsedAnswers = JSON.parse(storedAnswers);
+  
     setIsFetchingFeedback(true);
-
+  
     try {
       const { data: result } = await axiosPublic.post("/quiz_feedback", {
         quizData,
-        userAnswers,
+        userAnswers: parsedAnswers,
       });
-
+  
       setFeedback(result);
     } catch (error) {
       console.error("Error fetching AI feedback:", error);
@@ -136,18 +137,22 @@ const QuizAnswer = () => {
     } finally {
       setIsFetchingFeedback(false);
     }
+  };
+  
 
-    if (loading) {
+  if (loading) {
+    return (
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
           <p className="text-gray-400 text-xl">Loading your results...</p>
         </div>
-        ;
-      </div>;
-    }
-
-    if (questions.length === 0) {
+      </div>
+    );
+  }
+  
+  if (!questions.length) {
+    return (
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center p-8 bg-gray-800/50 rounded-xl border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-300 mb-4">
@@ -163,8 +168,10 @@ const QuizAnswer = () => {
             Take a Quiz
           </button>
         </div>
-      </div>;
-    }
+      </div>
+    );
+  }
+  
 
     return (
       <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
@@ -379,5 +386,5 @@ const QuizAnswer = () => {
       </div>
     );
   };
-};
+
 export default QuizAnswer;
