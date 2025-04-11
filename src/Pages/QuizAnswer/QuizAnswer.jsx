@@ -21,9 +21,8 @@ const QuizAnswer = () => {
 
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem(`quiz_${category}`);
-      const storedAnswers = localStorage.getItem("userAnswers");
-
+      const storedQuiz = localStorage.getItem(`quiz_questions`);
+      const storedAnswers = localStorage.getItem('userAnswers');
       if (storedQuiz && storedAnswers) {
         try {
           const parsedQuiz = JSON.parse(storedQuiz);
@@ -90,6 +89,12 @@ const QuizAnswer = () => {
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem(`quiz_${category}`);
     const storedAnswers = localStorage.getItem("userAnswers");
+    localStorage.removeItem(`quiz_questions`);
+    localStorage.removeItem('userAnswers');
+    navigate('/start-quiz');
+  };
+
+
 
     if (!storedQuiz || !storedAnswers) {
       alert("No quiz data found!");
