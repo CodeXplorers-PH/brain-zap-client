@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiSearch, FiArrowRight } from "react-icons/fi";
+import { FiSearch, FiArrowRight, FiPlus } from "react-icons/fi";
 import { blogs } from "@/data/Blogs";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
@@ -162,7 +162,7 @@ const Blog = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900 pt-24 pb-20 px-4 sm:px-6">
+    <div className="min-h-screen bg-gray-900 pt-40 pb-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
