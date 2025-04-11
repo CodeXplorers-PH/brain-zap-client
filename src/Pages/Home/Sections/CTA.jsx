@@ -41,7 +41,7 @@ const CTA = () => {
           </span>
           <Link to="/start-quiz">
             <button
-              className="bg-gradient-to-r from-purple-600 to-pink-500 text-white 
+              className="mt-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white 
             px-8 py-3 rounded-full text-lg font-semibold 
             hover:opacity-90 transition-all duration-300 
             shadow-xl shadow-purple-500/30 
