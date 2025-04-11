@@ -21,8 +21,10 @@ const QuizAnswer = () => {
 
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem(`quiz_questions`);
-      const storedAnswers = localStorage.getItem('userAnswers');
+      const storedQuiz = localStorage.getItem("quiz_questions");
+      const storedAnswers = localStorage.getItem("userAnswers");
+      const hasPosted = localStorage.getItem("history_posted");
+
       if (storedQuiz && storedAnswers) {
         try {
           const parsedQuiz = JSON.parse(storedQuiz);
@@ -31,7 +33,6 @@ const QuizAnswer = () => {
           setQuestions(parsedQuiz);
           setUserAnswers(parsedAnswers);
 
-          // Calculate score
           let correctCount = 0;
           const answers = {};
           parsedQuiz.forEach((q, index) => {
@@ -41,9 +42,31 @@ const QuizAnswer = () => {
             }
           });
 
+          const finalScore = Math.round(
+            (correctCount / parsedQuiz.length) * 100
+          );
+
           setCorrectAnswers(answers);
-          setScore(Math.round((correctCount / parsedQuiz.length) * 100));
+          setScore(finalScore);
           setShowScore(true);
+
+          // Post History if not posted yet
+          if (user && !hasPosted) {
+            axiosPublic
+              .post("/quiz_history", {
+                email: user?.email,
+                date: new Date(),
+                category: category,
+                score: finalScore,
+              })
+              .then((res) => {
+                console.log("History saved:", res.data);
+                localStorage.setItem("history_posted", "true");
+              })
+              .catch((err) => {
+                console.log("Error saving history:", err);
+              });
+          }
         } catch (error) {
           console.error("Error parsing localStorage data:", error);
         }
@@ -56,7 +79,7 @@ const QuizAnswer = () => {
 
     const timer = setTimeout(fetchResults, 500);
     return () => clearTimeout(timer);
-  }, [category]);
+  }, [axiosPublic, category, user]);
 
   useEffect(() => {
     const hasPosted = localStorage.getItem(`history_posted`);
@@ -89,12 +112,6 @@ const QuizAnswer = () => {
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem(`quiz_${category}`);
     const storedAnswers = localStorage.getItem("userAnswers");
-    localStorage.removeItem(`quiz_questions`);
-    localStorage.removeItem('userAnswers');
-    navigate('/start-quiz');
-  };
-
-
 
     if (!storedQuiz || !storedAnswers) {
       alert("No quiz data found!");
