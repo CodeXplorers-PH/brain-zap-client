@@ -4,6 +4,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import SocialLogin from './SocialLogin';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
+import useFormData from '@/hooks/useFormData';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Signup = () => {
   const fileInputRef = useRef(null);
 
   const { createNewUser, setUser, updateUserProfile } = useAuthContext();
+  const formData = useFormData();
   const axiosPublic = useAxiosPublic();
 
   const validatePassword = pass => {
@@ -69,8 +71,7 @@ const Signup = () => {
       return;
     }
 
-    const form = new FormData(e.target);
-    const { name, photo, email, password } = Object.fromEntries(form.entries());
+    const { name, photo, email, password } = formData(e.target);
 
     createNewUser(email, password)
       .then(result => {

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Quiz from "../Quiz/Quiz";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import Quiz from '../Quiz/Quiz';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizPage = () => {
   const { category } = useParams();
@@ -11,12 +11,14 @@ const QuizPage = () => {
 
   const axiosPublic = useAxiosPublic();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+
+  const difficulty = queryParams.get('difficulty');
+  const quizzesNumber = queryParams.get('quizzesNumber');
 
   useEffect(() => {
-    const localStorageKey = `quiz_${category}`;
+    const localStorageKey = `quiz_questions`;
     const storedQuiz = localStorage.getItem(localStorageKey);
 
     if (storedQuiz) {
@@ -31,19 +33,19 @@ const QuizPage = () => {
       setError(null);
       try {
         const { data: generatedQuiz } = await axiosPublic.get(
-          `/generate_quiz?topic=${category}&difficulty=medium`
+          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
         );
 
         setQuestions(generatedQuiz);
         localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
       } catch (err) {
-        console.error("Error fetching questions:", err);
-        setError("Failed to load questions. Please try again later.");
+        console.error('Error fetching questions:', err);
+        setError('Failed to load questions. Please try again later.');
       } finally {
         setLoading(false);
       }
     }
-  }, [category]);
+  }, [category, difficulty, quizzesNumber]);
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
