@@ -24,7 +24,9 @@ const Profile = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
-
+  const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
+  const avgScore = totalScore / userQuizHistory.length;
+  
   // Form state
   const [displayName, setDisplayName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
@@ -66,9 +68,9 @@ const Profile = () => {
 
   // Sample stats - replace with actual data from your application
   const stats = {
-    quizzesTaken: 27,
+    quizzesTaken: userQuizHistory?.length,
     totalPoints: xpPoints,
-    avgScore: 85,
+    avgScore: avgScore.toFixed(2),
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
