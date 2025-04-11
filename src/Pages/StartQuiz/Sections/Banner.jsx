@@ -6,6 +6,7 @@ const Banner = () => {
   return (
     <div className="pt-40 pb-20 text-center">
       <motion.h1
+      className="mb-4"
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -19,7 +20,7 @@ const Banner = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
       >
-        <span className="text-gray-400 mt-4 text-xl">
+        <span className="text-gray-400 text-xl">
           Test your coding knowledge with interactive quizzes.
         </span>
       </motion.p>

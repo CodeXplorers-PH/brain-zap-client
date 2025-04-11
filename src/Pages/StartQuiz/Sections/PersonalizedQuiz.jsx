@@ -145,6 +145,7 @@ const PersonalizedQuiz = ({
         {/* Start quiz */}
         <div className="mt-6 flex justify-center">
           <button
+            onClick={() => localStorage.removeItem(`history_posted`)}
             className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium text-white transition-colors"
             type="submit"
           >

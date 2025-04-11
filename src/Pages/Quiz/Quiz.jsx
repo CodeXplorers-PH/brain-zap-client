@@ -7,9 +7,8 @@ const Quiz = ({ questions }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const { category } = useParams();
   const navigate = useNavigate();
-
   const handleOptionSelect = (questionIndex, option) => {
-    setSelectedOptions(prev => ({
+    setSelectedOptions((prev) => ({
       ...prev,
       [questionIndex]: option,
     }));
@@ -17,11 +16,14 @@ const Quiz = ({ questions }) => {
 
   const handleSubmit = () => {
     if (Object.keys(selectedOptions).length !== questions.length) {
-      alert(`Please answer all ${questions.length} questions before submitting.`);
+      alert(
+        `Please answer all ${questions.length} questions before submitting.`
+      );
       return;
     }
 
     localStorage.setItem("userAnswers", JSON.stringify(selectedOptions));
+    localStorage.removeItem(`history_posted`);
     navigate(`/quiz/${category}/answer`);
   };
 
@@ -50,7 +52,9 @@ const Quiz = ({ questions }) => {
         >
           <h3 className="text-xl font-semibold text-white mb-4">
             <span className="text-purple-400">Q{index + 1}:</span>
-            <div className="mt-2 space-y-2">{renderFormattedQuestion(q.question)}</div>
+            <div className="mt-2 space-y-2">
+              {renderFormattedQuestion(q.question)}
+            </div>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -59,12 +63,14 @@ const Quiz = ({ questions }) => {
                 key={i}
                 className={`p-4 text-left rounded-lg transition-all flex items-start border ${
                   selectedOptions[index] === option
-                    ? 'border-purple-500 bg-purple-900/30'
-                    : 'border-gray-700 bg-gray-800 hover:bg-gray-700'
+                    ? "border-purple-500 bg-purple-900/30"
+                    : "border-gray-700 bg-gray-800 hover:bg-gray-700"
                 }`}
                 onClick={() => handleOptionSelect(index, option)}
               >
-                <span className="font-mono text-purple-400 mr-3 mt-0.5">{optionLabels[i]}</span>
+                <span className="font-mono text-purple-400 mr-3 mt-0.5">
+                  {optionLabels[i]}
+                </span>
                 <span className="text-gray-200">{option}</span>
               </button>
             ))}
@@ -80,7 +86,9 @@ const Quiz = ({ questions }) => {
         >
           {Object.keys(selectedOptions).length === questions.length
             ? "Submit Answers"
-            : `Answered ${Object.keys(selectedOptions).length}/${questions.length} questions`}
+            : `Answered ${Object.keys(selectedOptions).length}/${
+                questions.length
+              } questions`}
         </button>
       </div>
     </div>

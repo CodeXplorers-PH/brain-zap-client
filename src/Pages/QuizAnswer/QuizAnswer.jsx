@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { FaSignInAlt } from 'react-icons/fa';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
-import useAuth from '@/hooks/useAuth';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaSignInAlt } from "react-icons/fa";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import useAuth from "@/hooks/useAuth";
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -15,15 +15,15 @@ const QuizAnswer = () => {
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
-
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
-  const optionLabels = ['A.', 'B.', 'C.', 'D.'];
+  const optionLabels = ["A.", "B.", "C.", "D."];
 
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem(`quiz_questions`);
-      const storedAnswers = localStorage.getItem('userAnswers');
+      const storedQuiz = localStorage.getItem("quiz_questions");
+      const storedAnswers = localStorage.getItem("userAnswers");
+      const hasPosted = localStorage.getItem("history_posted");
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -33,7 +33,6 @@ const QuizAnswer = () => {
           setQuestions(parsedQuiz);
           setUserAnswers(parsedAnswers);
 
-          // Calculate score
           let correctCount = 0;
           const answers = {};
           parsedQuiz.forEach((q, index) => {
@@ -43,14 +42,36 @@ const QuizAnswer = () => {
             }
           });
 
+          const finalScore = Math.round(
+            (correctCount / parsedQuiz.length) * 100
+          );
+
           setCorrectAnswers(answers);
-          setScore(Math.round((correctCount / parsedQuiz.length) * 100));
+          setScore(finalScore);
           setShowScore(true);
+
+          // Post History if not posted yet
+          if (user && !hasPosted) {
+            axiosPublic
+              .post("/quiz_history", {
+                email: user?.email,
+                date: new Date(),
+                category: category,
+                score: finalScore,
+              })
+              .then((res) => {
+                console.log("History saved:", res.data);
+                localStorage.setItem("history_posted", "true");
+              })
+              .catch((err) => {
+                console.log("Error saving history:", err);
+              });
+          }
         } catch (error) {
-          console.error('Error parsing localStorage data:', error);
+          console.error("Error parsing localStorage data:", error);
         }
       } else {
-        console.warn('Quiz data or user answers not found in localStorage.');
+        console.warn("Quiz data or user answers not found in localStorage.");
       }
 
       setLoading(false);
@@ -58,20 +79,21 @@ const QuizAnswer = () => {
 
     const timer = setTimeout(fetchResults, 500);
     return () => clearTimeout(timer);
-  }, [category]);
+  }, [axiosPublic, category, user]);
 
   const handleQuizAgain = () => {
-    localStorage.removeItem(`quiz_questions`);
-    localStorage.removeItem('userAnswers');
-    navigate('/start-quiz');
+    localStorage.removeItem(`quiz_${category}`);
+    localStorage.setItem("userAnswers", false);
+    localStorage.removeItem(`history_posted`);
+    navigate("/start-quiz");
   };
 
   const handleGetFeedback = async () => {
-    const storedQuiz = localStorage.getItem(`quiz_questions`);
-    const storedAnswers = localStorage.getItem('userAnswers');
+    const storedQuiz = localStorage.getItem(`quiz_${category}`);
+    const storedAnswers = localStorage.getItem("userAnswers");
 
     if (!storedQuiz || !storedAnswers) {
-      alert('No quiz data found!');
+      alert("No quiz data found!");
       return;
     }
 
@@ -81,15 +103,15 @@ const QuizAnswer = () => {
     setIsFetchingFeedback(true);
 
     try {
-      const { data: result } = await axiosPublic.post('/quiz_feedback', {
+      const { data: result } = await axiosPublic.post("/quiz_feedback", {
         quizData,
         userAnswers,
       });
 
       setFeedback(result);
     } catch (error) {
-      console.error('Error fetching AI feedback:', error);
-      alert('Failed to fetch feedback from AI.');
+      console.error("Error fetching AI feedback:", error);
+      alert("Failed to fetch feedback from AI.");
     } finally {
       setIsFetchingFeedback(false);
     }
@@ -135,21 +157,21 @@ const QuizAnswer = () => {
           <div
             className={`mb-10 p-6 rounded-xl border ${
               score >= 70
-                ? 'border-green-500/30 bg-green-900/10'
+                ? "border-green-500/30 bg-green-900/10"
                 : score >= 40
-                ? 'border-yellow-500/30 bg-yellow-900/10'
-                : 'border-red-500/30 bg-red-900/10'
+                ? "border-yellow-500/30 bg-yellow-900/10"
+                : "border-red-500/30 bg-red-900/10"
             } text-center`}
           >
             <h2 className="text-2xl font-bold text-white mb-2">
-              Your Score:{' '}
+              Your Score:{" "}
               <span
                 className={
                   score >= 70
-                    ? 'text-green-400'
+                    ? "text-green-400"
                     : score >= 40
-                    ? 'text-yellow-400'
-                    : 'text-red-400'
+                    ? "text-yellow-400"
+                    : "text-red-400"
                 }
               >
                 {score}%
@@ -157,16 +179,16 @@ const QuizAnswer = () => {
             </h2>
             <p className="text-gray-300">
               {score >= 70
-                ? 'Excellent work!'
+                ? "Excellent work!"
                 : score >= 40
-                ? 'Good effort!'
-                : 'Keep practicing!'}{' '}
-              You answered{' '}
+                ? "Good effort!"
+                : "Keep practicing!"}{" "}
+              You answered{" "}
               {
                 Object.values(userAnswers).filter(
                   (ans, i) => ans === correctAnswers[i]
                 ).length
-              }{' '}
+              }{" "}
               out of {questions.length} questions correctly.
             </p>
           </div>
@@ -185,14 +207,14 @@ const QuizAnswer = () => {
                 key={index}
                 className={`rounded-xl p-6 border ${
                   isCorrect
-                    ? 'border-green-500/30 bg-green-900/10'
+                    ? "border-green-500/30 bg-green-900/10"
                     : isWrong
-                    ? 'border-red-500/30 bg-red-900/10'
-                    : 'border-gray-700 bg-gray-800/50'
+                    ? "border-red-500/30 bg-red-900/10"
+                    : "border-gray-700 bg-gray-800/50"
                 }`}
               >
                 <h3 className="text-xl font-semibold text-white mb-4">
-                  <span className="text-purple-400">Q{index + 1}:</span>{' '}
+                  <span className="text-purple-400">Q{index + 1}:</span>{" "}
                   {q.question}
                 </h3>
 
@@ -206,17 +228,17 @@ const QuizAnswer = () => {
                         key={i}
                         className={`p-4 rounded-lg flex items-start border ${
                           isSelected && isCorrect
-                            ? 'border-green-500 bg-green-900/30'
+                            ? "border-green-500 bg-green-900/30"
                             : isSelected && isWrong
-                            ? 'border-red-500 bg-red-900/30'
+                            ? "border-red-500 bg-red-900/30"
                             : isCorrectOption
-                            ? 'border-green-500 bg-green-900/30'
-                            : 'border-gray-700 bg-gray-800'
+                            ? "border-green-500 bg-green-900/30"
+                            : "border-gray-700 bg-gray-800"
                         }`}
                       >
                         <span
                           className={`font-mono mr-3 mt-0.5 ${
-                            isCorrectOption ? 'text-green-400' : 'text-gray-400'
+                            isCorrectOption ? "text-green-400" : "text-gray-400"
                           }`}
                         >
                           {optionLabels[i]}
@@ -234,7 +256,7 @@ const QuizAnswer = () => {
                     </p>
                   ) : isWrong ? (
                     <p className="text-red-400">
-                      <span className="mr-2">✗</span> The correct answer was:{' '}
+                      <span className="mr-2">✗</span> The correct answer was:{" "}
                       <span className="text-green-400 font-medium">
                         {correctAnswer}
                       </span>
@@ -253,8 +275,8 @@ const QuizAnswer = () => {
             disabled={isFetchingFeedback}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
               isFetchingFeedback
-                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
             }`}
           >
             {isFetchingFeedback ? (
@@ -263,7 +285,7 @@ const QuizAnswer = () => {
                 Feedback...
               </span>
             ) : (
-              'Get AI Feedback'
+              "Get AI Feedback"
             )}
           </button>
           <button
@@ -288,7 +310,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[0]?.Strengths ||
-                    'No specific strengths were identified.'}
+                    "No specific strengths were identified."}
                 </p>
               </div>
 
@@ -298,7 +320,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[1]?.Weaknesses ||
-                    'No significant weaknesses were found.'}
+                    "No significant weaknesses were found."}
                 </p>
               </div>
 
@@ -308,7 +330,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[2]?.Recommendations ||
-                    'No specific recommendations available.'}
+                    "No specific recommendations available."}
                 </p>
               </div>
             </div>
@@ -326,7 +348,7 @@ const QuizAnswer = () => {
               recommendations.
             </p>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate("/login")}
               className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
             >
               <FaSignInAlt className="inline-block mr-2" />
