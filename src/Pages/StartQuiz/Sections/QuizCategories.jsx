@@ -1,6 +1,5 @@
-import Button from "@/components/ui/Button";
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { HyperText } from "@/components/magicui/hyper-text";
 
@@ -264,7 +263,10 @@ const QuizCategories = () => {
 
                 <div className="mt-6 flex justify-between items-center">
                   <div></div>
-                  <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white transition-colors">
+                  <button
+                    onClick={() => localStorage.removeItem(`history_posted`)}
+                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white transition-colors"
+                  >
                     Start Quiz
                   </button>
                 </div>
