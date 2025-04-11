@@ -154,9 +154,9 @@ const Hero = () => {
       </div>
 
       {/* Marquee Section */}
-      <div className="relative z-10 bg-gray-800/30 border-t border-b border-gray-700/50 py-8">
+      {/* <div className="relative z-10 bg-gray-800/30 border-t border-b border-gray-700/50 py-8">
         <HeroMarquee />
-      </div>
+      </div> */}
     </div>
   );
 };
