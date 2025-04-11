@@ -1,6 +1,5 @@
 import { HyperText } from "@/components/magicui/hyper-text";
 import React from "react";
-import { motion } from "framer-motion";
 
 const Banner = () => {
   return (
@@ -11,9 +10,6 @@ const Banner = () => {
         </HyperText>
       </h1>
       <p
-        initial={{ opacity: 0, y: 9 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
       >
         <span className="text-gray-400 text-xl">
           Test your coding knowledge with interactive quizzes.
