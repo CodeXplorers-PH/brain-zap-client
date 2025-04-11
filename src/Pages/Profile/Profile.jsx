@@ -116,17 +116,14 @@ const Profile = () => {
       // Fetch the updated XP
       const data = await response.json();
       setTotalPoints(data.xp || 0); // Update the XP in local state
+      const newXP = totalPoints + newXP;
+      updateXP(newXP);
     } catch (error) {
       console.error("Error updating XP:", error);
       alert("Failed to update XP points. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
-  const handleQuizCompletion = (quizXP) => {
-    // Calculate the new XP after quiz completion
-    const newXP = totalPoints + quizXP;
-    updateXP(newXP); // Update XP in backend and profile
   };
 
   // Assuming this is called after quiz completion
