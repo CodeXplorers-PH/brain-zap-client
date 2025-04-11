@@ -32,23 +32,13 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <motion.h1
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4"
-          >
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
             Get In Touch
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl text-gray-400 max-w-3xl mx-auto"
-          >
+          </h1>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Whether you have questions, feedback, or collaboration ideas, we're
             here to help. Reach out and let's create something amazing together!
-          </motion.p>
+          </p>
         </div>
 
         {/* Contact Cards */}
@@ -134,9 +124,7 @@ const Contact = () => {
         </div>
 
         {/* Contact Form */}
-        <motion.div initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }} className="rounded-xl bg-gray-800/50 border border-gray-700 p-8 md:p-10 backdrop-blur-sm">
+        <div className="rounded-xl bg-gray-800/50 border border-gray-700 p-8 md:p-10 backdrop-blur-sm">
           <h2 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-8">
             Send Us a Message
           </h2>
@@ -245,7 +233,7 @@ const Contact = () => {
               <Send className="w-5 h-5" />
             </button>
           </form>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
