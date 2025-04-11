@@ -13,6 +13,7 @@ import Contact from "@/Pages/Contact/Contact";
 import Error from "@/Pages/404/Error";
 import Profile from "@/Pages/Profile/Profile";
 import CheckoutPage from "@/Pages/Checkout/Checkout";
+import BlogDetail from "@/Pages/Blog/BlogDetail";
 import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -30,8 +31,12 @@ export const router = createBrowserRouter([
         element: <Pricing />,
       },
       {
-        path: "/blog",
+        path: "/blogs",
         element: <Blog /> /* Blog Page */,
+      },
+      {
+        path: "/blogs/:id",
+        element: <BlogDetail /> /* Blog Page */,
       },
       {
         path: "/start-quiz",
