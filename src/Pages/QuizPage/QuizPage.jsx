@@ -17,8 +17,6 @@ const QuizPage = () => {
   const difficulty = queryParams.get('difficulty');
   const quizzesNumber = queryParams.get('quizzesNumber');
 
-  console.log(difficulty, quizzesNumber);
-
   useEffect(() => {
     const localStorageKey = `quiz_questions`;
     const storedQuiz = localStorage.getItem(localStorageKey);
