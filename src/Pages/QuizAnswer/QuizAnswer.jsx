@@ -81,16 +81,37 @@ const QuizAnswer = () => {
     return () => clearTimeout(timer);
   }, [axiosPublic, category, user]);
 
-  const handleQuizAgain = () => {
-    localStorage.removeItem(`quiz_${category}`);
-    localStorage.setItem("userAnswers", false);
-    localStorage.removeItem(`history_posted`);
-    navigate("/start-quiz");
-  };
+  useEffect(() => {
+    const hasPosted = localStorage.getItem(`history_posted`);
 
-  const handleGetFeedback = async () => {
-    const storedQuiz = localStorage.getItem(`quiz_${category}`);
-    const storedAnswers = localStorage.getItem("userAnswers");
+    if (user && score && questions.length > 0 && !hasPosted) {
+      axiosPublic
+        .post("/quiz_history", {
+          email: user?.email,
+          date: new Date(),
+          category: category,
+          score: score,
+        })
+        .then((res) => {
+          console.log("History saved:", res.data);
+          localStorage.setItem(`history_posted`, "true");
+        })
+        .catch((err) => {
+          console.log("Error saving history:", err);
+        });
+    }
+  }, [user, score, category, questions]);
+
+ const handleQuizAgain = () => {
+  localStorage.removeItem(`quiz_${category}`);
+  localStorage.setItem("userAnswers", false);
+  localStorage.removeItem(`history_posted`);
+  navigate("/start-quiz");
+};
+
+const handleGetFeedback = async () => {
+  const storedQuiz = localStorage.getItem(`quiz_${category}`);
+  const storedAnswers = localStorage.getItem("userAnswers");
 
     if (!storedQuiz || !storedAnswers) {
       alert("No quiz data found!");
