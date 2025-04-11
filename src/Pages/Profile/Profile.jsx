@@ -24,8 +24,6 @@ const Profile = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
-  console.log(xpPoints);
-  console.log(userInfo);
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -525,7 +523,7 @@ const Profile = () => {
                   <thead>
                     <tr className="border-b border-gray-700">
                       <th className="text-left py-3 text-gray-400 font-medium">
-                       Type
+                        Type
                       </th>
                       <th className="text-left py-3 text-gray-400 font-medium">
                         Transection ID
