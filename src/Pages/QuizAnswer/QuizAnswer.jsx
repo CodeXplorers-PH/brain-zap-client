@@ -136,20 +136,18 @@ const QuizAnswer = () => {
     } finally {
       setIsFetchingFeedback(false);
     }
-  
 
-  if (loading) {
-    (
+    if (loading) {
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
           <p className="text-gray-400 text-xl">Loading your results...</p>
         </div>
+        ;
       </div>;
     }
 
-  if (questions.length === 0) {
-    (
+    if (questions.length === 0) {
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center p-8 bg-gray-800/50 rounded-xl border border-gray-700">
           <h2 className="text-2xl font-bold text-gray-300 mb-4">
@@ -165,10 +163,8 @@ const QuizAnswer = () => {
             Take a Quiz
           </button>
         </div>
-      </div>
-    );
-  }
-  
+      </div>;
+    }
 
     return (
       <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
