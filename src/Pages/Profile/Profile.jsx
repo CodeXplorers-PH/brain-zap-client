@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { AuthContext } from "@/provider/AuthProvider";
 import {
   Edit2,
@@ -28,37 +28,6 @@ const Profile = () => {
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
-
-  // Streaks Code Start Here
-  // Step 1: Extract unique quiz dates (only the date part, no time)
-  const quizDaysSet = new Set(
-    userQuizHistory.map((q) => new Date(q.date).toISOString().split("T")[0])
-  );
-
-  // Step 2: Convert to array and sort in descending order (latest first)
-  const quizDates = Array.from(quizDaysSet).sort(
-    (a, b) => new Date(b) - new Date(a)
-  );
-
-  // Step 3: Calculate the current streak
-  let streak = 0;
-  let today = new Date();
-  today.setHours(0, 0, 0, 0); // normalize to midnight
-
-  for (let i = 0; i < quizDates.length; i++) {
-    const date = new Date(quizDates[i]);
-    date.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0 || diffDays === streak) {
-      streak++;
-    } else {
-      break; // streak broken
-    }
-  }
-
-  // Streaks Code Start Here
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -97,6 +66,38 @@ const Profile = () => {
 
     fetchUserInfo();
   }, [axiosPublic, user]);
+
+  // Streaks Code Starts Here
+  const streak = useMemo(() => {
+    const quizDaysSet = new Set(
+      userQuizHistory.map((q) => new Date(q.date).toISOString().split("T")[0])
+    );
+
+    const quizDates = Array.from(quizDaysSet).sort(
+      (a, b) => new Date(b) - new Date(a)
+    );
+
+    let streakCount = 0;
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < quizDates.length; i++) {
+      const date = new Date(quizDates[i]);
+      date.setHours(0, 0, 0, 0);
+
+      const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0 || diffDays === streakCount) {
+        streakCount++;
+      } else {
+        break;
+      }
+    }
+
+    return streakCount;
+  }, [userQuizHistory]);
+
+  // Streaks Code Ends Here
 
   // Sample stats - replace with actual data from your application
   const stats = {
@@ -225,8 +226,9 @@ const Profile = () => {
                     <button
                       onClick={handleSaveProfile}
                       disabled={loading}
-                      className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${loading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                      className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${
+                        loading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
                       <Save size={16} className="mr-2" />
                       {loading ? "Saving..." : "Save Changes"}
@@ -254,12 +256,9 @@ const Profile = () => {
                     )}
 
                     {userInfo?.subscription === "Elite" && (
-
                       <div className="tooltip" data-tip="Elite Member">
                         <Crown className="text-amber-500 w-6 h-6" />
                       </div>
-
-
                     )}
                   </h1>
                   <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
@@ -300,10 +299,11 @@ const Profile = () => {
         {/* Tabs Navigation */}
         <div className="flex border-b border-gray-700 mb-6">
           <button
-            className={`py-3 px-4 font-medium relative ${activeTab === "profile"
-              ? "text-purple-400"
-              : "text-gray-400 hover:text-gray-300"
-              }`}
+            className={`py-3 px-4 font-medium relative ${
+              activeTab === "profile"
+                ? "text-purple-400"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
             onClick={() => setActiveTab("profile")}
           >
             Profile
@@ -312,10 +312,11 @@ const Profile = () => {
             )}
           </button>
           <button
-            className={`py-3 px-4 font-medium relative ${activeTab === "history"
-              ? "text-purple-400"
-              : "text-gray-400 hover:text-gray-300"
-              }`}
+            className={`py-3 px-4 font-medium relative ${
+              activeTab === "history"
+                ? "text-purple-400"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
             onClick={() => setActiveTab("history")}
           >
             Quiz History
@@ -324,10 +325,11 @@ const Profile = () => {
             )}
           </button>
           <button
-            className={`py-3 px-4 font-medium relative ${activeTab === "settings"
-              ? "text-purple-400"
-              : "text-gray-400 hover:text-gray-300"
-              }`}
+            className={`py-3 px-4 font-medium relative ${
+              activeTab === "settings"
+                ? "text-purple-400"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
             onClick={() => setActiveTab("settings")}
           >
             Settings
@@ -336,10 +338,11 @@ const Profile = () => {
             )}
           </button>
           <button
-            className={`py-3 px-4 font-medium relative ${activeTab === "transecHistory"
-              ? "text-purple-400"
-              : "text-gray-400 hover:text-gray-300"
-              }`}
+            className={`py-3 px-4 font-medium relative ${
+              activeTab === "transecHistory"
+                ? "text-purple-400"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
             onClick={() => setActiveTab("transecHistory")}
           >
             Transection History
@@ -364,8 +367,8 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center">
-                <Flame size={20} className="text-purple-400 mr-3" />
-                  
+                  <Flame size={20} className="text-purple-400 mr-3" />
+
                   <div>
                     <p className="text-gray-400 text-sm">Streak</p>
                     <p className="text-white">{streak}</p>
@@ -446,12 +449,13 @@ const Profile = () => {
                         </td>
                         <td className="py-3 text-right">
                           <span
-                            className={`${quiz.score >= 80
-                              ? "bg-green-500/20 text-green-400"
-                              : quiz.score >= 50
+                            className={`${
+                              quiz.score >= 80
+                                ? "bg-green-500/20 text-green-400"
+                                : quiz.score >= 50
                                 ? "bg-yellow-500/20 text-yellow-400"
                                 : "bg-red-500/20 text-red-400"
-                              } py-1 px-2 rounded-md`}
+                            } py-1 px-2 rounded-md`}
                           >
                             {quiz.score}%
                           </span>
@@ -507,12 +511,13 @@ const Profile = () => {
                         </td>
                         <td className="py-3 text-right">
                           <span
-                            className={`${quiz.score >= 80
-                              ? "bg-green-500/20 text-green-400"
-                              : quiz.score >= 50
+                            className={`${
+                              quiz.score >= 80
+                                ? "bg-green-500/20 text-green-400"
+                                : quiz.score >= 50
                                 ? "bg-yellow-500/20 text-yellow-400"
                                 : "bg-red-500/20 text-red-400"
-                              } py-1 px-2 rounded-md`}
+                            } py-1 px-2 rounded-md`}
                           >
                             {quiz.score}%
                           </span>
