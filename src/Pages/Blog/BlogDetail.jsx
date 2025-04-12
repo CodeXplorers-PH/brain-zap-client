@@ -28,15 +28,55 @@ const BlogDetail = () => {
   }, [id]);
 
   if (isLoading) {
-    return <div className="text-white text-center py-20">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gray-900 pt-24 pb-20 px-4 sm:px-6 flex items-center justify-center">
+        <div className="text-center">
+          {/* Pulse animation container */}
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            {/* Outer pulsing circle */}
+            <div className="absolute inset-0 rounded-full bg-purple-600/20 animate-ping"></div>
+            
+            {/* Middle pulse circle */}
+            <div className="absolute inset-2 rounded-full bg-purple-500/40 animate-pulse"></div>
+            
+            {/* Inner solid circle */}
+            <div className="absolute inset-4 rounded-full bg-purple-600 flex items-center justify-center">
+              {/* Loading "dots" animation */}
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Text with gradient */}
+          <p className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 font-medium">
+            Loading awesome content...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (!blog) {
-    return <div className="text-white text-center py-20">Blog not found</div>;
+    return (
+      <div className="min-h-screen bg-gray-900 pt-24 pb-20 px-4 sm:px-6 flex items-center justify-center">
+        <div className="max-w-md w-full bg-gray-800 rounded-xl p-8 text-center border border-gray-700">
+          <div className="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-6 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Blog Not Found</h2>
+          <p className="text-gray-400">We couldn't find the blog post you're looking for. It may have been removed or doesn't exist.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 pt-24 pb-20 px-4 sm:px-6">
+    <div className="min-h-screen bg-gray-900 pt-40 pb-20 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         <img
           src={blog.img}

@@ -12,6 +12,7 @@ import {
   BarChart2,
   BookOpen
 } from 'lucide-react';
+import { Link } from "react-router-dom";
 
 const Features = () => {
   const featuresData = [
@@ -74,7 +75,7 @@ const Features = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section header */}
         <div className="text-center mb-20">
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -82,7 +83,7 @@ const Features = () => {
           >
             <span className="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
             <span className="text-sm font-medium text-gray-300">AI-Powered Learning</span>
-          </motion.div>
+          </motion.div> */}
           
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -149,9 +150,9 @@ const Features = () => {
                   </div>
                   <div className="text-2xl font-bold text-white mb-4">AI-Powered Quiz</div>
                   <div className="text-gray-400 mb-6">Adapting to your learning patterns...</div>
-                  <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white font-medium hover:from-purple-700 hover:to-blue-700 transition-colors">
+                  <Link to='/start-quiz' className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white font-medium hover:from-purple-700 hover:to-blue-700 transition-colors">
                     Try Demo
-                  </button>
+                  </Link>
                 </div>
               </div>
               <div className="absolute inset-0 border border-gray-700/50 rounded-xl pointer-events-none"></div>

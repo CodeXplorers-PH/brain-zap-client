@@ -19,7 +19,7 @@ const Footer = () => {
 
           {/* Links */}
           <div className="flex flex-wrap justify-center gap-6">
-            {['Features', 'Pricing', 'Blog', 'Contact'].map((link) => (
+            {['Profile', 'Pricing', 'Blog', 'Contact'].map((link) => (
               <Link
                 key={link}
                 to={`/${link.toLowerCase()}`}
@@ -33,7 +33,7 @@ const Footer = () => {
           {/* Socials */}
           <div className="flex gap-4">
             <a 
-              href="https://github.com" 
+              href="https://github.com/orgs/CodeXplorers-PH/repositories" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
