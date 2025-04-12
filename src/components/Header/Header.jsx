@@ -71,7 +71,7 @@ const Header = () => {
       <div className="navbar bg-gray-900/80 backdrop-blur-md rounded-full shadow-2xl max-w-6xl w-full px-6 border border-gray-800/50">
         {/* Logo Section */}
         <div className="navbar-start">
-          <Link to="/" className="font-bold text-xl text-white">
+          <Link to="/" className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
             BrainZap
           </Link>
         </div>
@@ -83,20 +83,18 @@ const Header = () => {
               <li key={`navlink-${index}`}>
                 <Link
                   to={navlink.path}
-                  className={`font-medium mx-1 relative overflow-hidden group ${
-                    location.pathname === navlink.path
+                  className={`font-medium mx-1 relative overflow-hidden group ${location.pathname === navlink.path
                       ? "text-purple-400 font-semibold"
                       : "text-gray-300"
-                  }`}
+                    }`}
                 >
                   {navlink.pathName}
                   {/* Underline animation */}
                   <span
-                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${
-                      location.pathname === navlink.path
+                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${location.pathname === navlink.path
                         ? "scale-x-100"
                         : "scale-x-0"
-                    } group-hover:scale-x-100 transition-transform duration-300`}
+                      } group-hover:scale-x-100 transition-transform duration-300`}
                   ></span>
                 </Link>
               </li>
@@ -136,11 +134,10 @@ const Header = () => {
                 <li key={`navlink-dropdown-${index}`}>
                   <Link
                     to={navlink.path}
-                    className={`${
-                      location.pathname === navlink.path
+                    className={`${location.pathname === navlink.path
                         ? "text-purple-400 font-semibold"
                         : "text-gray-300"
-                    } hover:bg-gray-700/50`}
+                      } hover:bg-gray-700/50`}
                   >
                     {navlink.pathName}
                   </Link>

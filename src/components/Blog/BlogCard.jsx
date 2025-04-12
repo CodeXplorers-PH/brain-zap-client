@@ -1,8 +1,5 @@
-import { useState } from "react";
-import { FiArrowRight, FiHeart } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
-import axios from "axios";
 
 const BlogCard = ({
   title,
@@ -12,116 +9,87 @@ const BlogCard = ({
   category,
   id,
   author,
-  likes,
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes || 0);
-  const { user } = useAuth();
+  // Format date nicely
+  const formattedDate = new Date(publish_date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  // Truncate description to 100 characters
+  const truncatedDescription = description && description.length > 100 
+    ? `${description.substring(0, 100)}...` 
+    : description;
 
   const categoryColors = {
-    Technology: "bg-purple-900/50 text-purple-400/80",
-    Science: "bg-blue-900/50 text-blue-400/80",
-    Health: "bg-emerald-900/50 text-emerald-400/80",
-    Business: "bg-amber-900/50 text-amber-400/80",
-    Entertainment: "bg-pink-900/50 text-pink-400/80",
-    Sports: "bg-red-900/50 text-red-400/80",
-    Education: "bg-indigo-900/50 text-indigo-400/80",
-    Lifestyle: "bg-green-900/50 text-green-400/80",
-    Travel: "bg-cyan-900/50 text-cyan-400/80",
-    Food: "bg-orange-900/50 text-orange-400/80",
-  };
-
-  const handleLike = async () => {
-    if (!user) {
-      alert("Please log in to like posts");
-      return;
-    }
-
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_ServerUrl}/blogs/${id}/like`,
-        { userId: user.uid },
-        { withCredentials: true }
-      );
-      setIsLiked(response.data.liked);
-      setLikeCount(prev => prev + (response.data.liked ? 1 : -1));
-    } catch (error) {
-      console.error("Error liking blog:", error);
-      alert("Failed to update like");
-    }
+    Technology: "bg-purple-900/50 text-purple-400 border-purple-700/50",
+    Programming: "bg-blue-900/50 text-blue-400 border-blue-700/50",
+    AI: "bg-emerald-900/50 text-emerald-400 border-emerald-700/50",
+    "Data Science": "bg-amber-900/50 text-amber-400 border-amber-700/50",
+    "Web Development": "bg-pink-900/50 text-pink-400 border-pink-700/50",
+    "Mobile Development": "bg-red-900/50 text-red-400 border-red-700/50",
+    "Computer Science": "bg-indigo-900/50 text-indigo-400 border-indigo-700/50",
+    Other: "bg-cyan-900/50 text-cyan-400 border-cyan-700/50",
   };
 
   return (
-    <div className="group relative h-full overflow-hidden rounded-xl border border-gray-800 bg-gray-800/50 hover:border-gray-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10">
-      <div className="h-48 overflow-hidden">
-        <img
-          src={img}
-          alt={title}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
-      <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
-        <div className="flex justify-between items-start mb-3">
-          <span
-            className={`inline-block w-fit px-3 py-1 text-xs font-medium rounded-full ${
-              categoryColors[category] || "bg-gray-700 text-gray-300"
-            }`}
-          >
-            {category}
-          </span>
-
-          {/* Author info */}
-          <div className="flex items-center">
-            <img
-              src={author?.avatar || "/default-avatar.png"}
-              alt={author?.name || "User"}
-              className="w-6 h-6 rounded-full mr-2"
-            />
-            <span className="text-xs text-gray-400">
-              {author?.name || "Anonymous"}
+    <Link
+      to={`/blogs/${id}`}
+      className="block h-full"
+    >
+      <div className="relative h-full overflow-hidden rounded-xl bg-gray-900 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 border border-gray-800 hover:border-purple-700/40">
+        {/* Image Container */}
+        <div className="relative h-52 overflow-hidden">
+          <img
+            src={img}
+            alt={title}
+            loading="lazy"
+            className="w-full h-full object-cover transition-all duration-700 hover:scale-110"
+          />
+          
+          {/* Category Badge */}
+          <div className="absolute top-4 left-4 z-10">
+            <span
+              className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border ${
+                categoryColors[category] || "bg-gray-800/80 text-gray-300 border-gray-700"
+              }`}
+            >
+              {category}
             </span>
           </div>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors line-clamp-2">
-          {title}
-        </h3>
-        <p className="text-gray-400 mb-4 line-clamp-3 flex-grow">{description}</p>
+        {/* Content Section */}
+        <div className="p-6 flex flex-col h-[calc(100%-13rem)]">
+          {/* Author info - Now always visible */}
+          <div className="flex items-center mb-4">
+            <img
+              src={author?.avatar || "/default-avatar.png"}
+              alt={author?.name || "User"}
+              className="w-8 h-8 rounded-full ring-2 ring-purple-500 mr-3"
+            />
+            <div>
+              <p className="text-white font-medium text-sm">{author?.name || "Anonymous"}</p>
+              <p className="text-gray-400 text-xs">{formattedDate}</p>
+            </div>
+          </div>
 
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-sm text-gray-500">
-            {new Date(publish_date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
+          <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors line-clamp-2">
+            {title}
+          </h3>
+          
+          <p className="text-gray-400 mb-6 line-clamp-3 flex-grow">{truncatedDescription}</p>
 
-          <div className="flex items-center space-x-4">
-            {/* Like button */}
-            <button
-              onClick={handleLike}
-              className={`flex items-center text-sm ${
-                isLiked ? "text-red-400" : "text-gray-400"
-              } hover:text-red-400 transition-colors`}
-            >
-              <FiHeart className={`mr-1 ${isLiked ? "fill-current" : ""}`} />
-              <span>{likeCount}</span>
-            </button>
-
-            <Link
-              to={`/blogs/${id}`}
-              className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center transition-colors"
-              aria-label={`Read more about ${title}`}
-            >
+          <div className="flex justify-end mt-auto">
+            <div className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center transition-all duration-300 hover:translate-x-1">
               Read More
               <FiArrowRight className="ml-1" />
-            </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -29,7 +29,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="bg-neutral text-neutral-content py-16 px-4">
+    <section className="bg-gray-900 text-neutral-content py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Hero Heading */}
         <div className="text-center mb-16">

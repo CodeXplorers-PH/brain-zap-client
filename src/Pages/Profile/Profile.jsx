@@ -225,9 +225,8 @@ const Profile = () => {
                     <button
                       onClick={handleSaveProfile}
                       disabled={loading}
-                      className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${
-                        loading ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                      className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                     >
                       <Save size={16} className="mr-2" />
                       {loading ? "Saving..." : "Save Changes"}
@@ -249,11 +248,18 @@ const Profile = () => {
 
                     {/* Premium Members Tick */}
                     {userInfo?.subscription === "Pro" && (
-                      <CircleCheck className="text-blue-500 w-6 h-6" />
+                      <div className="tooltip" data-tip="Pro Member">
+                        <CircleCheck className="text-blue-500 w-6 h-6" />
+                      </div>
                     )}
 
                     {userInfo?.subscription === "Elite" && (
-                      <Crown className="text-amber-500 w-6 h-6" />
+
+                      <div className="tooltip" data-tip="Elite Member">
+                        <Crown className="text-amber-500 w-6 h-6" />
+                      </div>
+
+
                     )}
                   </h1>
                   <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
@@ -294,11 +300,10 @@ const Profile = () => {
         {/* Tabs Navigation */}
         <div className="flex border-b border-gray-700 mb-6">
           <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "profile"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
+            className={`py-3 px-4 font-medium relative ${activeTab === "profile"
+              ? "text-purple-400"
+              : "text-gray-400 hover:text-gray-300"
+              }`}
             onClick={() => setActiveTab("profile")}
           >
             Profile
@@ -307,11 +312,10 @@ const Profile = () => {
             )}
           </button>
           <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "history"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
+            className={`py-3 px-4 font-medium relative ${activeTab === "history"
+              ? "text-purple-400"
+              : "text-gray-400 hover:text-gray-300"
+              }`}
             onClick={() => setActiveTab("history")}
           >
             Quiz History
@@ -320,11 +324,10 @@ const Profile = () => {
             )}
           </button>
           <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "settings"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
+            className={`py-3 px-4 font-medium relative ${activeTab === "settings"
+              ? "text-purple-400"
+              : "text-gray-400 hover:text-gray-300"
+              }`}
             onClick={() => setActiveTab("settings")}
           >
             Settings
@@ -333,11 +336,10 @@ const Profile = () => {
             )}
           </button>
           <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === "transecHistory"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
-            }`}
+            className={`py-3 px-4 font-medium relative ${activeTab === "transecHistory"
+              ? "text-purple-400"
+              : "text-gray-400 hover:text-gray-300"
+              }`}
             onClick={() => setActiveTab("transecHistory")}
           >
             Transection History
@@ -444,13 +446,12 @@ const Profile = () => {
                         </td>
                         <td className="py-3 text-right">
                           <span
-                            className={`${
-                              quiz.score >= 80
-                                ? "bg-green-500/20 text-green-400"
-                                : quiz.score >= 50
+                            className={`${quiz.score >= 80
+                              ? "bg-green-500/20 text-green-400"
+                              : quiz.score >= 50
                                 ? "bg-yellow-500/20 text-yellow-400"
                                 : "bg-red-500/20 text-red-400"
-                            } py-1 px-2 rounded-md`}
+                              } py-1 px-2 rounded-md`}
                           >
                             {quiz.score}%
                           </span>
@@ -506,13 +507,12 @@ const Profile = () => {
                         </td>
                         <td className="py-3 text-right">
                           <span
-                            className={`${
-                              quiz.score >= 80
-                                ? "bg-green-500/20 text-green-400"
-                                : quiz.score >= 50
+                            className={`${quiz.score >= 80
+                              ? "bg-green-500/20 text-green-400"
+                              : quiz.score >= 50
                                 ? "bg-yellow-500/20 text-yellow-400"
                                 : "bg-red-500/20 text-red-400"
-                            } py-1 px-2 rounded-md`}
+                              } py-1 px-2 rounded-md`}
                           >
                             {quiz.score}%
                           </span>
