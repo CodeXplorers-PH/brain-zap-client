@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useMemo } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/provider/AuthProvider";
 import {
   Edit2,
@@ -25,6 +25,7 @@ const Profile = () => {
   const axiosPublic = useAxiosPublic();
   const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const [streak, setStreak] = useState(0);
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
@@ -68,34 +69,51 @@ const Profile = () => {
   }, [axiosPublic, user]);
 
   // Streaks Code Starts Here
-  const streak = useMemo(() => {
-    const quizDaysSet = new Set(
-      userQuizHistory.map((q) => new Date(q.date).toISOString().split("T")[0])
-    );
-
-    const quizDates = Array.from(quizDaysSet).sort(
-      (a, b) => new Date(b) - new Date(a)
-    );
-
-    let streakCount = 0;
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    for (let i = 0; i < quizDates.length; i++) {
-      const date = new Date(quizDates[i]);
-      date.setHours(0, 0, 0, 0);
-
-      const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
-
-      if (diffDays === 0 || diffDays === streakCount) {
-        streakCount++;
-      } else {
-        break;
-      }
-    }
-
-    return streakCount;
-  }, [userQuizHistory]);
+  useEffect(() => {
+    if (!user) return;
+  
+    axiosPublic
+      .get(`/quiz_history/${user.email}`)
+      .then((res) => {
+        const history = res?.data || [];
+        setUserQuizHistory(history);
+  
+        // ✅ Streak Calculation Logic Here
+        const quizDaysSet = new Set(
+          history.map((q) =>
+            new Date(q.date).toISOString().split("T")[0]
+          )
+        );
+  
+        const quizDates = Array.from(quizDaysSet).sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
+  
+        let streakCount = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+  
+        for (let i = 0; i < quizDates.length; i++) {
+          const date = new Date(quizDates[i]);
+          date.setHours(0, 0, 0, 0);
+  
+          const diffDays = Math.floor(
+            (today - date) / (1000 * 60 * 60 * 24)
+          );
+  
+          if (diffDays === 0 || diffDays === streakCount) {
+            streakCount++;
+          } else {
+            break;
+          }
+        }
+  
+        setStreak(streakCount); 
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user]);
 
   // Streaks Code Ends Here
 
