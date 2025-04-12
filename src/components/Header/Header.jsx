@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
 import LockedErr from "../ui/LockedErr";
@@ -10,14 +10,46 @@ import streakImg from "../../assets/img/streak.png";
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const [streak, setStreak] = useState(0);
   const axiosPublic = useAxiosPublic();
   const location = useLocation(); // Get the current route
 
   useEffect(() => {
+    if (!user) return;
+
     axiosPublic
-      .get(`/quiz_history/${user?.email}`)
+      .get(`/quiz_history/${user.email}`)
       .then((res) => {
-        setUserQuizHistory(res?.data);
+        const history = res?.data || [];
+        setUserQuizHistory(history);
+
+        // ✅ Streak Calculation Logic Here
+        const quizDaysSet = new Set(
+          history.map((q) => new Date(q.date).toISOString().split("T")[0])
+        );
+
+        const quizDates = Array.from(quizDaysSet).sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
+
+        let streakCount = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < quizDates.length; i++) {
+          const date = new Date(quizDates[i]);
+          date.setHours(0, 0, 0, 0);
+
+          const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 0 || diffDays === streakCount) {
+            streakCount++;
+          } else {
+            break;
+          }
+        }
+
+        setStreak(streakCount);
       })
       .catch((err) => {
         console.log(err);
@@ -25,39 +57,6 @@ const Header = () => {
   }, [axiosPublic, user]);
 
   // Streaks Code Start Here
-  const streak = useMemo(() => {
-    const quizDaysSet = new Set(
-      userQuizHistory.map((q) => new Date(q.date).toISOString().split("T")[0])
-    );
-  
-    const quizDates = Array.from(quizDaysSet).sort(
-      (a, b) => new Date(b) - new Date(a)
-    );
-  
-    let streakCount = 0;
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-  
-    for (let i = 0; i < quizDates.length; i++) {
-      const date = new Date(quizDates[i]);
-      date.setHours(0, 0, 0, 0);
-  
-      const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
-  
-      if (diffDays === 0 || diffDays === streakCount) {
-        streakCount++;
-      } else {
-        break;
-      }
-    }
-  
-    return streakCount;
-  }, [userQuizHistory]);
-
-  // Streaks Code Start Here
-
-  console.log(userQuizHistory);
-  console.log(streak);
 
   // Nav items
   const Navs = [
