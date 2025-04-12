@@ -37,6 +37,9 @@
 ### Backend
 
 - **GraphQL** – Powerful query language for flexible APIs
+- **Node.js** – JavaScript runtime for server-side logic
+- **Express.js** – Minimal and fast web application framework
+- **MongoDB** – NoSQL database for scalable and flexible data storage
 
 ### Authentication & Payments
 
