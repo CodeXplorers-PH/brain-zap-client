@@ -1,6 +1,6 @@
 # BRAINZAP
 
-![BrainZap Banner](https://i.ibb.co.com/1YrKCG4Q/quiz-result.png)
+![BrainZap Banner](./public/quiz-result.png)
 
 **BRAINZAP** is an interactive, AI-powered quiz platform designed to supercharge your learning experience. Whether you're brushing up on programming skills or diving into something new, BRAINZAP adapts to your level and helps you grow — one question at a time.
 
@@ -37,6 +37,9 @@
 ### Backend
 
 - **GraphQL** – Powerful query language for flexible APIs
+- **Node.js** – JavaScript runtime for server-side logic
+- **Express.js** – Minimal and fast web application framework
+- **MongoDB** – NoSQL database for scalable and flexible data storage
 
 ### Authentication & Payments
 
