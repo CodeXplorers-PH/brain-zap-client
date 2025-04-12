@@ -11,6 +11,8 @@ import {
   X,
   CircleCheck,
   Crown,
+  Zap,
+  Flame,
 } from "lucide-react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { format } from "date-fns";
@@ -26,6 +28,37 @@ const Profile = () => {
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
+
+  // Streaks Code Start Here
+  // Step 1: Extract unique quiz dates (only the date part, no time)
+  const quizDaysSet = new Set(
+    userQuizHistory.map((q) => new Date(q.date).toISOString().split("T")[0])
+  );
+
+  // Step 2: Convert to array and sort in descending order (latest first)
+  const quizDates = Array.from(quizDaysSet).sort(
+    (a, b) => new Date(b) - new Date(a)
+  );
+
+  // Step 3: Calculate the current streak
+  let streak = 0;
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // normalize to midnight
+
+  for (let i = 0; i < quizDates.length; i++) {
+    const date = new Date(quizDates[i]);
+    date.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0 || diffDays === streak) {
+      streak++;
+    } else {
+      break; // streak broken
+    }
+  }
+
+  // Streaks Code Start Here
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -44,7 +77,6 @@ const Profile = () => {
       .get(`/quiz_history/${user?.email}`)
       .then((res) => {
         setUserQuizHistory(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -332,10 +364,11 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Clock size={18} className="text-purple-400 mr-3" />
+                <Flame size={20} className="text-purple-400 mr-3" />
+                  
                   <div>
-                    <p className="text-gray-400 text-sm">Last Active</p>
-                    <p className="text-white">{stats.lastActive}</p>
+                    <p className="text-gray-400 text-sm">Streak</p>
+                    <p className="text-white">{streak}</p>
                   </div>
                 </div>
                 <div className="flex items-center">

@@ -1,13 +1,60 @@
 import { Link, useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
 import LockedErr from "../ui/LockedErr";
 import { motion } from "framer-motion";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import streakImg from "../../assets/img/streak.png";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
+  const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const axiosPublic = useAxiosPublic();
   const location = useLocation(); // Get the current route
+
+  // Streaks Code Start Here
+  // Step 1: Extract unique quiz dates (only the date part, no time)
+  const quizDaysSet = new Set(
+    userQuizHistory.map((q) => new Date(q.date).toISOString().split("T")[0])
+  );
+
+  // Step 2: Convert to array and sort in descending order (latest first)
+  const quizDates = Array.from(quizDaysSet).sort(
+    (a, b) => new Date(b) - new Date(a)
+  );
+
+  // Step 3: Calculate the current streak
+  let streak = 0;
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // normalize to midnight
+
+  for (let i = 0; i < quizDates.length; i++) {
+    const date = new Date(quizDates[i]);
+    date.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0 || diffDays === streak) {
+      streak++;
+    } else {
+      break; // streak broken
+    }
+  }
+
+  // Streaks Code Start Here
+
+  useEffect(() => {
+    axiosPublic
+      .get(`/quiz_history/${user?.email}`)
+      .then((res) => {
+        setUserQuizHistory(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user]);
+
   // Nav items
   const Navs = [
     { path: "/", pathName: "Home" },
@@ -98,8 +145,19 @@ const Header = () => {
               ))}
             </ul>
           </div>
-
           {/* User Profile or Get Started button */}
+          {user && (
+            <div className="relative w-9 h-9 flex items-center justify-center mr-1">
+              <img
+                className="w-full h-full opacity-80"
+                src={streakImg}
+                alt="Streak"
+              />
+              <span className="absolute top-1 left-0 w-full h-full flex items-center justify-center text-lg font-bold text-white">
+                {streak}
+              </span>
+            </div>
+          )}
           {user ? (
             <div className="dropdown dropdown-end">
               <div
