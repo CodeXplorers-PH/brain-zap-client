@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import Swal from "sweetalert2";
+import { format } from "date-fns";
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -25,7 +26,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const axiosPublic = useAxiosPublic();
 
   const createNewUser = (email, password) => {
@@ -87,14 +87,17 @@ const AuthProvider = ({ children }) => {
           const res = await axiosPublic.patch("/account_lockout", {
             email: email,
           });
-          setIsLocked(res.data.isLocked);
 
-          if (res.data.isLocked) {
+          setIsLocked(res?.data?.isLocked);
+          if (res?.data?.isLocked) {
             logOut();
             Swal.fire({
               icon: "warning",
               title: "Account Locked!",
-              text: `Your account has been temporarily locked due to multiple failed login attempts. Please try again after 1 hour.`,
+              text: `Your account has been temporarily locked due to multiple failed login attempts. Please try again after ${format(
+                new Date(res?.data?.unlockTime),
+                "h:mm a"
+              )}.`,
               background: "rgba(30, 30, 60, 0.85)",
               color: "#fff",
               backdrop: "rgba(0, 0, 0, 0.4)",
