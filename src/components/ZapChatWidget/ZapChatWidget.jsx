@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { MessageCircle, X } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
@@ -12,6 +12,7 @@ const ZapChatWidget = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const [userType, setUserType] = useState("");
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -27,6 +28,10 @@ const ZapChatWidget = () => {
 
     fetchUserInfo();
   }, [axiosPublic, user]);
+
+  useEffect(() => {
+    bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -84,18 +89,28 @@ const ZapChatWidget = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-4 text-sm mb-1 pr-1">
+            {messages?.length === 0 && (
+              <div className="text-center text-white mt-20">
+                Ask anything and get help from{" "}
+                <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+                  ZapAI
+                </span>{" "}
+                🤖
+              </div>
+            )}
             {messages.map((msg, idx) => (
               <div
                 key={idx}
                 className={`p-2 rounded-lg max-w-[85%] break-words whitespace-pre-wrap ${
                   msg.from === "user"
-                    ? "bg-purple-700 ml-auto text-right"
+                    ? "bg-purple-700 ml-16 text-right"
                     : "bg-purple-900 mr-auto text-left"
                 }`}
               >
                 {msg.text}
               </div>
             ))}
+            <div ref={bottomRef} />
           </div>
 
           {userType === "Elite" ? (
@@ -146,7 +161,7 @@ const ZapChatWidget = () => {
                bg-gradient-to-br from-purple-800  to-violet-600 text-white flex items-center justify-center"
           onClick={() => setIsOpen(true)}
         >
-          <MessageCircle className="w-5 h-5" />
+          <MessageCircle className="w-6 h-6" />
         </button>
       )}
     </div>
