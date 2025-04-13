@@ -71,44 +71,40 @@ const Profile = () => {
   // Streaks Code Starts Here
   useEffect(() => {
     if (!user) return;
-  
+
     axiosPublic
       .get(`/quiz_history/${user.email}`)
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
-  
+
         // ✅ Streak Calculation Logic Here
         const quizDaysSet = new Set(
-          history.map((q) =>
-            new Date(q.date).toISOString().split("T")[0]
-          )
+          history.map((q) => new Date(q.date).toISOString().split("T")[0])
         );
-  
+
         const quizDates = Array.from(quizDaysSet).sort(
           (a, b) => new Date(b) - new Date(a)
         );
-  
+
         let streakCount = 0;
         let today = new Date();
         today.setHours(0, 0, 0, 0);
-  
+
         for (let i = 0; i < quizDates.length; i++) {
           const date = new Date(quizDates[i]);
           date.setHours(0, 0, 0, 0);
-  
-          const diffDays = Math.floor(
-            (today - date) / (1000 * 60 * 60 * 24)
-          );
-  
+
+          const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+
           if (diffDays === 0 || diffDays === streakCount) {
             streakCount++;
           } else {
             break;
           }
         }
-  
-        setStreak(streakCount); 
+
+        setStreak(streakCount);
       })
       .catch((err) => {
         console.log(err);
