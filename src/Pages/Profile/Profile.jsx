@@ -11,6 +11,8 @@ import {
   X,
   CircleCheck,
   Crown,
+  Zap,
+  Flame,
 } from "lucide-react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { format } from "date-fns";
@@ -22,7 +24,11 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
   const [userInfo, setUserInfo] = useState(null);
-  const [userQuizHistory, setUserQuizHistory] = useState(null);
+  const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const [streak, setStreak] = useState(0);
+  const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
+  const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
+  const avgScore = totalScore / userQuizHistory.length;
 
   // Form state
   const [displayName, setDisplayName] = useState("");
@@ -39,7 +45,9 @@ const Profile = () => {
   useEffect(() => {
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
-      .then((res) => setUserQuizHistory(res.data))
+      .then((res) => {
+        setUserQuizHistory(res.data);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -60,15 +68,64 @@ const Profile = () => {
     fetchUserInfo();
   }, [axiosPublic, user]);
 
+  // Streaks Code Starts Here
+  useEffect(() => {
+    if (!user) return;
+  
+    axiosPublic
+      .get(`/quiz_history/${user.email}`)
+      .then((res) => {
+        const history = res?.data || [];
+        setUserQuizHistory(history);
+  
+        // ✅ Streak Calculation Logic Here
+        const quizDaysSet = new Set(
+          history.map((q) =>
+            new Date(q.date).toISOString().split("T")[0]
+          )
+        );
+  
+        const quizDates = Array.from(quizDaysSet).sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
+  
+        let streakCount = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+  
+        for (let i = 0; i < quizDates.length; i++) {
+          const date = new Date(quizDates[i]);
+          date.setHours(0, 0, 0, 0);
+  
+          const diffDays = Math.floor(
+            (today - date) / (1000 * 60 * 60 * 24)
+          );
+  
+          if (diffDays === 0 || diffDays === streakCount) {
+            streakCount++;
+          } else {
+            break;
+          }
+        }
+  
+        setStreak(streakCount); 
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user]);
+
+  // Streaks Code Ends Here
+
   // Sample stats - replace with actual data from your application
   const stats = {
-    quizzesTaken: 27,
-    totalPoints: 1240,
-    avgScore: 85,
+    quizzesTaken: userQuizHistory?.length,
+    totalPoints: xpPoints,
+    avgScore: avgScore > 0 ? avgScore.toFixed(2) : 0,
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
-    lastActive: "3 hours ago",
+    lastActive: "Now",
   };
 
   const handleSaveProfile = async () => {
@@ -211,11 +268,15 @@ const Profile = () => {
 
                     {/* Premium Members Tick */}
                     {userInfo?.subscription === "Pro" && (
-                      <CircleCheck className="text-blue-500 w-6 h-6" />
+                      <div className="tooltip" data-tip="Pro Member">
+                        <CircleCheck className="text-blue-500 w-6 h-6" />
+                      </div>
                     )}
 
                     {userInfo?.subscription === "Elite" && (
-                      <Crown className="text-amber-500 w-6 h-6" />
+                      <div className="tooltip" data-tip="Elite Member">
+                        <Crown className="text-amber-500 w-6 h-6" />
+                      </div>
                     )}
                   </h1>
                   <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
@@ -294,6 +355,19 @@ const Profile = () => {
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
             )}
           </button>
+          <button
+            className={`py-3 px-4 font-medium relative ${
+              activeTab === "transecHistory"
+                ? "text-purple-400"
+                : "text-gray-400 hover:text-gray-300"
+            }`}
+            onClick={() => setActiveTab("transecHistory")}
+          >
+            Transection History
+            {activeTab === "transecHistory" && (
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
+            )}
+          </button>
         </div>
 
         {/* Profile Content */}
@@ -311,10 +385,11 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Clock size={18} className="text-purple-400 mr-3" />
+                  <Flame size={20} className="text-purple-400 mr-3" />
+
                   <div>
-                    <p className="text-gray-400 text-sm">Last Active</p>
-                    <p className="text-white">{stats.lastActive}</p>
+                    <p className="text-gray-400 text-sm">Streak</p>
+                    <p className="text-white">{streak}</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -491,6 +566,59 @@ const Profile = () => {
             <p className="text-gray-400">
               Account settings and preferences would be displayed here.
             </p>
+          </div>
+        )}
+
+        {/* Transection history */}
+        {activeTab === "transecHistory" && (
+          <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
+            <h2 className="text-xl font-semibold text-white text-left mb-4">
+              Transection History
+            </h2>
+            {user && userInfo?.transectionId?.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-700">
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Type
+                      </th>
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Transection ID
+                      </th>
+                      <th className="text-right py-3 text-gray-400 font-medium">
+                        Valid Till
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-700/50">
+                      <td className="py-3 text-white text-left">
+                        {userInfo?.subscription}
+                      </td>
+                      <td className="py-3 text-white text-left">
+                        {userInfo?.transectionId}
+                      </td>
+                      <td className="py-3 text-right text-white">
+                        {format(
+                          new Date(userInfo?.subscriptionLastTime),
+                          "MMMM dd, yyyy"
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  Transaction History
+                </h2>
+                <p className="text-gray-400">
+                  Your Transaction History would be displayed here.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

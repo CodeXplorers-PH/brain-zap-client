@@ -1,20 +1,70 @@
 import { Link, useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
 import LockedErr from "../ui/LockedErr";
 import { motion } from "framer-motion";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import streakImg from "../../assets/img/streak.png";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
+  const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const [streak, setStreak] = useState(0);
+  const axiosPublic = useAxiosPublic();
   const location = useLocation(); // Get the current route
+
+  useEffect(() => {
+    if (!user) return;
+
+    axiosPublic
+      .get(`/quiz_history/${user.email}`)
+      .then((res) => {
+        const history = res?.data || [];
+        setUserQuizHistory(history);
+
+        // ✅ Streak Calculation Logic Here
+        const quizDaysSet = new Set(
+          history.map((q) => new Date(q.date).toISOString().split("T")[0])
+        );
+
+        const quizDates = Array.from(quizDaysSet).sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
+
+        let streakCount = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < quizDates.length; i++) {
+          const date = new Date(quizDates[i]);
+          date.setHours(0, 0, 0, 0);
+
+          const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 0 || diffDays === streakCount) {
+            streakCount++;
+          } else {
+            break;
+          }
+        }
+
+        setStreak(streakCount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user]);
+
+  // Streaks Code Start Here
+
   // Nav items
   const Navs = [
     { path: "/", pathName: "Home" },
     // { path: "/features", pathName: "Features" },
     { path: "/start-quiz", pathName: "Start Quiz" },
     { path: "/pricing", pathName: "Pricing" },
-    { path: "/blog", pathName: "Blog" },
+    { path: "/blogs", pathName: "Blog" },
     { path: "/contact", pathName: "Contact" },
   ];
 
@@ -24,43 +74,7 @@ const Header = () => {
       <div className="navbar bg-gray-900/80 backdrop-blur-md rounded-full shadow-2xl max-w-6xl w-full px-6 border border-gray-800/50">
         {/* Logo Section */}
         <div className="navbar-start">
-          <Link to="/" className="font-bold text-xl text-white">
-            BrainZap
-          </Link>
-        </div>
-
-        {/* Desktop Navigation - Center */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal">
-            {Navs.map((navlink, index) => (
-              <li key={`navlink-${index}`}>
-                <Link
-                  to={navlink.path}
-                  className={`font-medium mx-1 relative overflow-hidden group ${
-                    location.pathname === navlink.path
-                      ? "text-purple-400 font-semibold"
-                      : "text-gray-300"
-                  }`}
-                >
-                  {navlink.pathName}
-                  {/* Underline animation */}
-                  <span
-                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${
-                      location.pathname === navlink.path
-                        ? "scale-x-100"
-                        : "scale-x-0"
-                    } group-hover:scale-x-100 transition-transform duration-300`}
-                  ></span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Auth Section and Mobile Menu - End */}
-        <div className="navbar-end">
-          {/* Mobile menu hamburger - navigation only */}
-          <div className="dropdown dropdown-end scale-110 lg:hidden mr-2">
+          <div className="dropdown dropdown-content scale-110 lg:hidden mr-2">
             <motion.button
               tabIndex={0}
               whileHover={{ scale: 1.2, color: "#ffffff" }}
@@ -89,11 +103,10 @@ const Header = () => {
                 <li key={`navlink-dropdown-${index}`}>
                   <Link
                     to={navlink.path}
-                    className={`${
-                      location.pathname === navlink.path
+                    className={`${location.pathname === navlink.path
                         ? "text-purple-400 font-semibold"
                         : "text-gray-300"
-                    } hover:bg-gray-700/50`}
+                      } hover:bg-gray-700/50`}
                   >
                     {navlink.pathName}
                   </Link>
@@ -101,8 +114,57 @@ const Header = () => {
               ))}
             </ul>
           </div>
+          <Link
+            to="/"
+            className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400"
+          >
+            BrainZap
+          </Link>
+        </div>
+
+        {/* Desktop Navigation - Center */}
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal">
+            {Navs.map((navlink, index) => (
+              <li key={`navlink-${index}`}>
+                <Link
+                  to={navlink.path}
+                  className={`font-medium mx-1 relative overflow-hidden group ${location.pathname === navlink.path
+                      ? "text-purple-400 font-semibold"
+                      : "text-gray-300"
+                    }`}
+                >
+                  {navlink.pathName}
+                  {/* Underline animation */}
+                  <span
+                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${location.pathname === navlink.path
+                        ? "scale-x-100"
+                        : "scale-x-0"
+                      } group-hover:scale-x-100 transition-transform duration-300`}
+                  ></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Auth Section and Mobile Menu - End */}
+        <div className="navbar-end">
+          {/* Mobile menu hamburger - navigation only */}
 
           {/* User Profile or Get Started button */}
+          {user && (
+            <div className="relative w-9 h-9 flex items-center justify-center mr-3">
+              <img
+                className="w-full h-full opacity-80"
+                src={streakImg}
+                alt="Streak"
+              />
+              <span className="absolute top-1 left-0 w-full h-full flex items-center justify-center text-lg font-bold text-white">
+                {streak}
+              </span>
+            </div>
+          )}
           {user ? (
             <div className="dropdown dropdown-end">
               <div

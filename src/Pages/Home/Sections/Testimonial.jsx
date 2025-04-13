@@ -103,7 +103,7 @@ const TestimonialCard = ({ testimonial }) => {
 
 const Testimonial = () => {
   return (
-    <section className="bg-neutral py-16 px-4">
+    <section className="bg-gray-900 py-16 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
