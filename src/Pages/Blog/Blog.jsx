@@ -131,6 +131,7 @@ const Blog = () => {
               <img
                 src={user.photoURL || "/default-avatar.png"}
                 alt={user.displayName || "User"}
+                referrerPolicy="no-referrer"
                 className="w-10 h-10 rounded-full mr-3"
               />
               <div>
