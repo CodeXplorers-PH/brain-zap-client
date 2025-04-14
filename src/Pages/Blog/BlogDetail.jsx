@@ -1,34 +1,69 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
+import EditPostModal from "../../components/Blog/EditPostModal"; // Update the path as needed
 
 const BlogDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const fetchBlog = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${import.meta.env.VITE_ServerUrl}/blogs/${id}`, {
+        withCredentials: true,
+      });
+      setBlog(response.data.blog);
+    } catch (error) {
+      console.error("Error fetching blog:", error);
+      setError("Failed to fetch blog");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_ServerUrl}/blogs/${id}`, {
-          withCredentials: true,
-        });
-        setBlog(response.data.blog);
-      } catch (error) {
-        console.error("Error fetching blog:", error);
-        setError("Failed to fetch blog");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchBlog();
     // Scroll to top when blog page loads
     window.scrollTo(0, 0);
   }, [id]);
+
+  const handleDeleteBlog = async () => {
+    try {
+      setDeleteLoading(true);
+      await axios.delete(`${import.meta.env.VITE_ServerUrl}/blogs/${id}`, {
+        withCredentials: true,
+        data: { userId: user.uid }
+      });
+      setShowDeleteModal(false);
+      // Redirect to blogs list page after successful deletion
+      navigate('/blogs');
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      setError("Failed to delete blog");
+      setDeleteLoading(false);
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleBlogUpdate = (updatedBlog) => {
+    // Update the local blog state with the updated blog
+    setBlog({
+      ...blog,
+      ...updatedBlog
+    });
+  };
+
+  // Check if current user is the author of the blog
+  const isAuthor = blog?.author_id === user?.uid;
 
   if (isLoading) {
     return (
@@ -117,19 +152,39 @@ const BlogDetail = () => {
         </div>
         
         {/* Author Info & Date */}
-        <div className="flex items-center mb-8 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
-          <img
-            src={blog.author_avatar || "/default-avatar.png"}
-            alt={blog.author_name || "Author"}
-            className="w-12 h-12 rounded-full mr-4 object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div>
-            <p className="text-gray-200 font-medium">{blog.author_name || "Anonymous"}</p>
-            <p className="text-sm text-gray-400">
-              {formatDate(blog.publish_date)}
-            </p>
+        <div className="flex items-center justify-between mb-8 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+          <div className="flex items-center">
+            <img
+              src={blog.author_avatar || "/default-avatar.png"}
+              alt={blog.author_name || "Author"}
+              className="w-12 h-12 rounded-full mr-4 object-cover"
+              referrerPolicy="no-referrer"
+            />
+            <div>
+              <p className="text-gray-200 font-medium">{blog.author_name || "Anonymous"}</p>
+              <p className="text-sm text-gray-400">
+                {formatDate(blog.publish_date)}
+              </p>
+            </div>
           </div>
+          
+          {/* Edit/Delete buttons if user is author */}
+          {isAuthor && (
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
         
         {/* Content */}
@@ -146,6 +201,52 @@ const BlogDetail = () => {
           )}
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <EditPostModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onUpdate={handleBlogUpdate}
+        blogId={id}
+      />
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700 shadow-xl">
+            <h3 className="text-xl font-bold text-white mb-4">Delete Blog</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete this blog post? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
+                disabled={deleteLoading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteBlog}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center"
+                disabled={deleteLoading}
+              >
+                {deleteLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
