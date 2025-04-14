@@ -1,26 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import { FiX, FiImage, FiUpload, FiAlertCircle } from "react-icons/fi";
+import RichTextEditor from "./RichTextEditor";
 
 // API URL from environment or default
 const API_BASE_URL = import.meta.env.VITE_ServerUrl;
 
 const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [category, setCategory] = useState("Technology");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [content, setContent] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   const { user } = useAuth();
 
+  // Clear form when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isOpen) {
+        handleCancel();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (file) {
+      processImageFile(file);
+    }
+  };
 
+  const processImageFile = (file) => {
     if (file.size > 5 * 1024 * 1024) {
       setError("Image must be less than 5MB");
       return;
@@ -30,6 +74,7 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
     reader.onloadend = () => {
       setImage(reader.result);
       setImagePreview(reader.result);
+      setError("");
     };
     reader.readAsDataURL(file);
   };
@@ -57,10 +102,6 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
       setError("Content is required");
       return false;
     }
-    if (!category) {
-      setError("Category is required");
-      return false;
-    }
     return true;
   };
 
@@ -76,23 +117,22 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
       // Prepare author info if user is authenticated
       const author = user
         ? {
-            id: user.uid,
-            name: user.displayName || "Anonymous User",
-            avatar: user.photoURL || "/default-avatar.png",
-          }
+          id: user.uid,
+          name: user.displayName || "Anonymous User",
+          avatar: user.photoURL || "/default-avatar.png",
+        }
         : null;
 
-      // Ensure we're sending the full image data string including the data URI prefix
       const response = await axios.post(
         `${API_BASE_URL}/blogs`,
         {
           title,
-          blog: content, // Server expects 'blog' field
+          blog: content,
           category,
-          imageBase64: image, // Send the complete data URI
+          imageBase64: image,
           author,
         },
-        { 
+        {
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json'
@@ -101,17 +141,16 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
       );
 
       if (response.data.success) {
-        // Format the new blog post with proper author information before sending it back
         const formattedBlog = {
           ...response.data.blog,
-          description: response.data.blog.blog || content, // Make sure description is set
+          description: response.data.blog.blog || content,
           author: {
             id: user?.uid,
             name: user?.displayName || "Anonymous User",
             avatar: user?.photoURL || "/default-avatar.png",
           }
         };
-        
+
         onSubmit(formattedBlog);
         resetForm();
         onClose();
@@ -121,8 +160,8 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
     } catch (err) {
       console.error("Error creating blog:", err);
       setError(
-        err.response?.data?.message || 
-        err.message || 
+        err.response?.data?.message ||
+        err.message ||
         "Failed to create post. Please try again."
       );
     } finally {
@@ -144,14 +183,18 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
-      <div className="bg-gray-900 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl shadow-purple-500/10 border border-gray-800">
-        {/* Header with close button */}
-        <div className="flex items-center justify-between border-b border-gray-800 p-6">
-          <h2 className="text-2xl font-bold text-white">Share Your Thoughts</h2>
-          <button 
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div
+        className="bg-gray-900 rounded-lg w-full max-w-3xl max-h-[90vh] flex flex-col shadow-xl border border-gray-800"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header - Fixed at top */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <h2 className="text-xl font-medium text-white">Create Post</h2>
+          <button
+            type="button" 
             onClick={handleCancel}
-            className="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-gray-800"
+            className="text-gray-400 hover:text-white"
           >
             <FiX size={24} />
           </button>
@@ -159,132 +202,127 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
 
         {/* Error message */}
         {error && (
-          <div className="mx-6 mt-4 p-4 bg-red-900/20 border border-red-700/50 rounded-xl flex items-center gap-3 text-red-300">
-            <FiAlertCircle size={20} className="flex-shrink-0" />
-            <p>{error}</p>
+          <div className="mx-4 mt-4 p-3 bg-red-900/20 border border-red-700/50 rounded-lg flex items-center gap-2 text-red-300">
+            <FiAlertCircle size={18} />
+            <p className="text-sm">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-6 pt-4 space-y-6">
-          {/* Image Upload - Moved to top for better visibility */}
-          <div className="relative">
-            <div className={`rounded-xl overflow-hidden transition-all duration-300 ${
-              imagePreview 
-                ? "h-64 bg-gray-800" 
-                : "h-32 border-2 border-dashed border-gray-700 bg-gray-800/30 hover:border-purple-500/50 hover:bg-gray-800/50"
-            }`}>
-              {imagePreview ? (
-                <div className="relative h-full w-full group">
-                  <img
-                    src={imagePreview}
-                    alt="Cover"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImage(null);
-                        setImagePreview(null);
-                      }}
-                      className="p-2 bg-red-600 rounded-full text-white"
-                    >
-                      <FiX size={20} />
-                    </button>
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {/* Remove the form wrapper from around content to prevent unintended submissions */}
+          <div className="flex flex-col h-full">
+            <div className="grid grid-cols-1 gap-4">
+              {/* Image Upload - Simplified */}
+              <div
+                className={`rounded-lg overflow-hidden border border-gray-700 transition-all ${
+                  isDragging ? "border-purple-500" : ""
+                } ${imagePreview ? "h-60" : "h-32"}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                {imagePreview ? (
+                  <div className="relative h-full w-full group">
+                    <img
+                      src={imagePreview}
+                      alt="Cover"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImage(null);
+                          setImagePreview(null);
+                        }}
+                        className="p-2 bg-red-600 rounded-full text-white"
+                      >
+                        <FiX size={16} />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <label className="cursor-pointer h-full w-full flex flex-col items-center justify-center text-gray-400 hover:text-gray-300 transition-colors">
-                  <FiImage size={28} className="mb-2" />
-                  <span className="text-sm">Add Cover Image (optional)</span>
-                  <span className="text-xs text-gray-500 mt-1">Max size: 5MB</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-              )}
+                ) : (
+                  <label className="cursor-pointer h-full w-full flex flex-col items-center justify-center text-gray-400">
+                    <FiImage size={24} className="mb-2" />
+                    <span className="text-sm">Drop image or click to upload</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+              </div>
+              
+              {/* Title Input */}
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full bg-gray-800 border border-gray-700 px-4 py-3 text-white rounded-lg focus:outline-none focus:border-purple-500"
+                placeholder="Title"
+                autoFocus
+              />
+              
+              {/* Category Select - Horizontal Pills */}
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button" 
+                    onClick={() => setCategory(cat)}
+                    className={`px-3 py-1.5 rounded-full text-sm ${
+                      category === cat
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Rich Text Editor - Flexible height */}
+              <div className="min-h-64 bg-gray-800 rounded-lg overflow-hidden">
+                <RichTextEditor
+                  content={content}
+                  onUpdate={(newContent) => setContent(newContent)}
+                  placeholder="Write your post..."
+                  formId="createPostForm" 
+                />
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Title Input */}
-          <div>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-transparent border-b border-gray-700 px-2 py-3 text-xl text-white focus:outline-none focus:border-purple-500 placeholder-gray-500"
-              placeholder="Title"
-              required
-            />
-          </div>
-
-          {/* Category Select - Redesigned as pills */}
-          <div>
-            <label className="block text-gray-400 text-sm mb-3">
-              Select Category
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setCategory(cat)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                    category === cat
-                      ? "bg-purple-600 text-white"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Content Input */}
-          <div>
-            <textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full bg-gray-800/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-purple-500 min-h-[200px] resize-none placeholder-gray-500"
-              placeholder="Share your knowledge with the community..."
-              required
-            />
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-end space-x-4 pt-2">
+        {/* Action Buttons - Fixed at bottom */}
+        <div className="p-4 border-t border-gray-800">
+          <form id="createPostForm" onSubmit={handleSubmit} className="flex justify-end space-x-3">
             <button
               type="button"
               onClick={handleCancel}
-              className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-colors"
-              disabled={isSubmitting}
+              className="px-4 py-2 bg-gray-800 text-white rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className={`px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl transition-colors flex items-center justify-center gap-2 min-w-[140px] ${
-                isSubmitting ? "opacity-75 cursor-not-allowed" : ""
-              }`}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                "Publishing..."
+                <span>Publishing...</span>
               ) : (
                 <>
-                  <FiUpload size={18} />
-                  Publish Post
+                  <FiUpload size={16} />
+                  <span>Publish</span>
                 </>
               )}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

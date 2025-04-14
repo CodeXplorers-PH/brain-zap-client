@@ -17,10 +17,30 @@ const BlogCard = ({
     day: "numeric",
   });
 
-  // Truncate description to 100 characters
-  const truncatedDescription = description && description.length > 100 
-    ? `${description.substring(0, 100)}...` 
-    : description;
+  // Strip HTML tags and add spaces after headings
+  const stripHtml = (html) => {
+    if (!html) return "";
+    
+    // Replace closing heading tags with the tag + space
+    let formattedHtml = html
+      .replace(/<\/h1>/g, '</h1> ')
+      .replace(/<\/h2>/g, '</h2> ')
+      .replace(/<\/h3>/g, '</h3> ')
+      .replace(/<\/b>/g, '</b> ')
+      .replace(/<\/h5>/g, '</h5> ')
+      .replace(/<\/h6>/g, '</h6> ');
+    
+    // Create a temporary element to strip HTML
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = formattedHtml;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  // Get clean text and truncate
+  const cleanDescription = stripHtml(description);
+  const truncatedDescription = cleanDescription && cleanDescription.length > 100 
+    ? `${cleanDescription.substring(0, 100)}...` 
+    : cleanDescription;
 
   const categoryColors = {
     Technology: "bg-purple-900/50 text-purple-400 border-purple-700/50",
