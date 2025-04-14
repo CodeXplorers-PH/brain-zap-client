@@ -73,7 +73,7 @@ const Profile = () => {
     if (!user) return;
 
     axiosPublic
-      .get(`/quiz_history/${user.email}`)
+      .get(`/quiz_history/${user?.email}`)
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
