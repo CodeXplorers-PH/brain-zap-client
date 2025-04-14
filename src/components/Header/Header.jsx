@@ -10,15 +10,16 @@ import streakImg from "../../assets/img/streak.png";
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
-  const [streak, setStreak] = useState(0);
+  const [streak, setStreak] = useState(null);
   const axiosPublic = useAxiosPublic();
   const location = useLocation(); // Get the current route
 
+  // Streaks Code Starts Here
   useEffect(() => {
     if (!user) return;
 
     axiosPublic
-      .get(`/quiz_history/${user.email}`)
+      .get(`/quiz_history/${user?.email}`)
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
@@ -54,9 +55,9 @@ const Header = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [axiosPublic, user]);
+  }, [axiosPublic, user, location?.pathname]);
 
-  // Streaks Code Start Here
+  // Streaks Code Ends Here
 
   // Nav items
   const Navs = [
@@ -103,10 +104,11 @@ const Header = () => {
                 <li key={`navlink-dropdown-${index}`}>
                   <Link
                     to={navlink.path}
-                    className={`${location.pathname === navlink.path
+                    className={`${
+                      location.pathname === navlink.path
                         ? "text-purple-400 font-semibold"
                         : "text-gray-300"
-                      } hover:bg-gray-700/50`}
+                    } hover:bg-gray-700/50`}
                   >
                     {navlink.pathName}
                   </Link>
@@ -129,18 +131,20 @@ const Header = () => {
               <li key={`navlink-${index}`}>
                 <Link
                   to={navlink.path}
-                  className={`font-medium mx-1 relative overflow-hidden group ${location.pathname === navlink.path
+                  className={`font-medium mx-1 relative overflow-hidden group ${
+                    location.pathname === navlink.path
                       ? "text-purple-400 font-semibold"
                       : "text-gray-300"
-                    }`}
+                  }`}
                 >
                   {navlink.pathName}
                   {/* Underline animation */}
                   <span
-                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${location.pathname === navlink.path
+                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${
+                      location.pathname === navlink.path
                         ? "scale-x-100"
                         : "scale-x-0"
-                      } group-hover:scale-x-100 transition-transform duration-300`}
+                    } group-hover:scale-x-100 transition-transform duration-300`}
                   ></span>
                 </Link>
               </li>
