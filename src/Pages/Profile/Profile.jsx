@@ -16,6 +16,11 @@ import {
 } from "lucide-react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { format } from "date-fns";
+import medal1 from "../../../public/icons/medal1.png";
+import medal2 from "../../../public/icons/medal2.png";
+import medal3 from "../../../public/icons/medal3.png";
+import medal4 from "../../../public/icons/medal4.png";
+import medal5 from "../../../public/icons/medal5.png";
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -27,6 +32,7 @@ const Profile = () => {
   const [userQuizHistory, setUserQuizHistory] = useState([]);
   const [streak, setStreak] = useState(0);
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
+  console.log(xpPoints);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
 
@@ -408,10 +414,32 @@ const Profile = () => {
               <div className="space-y-4">
                 <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
                   <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                    <Award size={24} className="text-purple-400" />
+                    {(xpPoints >= 500 && (
+                      <img className="w-[30px]" src={medal5} alt="" />
+                    )) ||
+                      (xpPoints >= 400 && (
+                        <img className="w-[30px]" src={medal4} alt="" />
+                      )) ||
+                      (xpPoints >= 300 && (
+                        <img className="w-[30px]" src={medal3} alt="" />
+                      )) ||
+                      (xpPoints >= 200 && (
+                        <img className="w-[30px]" src={medal2} alt="" />
+                      )) ||
+                      (xpPoints >= 100 && (
+                        <img className="w-[30px]" src={medal1} alt="" />
+                      ))}
                   </div>
+
                   <div>
-                    <p className="text-white font-medium">Quiz Master</p>
+                    <p className="text-white font-medium">
+                      {(xpPoints >= 500 && "Elite Legend") ||
+                        (xpPoints >= 400 && "Advanced Master") ||
+                        (xpPoints >= 300 && "Intermediate Achiever") ||
+                        (xpPoints >= 200 && "Knowledge Seeker") ||
+                        (xpPoints >= 100 && "Beginner Milestones")}
+                    </p>
+
                     <p className="text-gray-400 text-sm">
                       Completed 25+ quizzes
                     </p>
