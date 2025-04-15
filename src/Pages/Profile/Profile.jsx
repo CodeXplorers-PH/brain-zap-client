@@ -34,8 +34,8 @@ const Profile = () => {
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   console.log(xpPoints);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
+  console.log("Total", totalScore);
   const avgScore = totalScore / userQuizHistory.length;
-
   // Form state
   const [displayName, setDisplayName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
@@ -445,6 +445,7 @@ const Profile = () => {
                     </p>
                   </div>
                 </div>
+
                 <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
                   <div className="bg-gray-600/20 p-2 rounded-lg mr-3">
                     <FileText size={24} className="text-gray-400" />
