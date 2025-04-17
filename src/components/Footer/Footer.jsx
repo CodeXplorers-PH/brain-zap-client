@@ -9,7 +9,10 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           {/* Branding */}
           <div className="text-center md:text-left">
-            <Link to="/" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+            <Link
+              to="/"
+              className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400"
+            >
               BrainZap
             </Link>
             <p className="text-gray-400 mt-2 text-sm">
@@ -19,7 +22,7 @@ const Footer = () => {
 
           {/* Links */}
           <div className="flex flex-wrap justify-center gap-6">
-            {['Features', 'Pricing', 'Blog', 'Contact'].map((link) => (
+            {["Profile", "Pricing", "Blog", "Contact"].map((link) => (
               <Link
                 key={link}
                 to={`/${link.toLowerCase()}`}
@@ -32,27 +35,27 @@ const Footer = () => {
 
           {/* Socials */}
           <div className="flex gap-4">
-            <a 
-              href="https://github.com" 
-              target="_blank" 
+            <a
+              href="https://github.com/orgs/CodeXplorers-PH/repositories"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
               aria-label="GitHub"
             >
               <Github size={18} />
             </a>
-            <a 
-              href="https://twitter.com" 
-              target="_blank" 
+            <a
+              href="https://twitter.com"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
               aria-label="Twitter"
             >
               <Twitter size={18} />
             </a>
-            <a 
-              href="https://linkedin.com" 
-              target="_blank" 
+            <a
+              href="https://linkedin.com"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
               aria-label="LinkedIn"

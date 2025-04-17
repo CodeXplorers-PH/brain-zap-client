@@ -60,7 +60,7 @@ const Hero = () => {
             with{" "}
             <SparklesText
               text="Smart Quizzes"
-              className="text-white inline-block"
+              className="text-white text-4xl md:text-6xl inline-block"
             />
           </motion.h1>
 
@@ -69,7 +69,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-xl text-gray-400 max-w-3xl mx-auto mb-10"
+            className="text-md md:text-xl text-gray-400 max-w-3xl mx-auto mb-10"
           >
             Brain Zap adapts to your learning style, delivering personalized
             challenges and smart insights to boost your knowledge and

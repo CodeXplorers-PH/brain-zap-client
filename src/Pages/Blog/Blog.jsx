@@ -1,74 +1,12 @@
 import { useEffect, useState } from "react";
 import { FiSearch, FiArrowRight, FiPlus } from "react-icons/fi";
-import { blogs } from "@/data/Blogs";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import CreatePostModal from "@/components/Blog/CreatePostModal";
 import { Link } from "react-router-dom";
+import BlogCard from "@/components/Blog/BlogCard"; // Import the external BlogCard component
+
 const API_BASE_URL = import.meta.env.VITE_ServerUrl;
-const BlogCard = ({ title, description, publish_date, img, category, id }) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const categoryColors = {
-    Technology: "bg-purple-900/50 text-purple-400/80",
-    Science: "bg-blue-900/50 text-blue-400/80",
-    Health: "bg-emerald-900/50 text-emerald-400/80",
-    Business: "bg-amber-900/50 text-amber-400/80",
-    Entertainment: "bg-pink-900/50 text-pink-400/80",
-    Sports: "bg-red-900/50 text-red-400/80",
-    Education: "bg-indigo-900/50 text-indigo-400/80",
-    Lifestyle: "bg-green-900/50 text-green-400/80",
-    Travel: "bg-cyan-900/50 text-cyan-400/80",
-    Food: "bg-orange-900/50 text-orange-400/80",
-  };
-
-
-  return (
-    <div className="group relative h-full overflow-hidden rounded-xl border border-gray-800 bg-gray-800/50 hover:border-gray-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10">
-      <div className="h-48 overflow-hidden">
-        <img
-          src={img}
-          alt={title}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
-      <div className="p-6 flex flex-col h-[calc(100%-12rem)]">
-        <span
-          className={`inline-block w-fit px-3 py-1 text-xs font-medium rounded-full ${
-            categoryColors[category] || "bg-gray-700 text-gray-300"
-          } mb-3`}
-        >
-          {category}
-        </span>
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors line-clamp-2">
-          {title}
-        </h3>
-        <p className="text-gray-400 mb-4 line-clamp-3 flex-grow">
-          {description}
-        </p>
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-sm text-gray-500">
-            {new Date(publish_date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
-          <Link to={`/blogs/${id}`}
-            className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center transition-colors"
-            aria-label={`Read more about ${title}`}
-          >
-            Read More
-            <FiArrowRight className="ml-1" />
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,6 +23,10 @@ const Blog = () => {
   const { user } = useAuth();
   const isAuthenticated = !!user;
   const limit = 6; // Blogs per page
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const fetchBlogs = async (reset = false) => {
     setIsLoading(true);
@@ -189,6 +131,7 @@ const Blog = () => {
               <img
                 src={user.photoURL || "/default-avatar.png"}
                 alt={user.displayName || "User"}
+                referrerPolicy="no-referrer"
                 className="w-10 h-10 rounded-full mr-3"
               />
               <div>
@@ -295,10 +238,8 @@ const Blog = () => {
               />
             ))}
           </div>
-        ) : (
-          <div
-            className="text-center py-20 border border-gray-800 rounded-xl bg-gray-800/30"
-          >
+        ) : !isLoading ? (
+          <div className="text-center py-20 border border-gray-800 rounded-xl bg-gray-800/30">
             <h3 className="text-xl font-medium text-gray-400 mb-2">
               No posts found
             </h3>
@@ -308,8 +249,20 @@ const Blog = () => {
                 : "Try adjusting your search or filter criteria"}
             </p>
           </div>
-        )}
+        ) : null}
 
+        {/* Load More Button - Show if there are more blogs to load */}
+        {!isLoading && filteredBlogs.length > 0 && filteredBlogs.length < totalBlogs && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={loadMore}
+              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-lg transition-all"
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Create Post Modal */}
