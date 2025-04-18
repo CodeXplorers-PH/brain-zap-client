@@ -1,15 +1,29 @@
-import { Slider } from '@radix-ui/react-slider';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Slider } from 'radix-ui';
+import { useNavigate } from 'react-router-dom';
 
 const PersonalizedQuiz = () => {
+  const [quizzesNumber, setQuizzesNumber] = useState(10);
+
+  const navigate = useNavigate();
+
   const handleSubmit = e => {
     e.preventDefault();
 
-    console.log(e);
+    const formData = new FormData(e.target);
+    const { topic, difficulty } = Object.fromEntries(formData.entries());
+
+    navigate(
+      `/quiz/${topic}?difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
+    );
   };
 
+  useEffect(() => {
+    localStorage.removeItem('quiz_questions');
+  });
+
   return (
-    <div className="bg-gray-900 pt-40 pb-20 min-h-screen">
+    <div className="bg-gray-900 pt-36 pb-20 min-h-screen">
       <div className="px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">
         {/* Heading */}
         <div className="mb-8">
@@ -43,7 +57,7 @@ const PersonalizedQuiz = () => {
               required
             />
             <p className="text-gray-400 mt-2">
-              Select the topic area for your quiz questions.
+              Select a topic area for your quiz questions.
             </p>
           </div>
 
@@ -92,14 +106,26 @@ const PersonalizedQuiz = () => {
 
           {/* Quiz number */}
           <div>
-            <label
-              className="text-gray-300 font-medium ps-1"
-              htmlFor="quizzesNumber"
-            >
-              Quizzes Number
-            </label>
+            <p className="text-gray-300 font-medium ps-1 mb-2">
+              Quizzes Number: {quizzesNumber}
+            </p>
 
-            <Slider defaultValue={[5]} min={5} max={20} step={1} value={5} />
+            <Slider.Root
+              className="relative flex h-5 w-full touch-none select-none items-center"
+              defaultValue={[10]}
+              min={5}
+              max={20}
+              step={1}
+              onChange={e => setQuizzesNumber(Number(e.target.value))}
+            >
+              <Slider.Track className="relative h-[6px] grow rounded-full bg-gray-600">
+                <Slider.Range className="absolute h-full rounded-full bg-purple-600" />
+              </Slider.Track>
+              <Slider.Thumb
+                className="block size-4 rounded-full bg-gray-800 border-2 border-[#c27aff] shadow-[0_0_3px_3px_#9010fa] hover:shadow-[0_0_4px_4px_#9010fa] cursor-pointer outline-none transition-all duration-300"
+                aria-label="Volume"
+              />
+            </Slider.Root>
 
             <p className="text-gray-400 mt-2">
               Choose between 5 and 20 questions.
