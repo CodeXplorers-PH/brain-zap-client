@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PersonalizedQuiz from './PersonalizedQuiz';
+import { Link, useNavigate } from 'react-router-dom';
 
 const categories = [
   {
@@ -152,9 +151,9 @@ const categories = [
 
 const QuizCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [difficulty, setDifficulty] = useState('medium');
-  const [quizzesNumber, setQuizzesNumber] = useState(10);
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  const navigate = useNavigate();
 
   const categoryColors = {
     'Web Development': 'from-indigo-600 to-purple-600',
@@ -183,15 +182,49 @@ const QuizCategories = () => {
         </p>
       </div>
 
-      {/* Personalized Quiz */}
-      <div>
-        <PersonalizedQuiz
-          categoryColors={categoryColors}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          setDifficulty={setDifficulty}
-          setQuizzesNumber={setQuizzesNumber}
-        />
+      <div className="mb-10 flex justify-center items-center gap-4">
+        {/* Category Filter */}
+        <div className="relative">
+          <select
+            className="w-full appearance-none pl-4 pr-2 md:pr-6 lg:pr-8 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all cursor-pointer"
+            name="category"
+            id="category"
+            value={selectedCategory}
+            onChange={e => setSelectedCategory(e.target.value)}
+          >
+            <option value="All">All Categories</option>
+            {Object.keys(categoryColors).map(cat => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          <div className="pointer-events-none absolute top-4 right-0 flex items-center px-2 text-gray-400">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Create Personalize quiz button */}
+        <button
+          onClick={() => navigate('/create_quiz')}
+          className="px-3 sm:px-6 md:px-8 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white font-medium hover:from-purple-700 hover:to-blue-700 transition-colors"
+          type="submit"
+        >
+          Create Quiz
+        </button>
       </div>
 
       {/* Categories Grid */}
@@ -199,7 +232,7 @@ const QuizCategories = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
             <Link
-              to={`/quiz/${category.link}?difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`}
+              to={`/quiz/${category.link}?difficulty=medium&quizzesNumber=10`}
               key={index}
               className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
               onMouseEnter={() => setHoveredCard(index)}
