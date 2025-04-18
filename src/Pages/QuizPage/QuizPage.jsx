@@ -18,6 +18,10 @@ const QuizPage = () => {
   const quizzesNumber = queryParams.get('quizzesNumber');
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     let abortController = new AbortController();
 
     const localStorageKey = `quiz_questions`;
@@ -43,12 +47,8 @@ const QuizPage = () => {
           localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
         }
       } catch (err) {
-        if (err.name === 'AbortError') {
-          console.log('Fetch request was aborted.');
-        } else {
-          console.error('Error fetching questions:', err);
-          setError('Failed to load questions. Please try again later.');
-        }
+        console.error('Error fetching questions:', err);
+        setError('Failed to load questions. Please try again later.');
       } finally {
         if (!signal.aborted) {
           setLoading(false);
@@ -67,7 +67,7 @@ const QuizPage = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
-      <h2 className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12">
+      <h2 className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 capitalize">
         {category} Quiz
       </h2>
 
