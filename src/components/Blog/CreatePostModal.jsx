@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import useAuth from "../../hooks/useAuth";
-import { FiX, FiImage, FiUpload, FiAlertCircle } from "react-icons/fi";
-import RichTextEditor from "./RichTextEditor";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
+import { FiX, FiImage, FiUpload, FiAlertCircle } from 'react-icons/fi';
+import RichTextEditor from './RichTextEditor';
 
 // API URL from environment or default
 const API_BASE_URL = import.meta.env.VITE_ServerUrl;
 
 const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("Technology");
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('Technology');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [content, setContent] = useState("");
+  const [error, setError] = useState('');
+  const [content, setContent] = useState('');
   const [isDragging, setIsDragging] = useState(false);
 
   const { user } = useAuth();
@@ -28,17 +28,17 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
 
   // Handle escape key
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === "Escape" && isOpen) {
+    const handleEscape = e => {
+      if (e.key === 'Escape' && isOpen) {
         handleCancel();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
-  const handleDragOver = (e) => {
+  const handleDragOver = e => {
     e.preventDefault();
     setIsDragging(true);
   };
@@ -47,7 +47,7 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
     setIsDragging(false);
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = e => {
     e.preventDefault();
     setIsDragging(false);
 
@@ -57,16 +57,16 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = e => {
     const file = e.target.files[0];
     if (file) {
       processImageFile(file);
     }
   };
 
-  const processImageFile = (file) => {
+  const processImageFile = file => {
     if (file.size > 5 * 1024 * 1024) {
-      setError("Image must be less than 5MB");
+      setError('Image must be less than 5MB');
       return;
     }
 
@@ -74,18 +74,18 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
     reader.onloadend = () => {
       setImage(reader.result);
       setImagePreview(reader.result);
-      setError("");
+      setError('');
     };
     reader.readAsDataURL(file);
   };
 
   const resetForm = () => {
-    setTitle("");
-    setContent("");
-    setCategory("Technology");
+    setTitle('');
+    setContent('');
+    setCategory('Technology');
     setImage(null);
     setImagePreview(null);
-    setError("");
+    setError('');
   };
 
   const handleCancel = () => {
@@ -95,19 +95,19 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
 
   const validateForm = () => {
     if (!title.trim()) {
-      setError("Title is required");
+      setError('Title is required');
       return false;
     }
     if (!content.trim()) {
-      setError("Content is required");
+      setError('Content is required');
       return false;
     }
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    setError("");
+    setError('');
 
     if (!validateForm()) return;
 
@@ -117,10 +117,10 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
       // Prepare author info if user is authenticated
       const author = user
         ? {
-          id: user.uid,
-          name: user.displayName || "Anonymous User",
-          avatar: user.photoURL || "/default-avatar.png",
-        }
+            id: user.uid,
+            name: user.displayName || 'Anonymous User',
+            avatar: user.photoURL || '/default-avatar.png',
+          }
         : null;
 
       const response = await axios.post(
@@ -135,8 +135,8 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
         {
           withCredentials: true,
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         }
       );
 
@@ -146,23 +146,23 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
           description: response.data.blog.blog || content,
           author: {
             id: user?.uid,
-            name: user?.displayName || "Anonymous User",
-            avatar: user?.photoURL || "/default-avatar.png",
-          }
+            name: user?.displayName || 'Anonymous User',
+            avatar: user?.photoURL || '/default-avatar.png',
+          },
         };
 
         onSubmit(formattedBlog);
         resetForm();
         onClose();
       } else {
-        setError(response.data.message || "Failed to create post");
+        setError(response.data.message || 'Failed to create post');
       }
     } catch (err) {
-      console.error("Error creating blog:", err);
+      console.error('Error creating blog:', err);
       setError(
         err.response?.data?.message ||
-        err.message ||
-        "Failed to create post. Please try again."
+          err.message ||
+          'Failed to create post. Please try again.'
       );
     } finally {
       setIsSubmitting(false);
@@ -172,27 +172,27 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
   if (!isOpen) return null;
 
   const categories = [
-    "Technology",
-    "Programming",
-    "AI",
-    "Data Science",
-    "Web Development",
-    "Mobile Development",
-    "Computer Science",
-    "Other",
+    'Technology',
+    'Programming',
+    'AI',
+    'Data Science',
+    'Web Development',
+    'Mobile Development',
+    'Computer Science',
+    'Other',
   ];
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
       <div
         className="bg-gray-900 rounded-lg w-full max-w-3xl max-h-[90vh] flex flex-col shadow-xl border border-gray-800"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {/* Header - Fixed at top */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800">
           <h2 className="text-xl font-medium text-white">Create Post</h2>
           <button
-            type="button" 
+            type="button"
             onClick={handleCancel}
             className="text-gray-400 hover:text-white"
           >
@@ -216,8 +216,8 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
               {/* Image Upload - Simplified */}
               <div
                 className={`rounded-lg overflow-hidden border border-gray-700 transition-all ${
-                  isDragging ? "border-purple-500" : ""
-                } ${imagePreview ? "h-60" : "h-32"}`}
+                  isDragging ? 'border-purple-500' : ''
+                } ${imagePreview ? 'h-60' : 'h-32'}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -245,7 +245,9 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
                 ) : (
                   <label className="cursor-pointer h-full w-full flex flex-col items-center justify-center text-gray-400">
                     <FiImage size={24} className="mb-2" />
-                    <span className="text-sm">Drop image or click to upload</span>
+                    <span className="text-sm">
+                      Drop image or click to upload
+                    </span>
                     <input
                       type="file"
                       accept="image/*"
@@ -255,28 +257,28 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
                   </label>
                 )}
               </div>
-              
+
               {/* Title Input */}
               <input
                 type="text"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={e => setTitle(e.target.value)}
                 className="w-full bg-gray-800 border border-gray-700 px-4 py-3 text-white rounded-lg focus:outline-none focus:border-purple-500"
                 placeholder="Title"
                 autoFocus
               />
-              
+
               {/* Category Select - Horizontal Pills */}
               <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
+                {categories.map(cat => (
                   <button
                     key={cat}
-                    type="button" 
+                    type="button"
                     onClick={() => setCategory(cat)}
                     className={`px-3 py-1.5 rounded-full text-sm ${
                       category === cat
-                        ? "bg-purple-600 text-white"
-                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                     }`}
                   >
                     {cat}
@@ -288,9 +290,9 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
               <div className="min-h-64 bg-gray-800 rounded-lg overflow-hidden">
                 <RichTextEditor
                   content={content}
-                  onUpdate={(newContent) => setContent(newContent)}
+                  onUpdate={newContent => setContent(newContent)}
                   placeholder="Write your post..."
-                  formId="createPostForm" 
+                  formId="createPostForm"
                 />
               </div>
             </div>
@@ -299,7 +301,11 @@ const CreatePostModal = ({ isOpen, onClose, onSubmit }) => {
 
         {/* Action Buttons - Fixed at bottom */}
         <div className="p-4 border-t border-gray-800">
-          <form id="createPostForm" onSubmit={handleSubmit} className="flex justify-end space-x-3">
+          <form
+            id="createPostForm"
+            onSubmit={handleSubmit}
+            className="flex justify-end space-x-3"
+          >
             <button
               type="button"
               onClick={handleCancel}
