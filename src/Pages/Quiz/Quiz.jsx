@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const optionLabels = ["A.", "B.", "C.", "D."];
+const optionLabels = ['A.', 'B.', 'C.', 'D.'];
 
 const Quiz = ({ questions }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const { category } = useParams();
   const navigate = useNavigate();
   const handleOptionSelect = (questionIndex, option) => {
-    setSelectedOptions((prev) => ({
+    setSelectedOptions(prev => ({
       ...prev,
       [questionIndex]: option,
     }));
@@ -22,21 +22,21 @@ const Quiz = ({ questions }) => {
       return;
     }
 
-    localStorage.setItem("userAnswers", JSON.stringify(selectedOptions));
+    localStorage.setItem('userAnswers', JSON.stringify(selectedOptions));
     localStorage.removeItem(`history_posted`);
     navigate(`/quiz/${category}/answer`);
   };
 
   // 🧠 Helper to render question + code
-  const renderFormattedQuestion = (question) => {
-    const parts = question.split("```");
+  const renderFormattedQuestion = question => {
+    const parts = question.split('```');
 
     return (
       <>
         <p className="text-white whitespace-pre-wrap">{parts[0]}</p>
         {parts[1] && (
           <pre className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto text-sm my-2">
-            <code>{parts[1].split("\n").slice(1).join("\n")}</code>
+            <code>{parts[1].split('\n').slice(1).join('\n')}</code>
           </pre>
         )}
       </>
@@ -63,8 +63,8 @@ const Quiz = ({ questions }) => {
                 key={i}
                 className={`p-4 text-left rounded-lg transition-all flex items-start border ${
                   selectedOptions[index] === option
-                    ? "border-purple-500 bg-purple-900/30"
-                    : "border-gray-700 bg-gray-800 hover:bg-gray-700"
+                    ? 'border-purple-500 bg-purple-900/30'
+                    : 'border-gray-700 bg-gray-800 hover:bg-gray-700'
                 }`}
                 onClick={() => handleOptionSelect(index, option)}
               >
@@ -85,7 +85,7 @@ const Quiz = ({ questions }) => {
           disabled={Object.keys(selectedOptions).length !== questions.length}
         >
           {Object.keys(selectedOptions).length === questions.length
-            ? "Submit Answers"
+            ? 'Submit Answers'
             : `Answered ${Object.keys(selectedOptions).length}/${
                 questions.length
               } questions`}

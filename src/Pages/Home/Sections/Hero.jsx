@@ -145,11 +145,10 @@ const Hero = () => {
         </div>
 
         {/* Hero Image/Illustration Placeholder */}
-        <div className="relative mt-16 rounded-2xl overflow-hidden border border-gray-800 bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-1">
-          <div className="h-full w-full bg-gray-800/30 rounded-xl flex items-center justify-center">
-            <img src="/quiz-result.png" alt="" />
+        <div className="relative mt-16 rounded-3xl overflow-hidden border border-gray-800 bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-2">
+          <div className="h-full w-full flex items-center justify-center">
+            <img src="/quiz-result.png" alt="quiz-result"  className="rounded-[20px]"/>
           </div>
-          <div className="absolute inset-0 border border-gray-700/50 rounded-xl pointer-events-none"></div>
         </div>
       </div>
 

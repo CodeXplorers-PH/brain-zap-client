@@ -6,6 +6,7 @@ import LockedErr from "../ui/LockedErr";
 import { motion } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import streakImg from "../../assets/img/streak.png";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -184,22 +185,18 @@ const Header = () => {
                 tabIndex={0}
                 role="button"
                 aria-label="User profile"
-                className="relative flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-pointer"
+                className="relative flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
               >
-                {user?.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt="User avatar"
-                    className="w-full h-full rounded-full object-cover"
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full rounded-full bg-purple-600 text-white flex items-center justify-center font-medium">
-                    {user?.displayName?.charAt(0).toUpperCase() ||
-                      user?.email?.charAt(0).toUpperCase() ||
-                      "U"}
-                  </div>
+                {user?.photoURL && (
+                  <Avatar>
+                    <AvatarImage
+                      src={user?.photoURL}
+                      alt={`Photo of ${user?.displayName}`}
+                    />
+                    <AvatarFallback>
+                      {user?.displayName?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 )}
               </div>
               <ul
