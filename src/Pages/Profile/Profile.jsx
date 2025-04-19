@@ -17,6 +17,7 @@ import {
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -197,20 +198,21 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row items-center gap-6">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-purple-600 shadow-lg">
                 {photoURL ? (
-                  <img
-                    src={photoURL}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+                  <Avatar className="w-24 h-24 md:w-32 md:h-32 text-2xl overflow-hidden border-4 border-purple-600">
+                    <AvatarImage
+                      src={photoURL}
+                      alt={`Photo of ${user?.displayName}`}
+                    />
+                    <AvatarFallback>
+                      {user?.displayName?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 ) : (
                   <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
                     {getInitials()}
                   </div>
                 )}
-              </div>
               <button
                 onClick={() => setIsEditing(true)}
                 className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-lg transition-all duration-200"
@@ -567,7 +569,7 @@ const Profile = () => {
                         <td className="py-3 text-right">
                           <button
                             onClick={() => handleViewHistory(quiz)}
-                            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-purple-300 transition-colors"
+                            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium text-purple-400 transition-colors"
                           >
                             View
                           </button>
