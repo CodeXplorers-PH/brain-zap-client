@@ -11,7 +11,6 @@ const Layout = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [chat, setChat] = useState(true);
-  console.log(location?.pathname);
 
   useEffect(() => {
     const isQuizPage = location.pathname.startsWith("/quiz");

@@ -17,58 +17,54 @@ const Header = () => {
   // Streaks Code Starts Here
   useEffect(() => {
     if (!user) return;
-  
+
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
-        console.log(history);
-  
         // Utility to get date in local YYYY-MM-DD format
         const formatDateLocal = (dateStr) => {
           const date = new Date(dateStr);
           return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
         };
-  
+
         // Extract unique quiz dates (formatted locally)
         const quizDaysSet = new Set(
           history.map((q) => formatDateLocal(q.date))
         );
-  
+
         const today = new Date();
         const todayStr = today.toLocaleDateString("en-CA");
-  
+
         // 🛑 If user didn't give quiz today, streak = 0
         if (!quizDaysSet.has(todayStr)) {
           setStreak(0);
           return;
         }
-  
+
         // ✅ Start with today counted
         let streakCount = 1;
-  
+
         // 🔁 Check previous consecutive days
         for (let i = 1; ; i++) {
           const prevDate = new Date();
           prevDate.setDate(today.getDate() - i);
           const prevStr = prevDate.toLocaleDateString("en-CA");
-  
+
           if (quizDaysSet.has(prevStr)) {
             streakCount++;
           } else {
             break;
           }
         }
-  
+
         setStreak(streakCount);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [axiosPublic, user, location?.pathname]);
-  
-  
 
   // Streaks Code Ends Here
 

@@ -32,6 +32,11 @@ const QuizAnswer = () => {
   const printContentRef = useRef(null);
   const shareableLink = window.location.href;
 
+  // Scroll to top view
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
   useEffect(() => {
     const fetchResults = () => {
       const storedQuiz = localStorage.getItem("quiz_questions");

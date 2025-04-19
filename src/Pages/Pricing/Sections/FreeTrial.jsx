@@ -22,7 +22,7 @@ const FreeTrial = () => {
               <span className="font-mono bg-purple-800/50 px-2 py-1 rounded text-amber-300">
                 BRAINZAP10
               </span>{" "}
-              for a FREE 30-day trial.
+              and get 10% off instant.
             </p>
 
             <Link to={"/checkout"}>
