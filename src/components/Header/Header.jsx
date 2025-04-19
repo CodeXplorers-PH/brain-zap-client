@@ -24,7 +24,6 @@ const Header = () => {
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
-
         // Utility to get date in local YYYY-MM-DD format
         const formatDateLocal = (dateStr) => {
           const date = new Date(dateStr);

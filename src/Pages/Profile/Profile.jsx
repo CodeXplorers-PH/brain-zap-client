@@ -123,7 +123,6 @@ const Profile = () => {
         console.log(err);
       });
   }, [axiosPublic, user]);
-
   // Streaks Code Ends Here
 
   // Sample stats - replace with actual data from your application
