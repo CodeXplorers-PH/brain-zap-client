@@ -1,67 +1,71 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { 
-  Zap, 
-  Layers, 
-  Target, 
-  Settings, 
-  Lightbulb, 
+import React from 'react';
+import { motion } from 'framer-motion';
+import {
+  Zap,
+  Layers,
+  Target,
+  Settings,
+  Lightbulb,
   Award,
   Sparkles,
   BrainCircuit,
   BarChart2,
-  BookOpen
+  BookOpen,
 } from 'lucide-react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const Features = () => {
   const featuresData = [
     {
       id: 1,
       icon: <Sparkles className="w-6 h-6" />,
-      title: "AI-Powered Quizzes",
-      description: "Dynamic quizzes that adapt to your learning style in real-time",
-      highlight: "Intelligent adaptation"
+      title: 'AI-Powered Quizzes',
+      description:
+        'Dynamic quizzes that adapt to your learning style in real-time',
+      highlight: 'Intelligent adaptation',
     },
     {
       id: 2,
       icon: <BrainCircuit className="w-6 h-6" />,
-      title: "Personalized Learning",
-      description: "Custom paths tailored to your knowledge gaps",
-      highlight: "Targeted improvement"
+      title: 'Personalized Learning',
+      description: 'Custom paths tailored to your knowledge gaps',
+      highlight: 'Targeted improvement',
     },
     {
       id: 3,
       icon: <BarChart2 className="w-6 h-6" />,
-      title: "Performance Analytics",
-      description: "Detailed insights into your progress",
-      highlight: "Data-driven learning"
+      title: 'Performance Analytics',
+      description: 'Detailed insights into your progress',
+      highlight: 'Data-driven learning',
     },
     {
       id: 4,
       icon: <BookOpen className="w-6 h-6" />,
-      title: "Knowledge Reinforcement",
-      description: "Smart repetition of challenging concepts",
-      highlight: "Long-term retention"
-    }
+      title: 'Knowledge Reinforcement',
+      description: 'Smart repetition of challenging concepts',
+      highlight: 'Long-term retention',
+    },
   ];
 
   const featureHighlights = [
     {
       icon: <Zap className="w-8 h-8 text-purple-400" />,
-      title: "Instant Feedback",
-      description: "Get real-time explanations and corrections as you answer questions"
+      title: 'Instant Feedback',
+      description:
+        'Get real-time explanations and corrections as you answer questions',
     },
     {
       icon: <Layers className="w-8 h-8 text-blue-400" />,
-      title: "Multi-Layered Difficulty",
-      description: "Progress from beginner to expert with adaptive challenge levels"
+      title: 'Multi-Layered Difficulty',
+      description:
+        'Progress from beginner to expert with adaptive challenge levels',
     },
     {
       icon: <Target className="w-8 h-8 text-green-400" />,
-      title: "Precision Training",
-      description: "Focus on specific topics or skills with targeted quiz modes"
-    }
+      title: 'Precision Training',
+      description:
+        'Focus on specific topics or skills with targeted quiz modes',
+    },
   ];
 
   return (
@@ -71,7 +75,7 @@ const Features = () => {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl opacity-20"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-900/20 rounded-full filter blur-3xl opacity-20"></div>
       </div>
-      
+
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section header */}
         <div className="text-center mb-20">
@@ -84,7 +88,7 @@ const Features = () => {
             <span className="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
             <span className="text-sm font-medium text-gray-300">AI-Powered Learning</span>
           </motion.div> */}
-          
+
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -97,14 +101,15 @@ const Features = () => {
             <br />
             Faster Learning
           </motion.h2>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl text-gray-400 max-w-3xl mx-auto"
           >
-            BrainZap's adaptive technology personalizes your learning experience for maximum knowledge retention.
+            BrainZap's adaptive technology personalizes your learning experience
+            for maximum knowledge retention.
           </motion.p>
         </div>
 
@@ -123,9 +128,13 @@ const Features = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-400 mb-3">{feature.description}</p>
-                <span className="text-xs font-medium text-purple-400">{feature.highlight}</span>
+                <span className="text-xs font-medium text-purple-400">
+                  {feature.highlight}
+                </span>
               </div>
             </motion.div>
           ))}
@@ -146,11 +155,20 @@ const Features = () => {
                 <div className="text-center">
                   <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-700 mb-6">
                     <span className="w-2 h-2 rounded-full bg-green-400 mr-2 animate-pulse"></span>
-                    <span className="text-sm font-medium text-gray-300">Active Quiz Session</span>
+                    <span className="text-sm font-medium text-gray-300">
+                      Active Quiz Session
+                    </span>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-4">AI-Powered Quiz</div>
-                  <div className="text-gray-400 mb-6">Adapting to your learning patterns...</div>
-                  <Link to='/start-quiz' className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white font-medium hover:from-purple-700 hover:to-blue-700 transition-colors">
+                  <div className="text-2xl font-bold text-white mb-4">
+                    AI-Powered Quiz
+                  </div>
+                  <div className="text-gray-400 mb-6">
+                    Adapting to your learning patterns...
+                  </div>
+                  <Link
+                    to="/start-quiz"
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white font-medium hover:from-purple-700 hover:to-blue-700 transition-colors"
+                  >
                     Try Demo
                   </Link>
                 </div>
@@ -175,7 +193,9 @@ const Features = () => {
                 Powered by AI
               </h3>
               <p className="text-gray-400 text-lg">
-                Our platform uses machine learning to identify your strengths and weaknesses, creating optimal learning paths tailored just for you.
+                Our platform uses machine learning to identify your strengths
+                and weaknesses, creating optimal learning paths tailored just
+                for you.
               </p>
             </div>
 
@@ -188,11 +208,11 @@ const Features = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="flex items-start space-x-4"
                 >
-                  <div className="flex-shrink-0 mt-1">
-                    {highlight.icon}
-                  </div>
+                  <div className="flex-shrink-0 mt-1">{highlight.icon}</div>
                   <div>
-                    <h4 className="font-bold text-xl text-white mb-2">{highlight.title}</h4>
+                    <h4 className="font-bold text-xl text-white mb-2">
+                      {highlight.title}
+                    </h4>
                     <p className="text-gray-400">{highlight.description}</p>
                   </div>
                 </motion.div>

@@ -61,8 +61,7 @@ const TestimonialCard = ({ testimonial }) => {
   return (
     <div className="relative bg-neutral-800 rounded-2xl p-8 overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:scale-105">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900 opacity-75 group-hover:opacity-90 transition-opacity"></div>
-
+      <div className="absolute inset-0 bg-gradient-to-br from-neutral-700/10 to-neutral-900/10 opacity-75 group-hover:opacity-90 transition-opacity"></div>
       {/* Quote Icon */}
       <div className="absolute top-4 right-4 opacity-20">
         <Quote className="w-16 h-16 text-neutral-500" />
