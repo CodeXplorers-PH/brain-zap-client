@@ -59,18 +59,18 @@ const TestimonialCard = ({ testimonial }) => {
   const { name, image, location, age, feedback, rating } = testimonial;
 
   return (
-    <div className="relative bg-neutral-800 rounded-2xl p-8 overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:scale-105">
+    <div className="relative bg-violet-900/20 rounded-2xl p-8 overflow-hidden group cursor-pointer">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-neutral-700/10 to-neutral-900/10 opacity-75 group-hover:opacity-90 transition-opacity"></div>
       {/* Quote Icon */}
-      <div className="absolute top-4 right-4 opacity-20">
-        <Quote className="w-16 h-16 text-neutral-500" />
+      <div className="absolute top-4 right-4 opacity-20 group-hover:scale-125 transition-transform duration-300">
+        <Quote className="w-16 h-16 text-violet-500/50" />
       </div>
 
       {/* Testimonial Content */}
       <div className="relative z-10 space-y-6">
-        <p className="text-neutral-200 italic leading-relaxed mb-6">
-          "{feedback.slice(0, 250)}..."
+        <p className="text-neutral-200 leading-relaxed mb-6">
+          {feedback.slice(0, 250)}
         </p>
 
         {/* Rating */}
