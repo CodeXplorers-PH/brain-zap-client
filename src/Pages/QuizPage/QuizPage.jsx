@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import Quiz from '../Quiz/Quiz';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import Quiz from "../Quiz/Quiz";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const QuizPage = () => {
   const { category } = useParams();
@@ -14,8 +14,8 @@ const QuizPage = () => {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
 
-  const difficulty = queryParams.get('difficulty');
-  const quizzesNumber = queryParams.get('quizzesNumber');
+  const difficulty = queryParams.get("difficulty");
+  const quizzesNumber = queryParams.get("quizzesNumber");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -47,8 +47,8 @@ const QuizPage = () => {
           localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
         }
       } catch (err) {
-        console.error('Error fetching questions:', err);
-        setError('Failed to load questions. Please try again later.');
+        console.error("Error fetching questions:", err);
+        setError("Failed to load questions. Please try again later.");
       } finally {
         if (!signal.aborted) {
           setLoading(false);
