@@ -25,15 +25,11 @@ const CTA = () => {
           </p>
 
           <div className="pt-4">
-            <Link to={"/start-quiz"}>
-              <button
-                className="bg-gradient-to-r from-purple-600 to-pink-500 text-white 
+            <Link to='/start-quiz' className="bg-gradient-to-r from-purple-600 to-pink-500 text-white 
               px-8 py-3 rounded-full text-lg font-semibold 
               hover:opacity-90 transition-all duration-300 
-              shadow-lg hover:scale-105 active:scale-100"
-              >
-                Get Started Now
-              </button>
+              shadow-lg hover:scale-105 active:scale-100">
+              Get Started Now
             </Link>
           </div>
         </div>

@@ -4,12 +4,12 @@ import {
   FaSignInAlt,
   FaPrint,
   FaFacebookF,
-  FaTwitter,
   FaLinkedinIn,
   FaWhatsapp,
   FaLink,
   FaShareAlt,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import useAuth from "@/hooks/useAuth";
 
@@ -764,15 +764,15 @@ const QuizAnswer = () => {
 
               <button
                 onClick={() => handleShareSocial("twitter")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-sky-500 hover:bg-sky-600 transition-colors"
+                className="flex flex-col items-center justify-center p-3 rounded-lg bg-gray-900 hover:bg-black transition-colors"
               >
-                <FaTwitter className="text-white text-xl mb-1" />
+                <FaXTwitter className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">Twitter</span>
               </button>
 
               <button
                 onClick={() => handleShareSocial("linkedin")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-700 hover:bg-blue-800 transition-colors"
+                className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors"
               >
                 <FaLinkedinIn className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">LinkedIn</span>
@@ -811,7 +811,7 @@ const QuizAnswer = () => {
       )}
 
       {/* Add print-specific styles */}
-      <style jsx global>{`
+      <style jsx="true" global="true">{`
         @media print {
           nav,
           footer,
