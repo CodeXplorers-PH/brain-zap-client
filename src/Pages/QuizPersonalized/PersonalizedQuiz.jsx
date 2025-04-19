@@ -100,7 +100,7 @@ const PersonalizedQuiz = () => {
             </div>
 
             <p className="text-gray-400 mt-2">
-              Choose how challenging you want your quiz to be.
+              Choose challenging level of your quiz.
             </p>
           </div>
 

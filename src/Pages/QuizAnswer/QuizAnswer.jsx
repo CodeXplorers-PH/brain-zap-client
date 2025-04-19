@@ -71,6 +71,8 @@ const QuizAnswer = () => {
                 date: new Date(),
                 category: category,
                 score: finalScore,
+                questions: JSON.parse(storedQuiz),
+                answers: JSON.parse(storedAnswers),
               })
               .then(res => {
                 console.log('History saved:', res.data);
@@ -92,7 +94,7 @@ const QuizAnswer = () => {
 
     const timer = setTimeout(fetchResults, 500);
     return () => clearTimeout(timer);
-  }, [axiosPublic, category, user]);
+  }, [category, user]);
 
   useEffect(() => {
     // Reset copy status after 3 seconds
@@ -106,6 +108,8 @@ const QuizAnswer = () => {
 
   useEffect(() => {
     const hasPosted = localStorage.getItem(`history_posted`);
+    const storedQuiz = localStorage.getItem('quiz_questions');
+    const storedAnswers = localStorage.getItem('userAnswers');
 
     if (user && score && questions.length > 0 && !hasPosted) {
       axiosPublic
@@ -114,6 +118,8 @@ const QuizAnswer = () => {
           date: new Date(),
           category: category,
           score: score,
+          questions: JSON.parse(storedQuiz),
+          answers: JSON.parse(storedAnswers),
         })
         .then(res => {
           console.log('History saved:', res.data);
