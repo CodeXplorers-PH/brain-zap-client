@@ -21,8 +21,6 @@ import medal2 from "../../../public/icons/medal2.png";
 import medal3 from "../../../public/icons/medal3.png";
 import medal4 from "../../../public/icons/medal4.png";
 import medal5 from "../../../public/icons/medal5.png";
-import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -41,8 +39,6 @@ const Profile = () => {
   // Form state
   const [displayName, setDisplayName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
-
-  const navigate = useNavigate();
 
   // Update local state when user data changes
   useEffect(() => {
@@ -87,36 +83,27 @@ const Profile = () => {
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
-        // Utility to get date in local YYYY-MM-DD format
-        const formatDateLocal = (dateStr) => {
-          const date = new Date(dateStr);
-          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
-        };
 
-        // Extract unique quiz dates (formatted locally)
+        // ✅ Streak Calculation Logic Here
         const quizDaysSet = new Set(
-          history.map((q) => formatDateLocal(q.date))
+          history.map((q) => new Date(q.date).toISOString().split("T")[0])
         );
 
-        const today = new Date();
-        const todayStr = today.toLocaleDateString("en-CA");
+        const quizDates = Array.from(quizDaysSet).sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
 
-        // 🛑 If user didn't give quiz today, streak = 0
-        if (!quizDaysSet.has(todayStr)) {
-          setStreak(0);
-          return;
-        }
+        let streakCount = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        // ✅ Start with today counted
-        let streakCount = 1;
+        for (let i = 0; i < quizDates.length; i++) {
+          const date = new Date(quizDates[i]);
+          date.setHours(0, 0, 0, 0);
 
-        // 🔁 Check previous consecutive days
-        for (let i = 1; ; i++) {
-          const prevDate = new Date();
-          prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString("en-CA");
+          const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
 
-          if (quizDaysSet.has(prevStr)) {
+          if (diffDays === 0 || diffDays === streakCount) {
             streakCount++;
           } else {
             break;
@@ -129,6 +116,7 @@ const Profile = () => {
         console.log(err);
       });
   }, [axiosPublic, user]);
+
   // Streaks Code Ends Here
 
   // Sample stats - replace with actual data from your application
@@ -182,19 +170,6 @@ const Profile = () => {
     return "U";
   };
 
-  // Handle View Quiz History
-  const handleViewHistory = (quiz) => {
-    const { category, answers, questions } = quiz;
-
-    if (answers && questions) {
-      localStorage.setItem("quiz_questions", JSON.stringify(questions));
-      localStorage.setItem("userAnswers", JSON.stringify(answers));
-      localStorage.setItem("history_posted", true);
-
-      navigate(`/quiz/${category}/answer`);
-    }
-  };
-
   return (
     <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
       <div className="max-w-4xl mx-auto">
@@ -203,21 +178,20 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row items-center gap-6">
             {/* Avatar */}
             <div className="relative">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-purple-600 shadow-lg">
                 {photoURL ? (
-                  <Avatar className="w-24 h-24 md:w-32 md:h-32 text-2xl overflow-hidden border-4 border-purple-600">
-                    <AvatarImage
-                      src={photoURL}
-                      alt={`Photo of ${user?.displayName}`}
-                    />
-                    <AvatarFallback>
-                      {user?.displayName?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <img
+                    src={photoURL}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
                 ) : (
                   <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
                     {getInitials()}
                   </div>
                 )}
+              </div>
               <button
                 onClick={() => setIsEditing(true)}
                 className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-lg transition-all duration-200"
@@ -454,7 +428,11 @@ const Profile = () => {
                       )) ||
                       (xpPoints >= 100 && (
                         <img className="w-[30px]" src={medal1} alt="" />
-                      ))}
+                      )) || (
+                        <div>
+                          <Award className="text-gray-400" />
+                        </div>
+                      )}
                   </div>
 
                   <div>
@@ -557,18 +535,15 @@ const Profile = () => {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-700">
-                      {["Quiz", "Date", "Score", "Action"].map(
-                        (tHead, index) => (
-                          <th
-                            key={index}
-                            className={`py-3 text-gray-400 font-medium ${
-                              index > 1 ? "text-right" : "text-left"
-                            }`}
-                          >
-                            {tHead}
-                          </th>
-                        )
-                      )}
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Quiz
+                      </th>
+                      <th className="text-left py-3 text-gray-400 font-medium">
+                        Date
+                      </th>
+                      <th className="text-right py-3 text-gray-400 font-medium">
+                        Score
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -593,14 +568,6 @@ const Profile = () => {
                           >
                             {quiz.score}%
                           </span>
-                        </td>
-                        <td className="py-3 text-right">
-                          <button
-                            onClick={() => handleViewHistory(quiz)}
-                            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium text-purple-400 transition-colors"
-                          >
-                            View
-                          </button>
                         </td>
                       </tr>
                     ))}
