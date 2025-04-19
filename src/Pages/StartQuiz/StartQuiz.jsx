@@ -7,7 +7,7 @@ const StartQuiz = () => {
     window.scrollTo(0, 0);
 
     localStorage.removeItem('quiz_questions');
-  }, []);
+  });
   return (
     <div className="bg-gray-900 min-h-screen">
       <Banner />

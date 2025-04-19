@@ -1,6 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaSignInAlt } from "react-icons/fa";
+import {
+  FaSignInAlt,
+  FaPrint,
+  FaFacebookF,
+  FaLinkedinIn,
+  FaWhatsapp,
+  FaLink,
+  FaShareAlt,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import useAuth from "@/hooks/useAuth";
 
@@ -15,9 +24,18 @@ const QuizAnswer = () => {
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const optionLabels = ["A.", "B.", "C.", "D."];
+  const printContentRef = useRef(null);
+  const shareableLink = window.location.href;
+
+  // Scroll to top view
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   useEffect(() => {
     const fetchResults = () => {
@@ -49,24 +67,6 @@ const QuizAnswer = () => {
           setCorrectAnswers(answers);
           setScore(finalScore);
           setShowScore(true);
-
-          // Post History if not posted yet
-          if (user && !hasPosted) {
-            axiosPublic
-              .post("/quiz_history", {
-                email: user?.email,
-                date: new Date(),
-                category: category,
-                score: finalScore,
-              })
-              .then((res) => {
-                console.log("History saved:", res.data);
-                localStorage.setItem("history_posted", "true");
-              })
-              .catch((err) => {
-                console.log("Error saving history:", err);
-              });
-          }
         } catch (error) {
           console.error("Error parsing localStorage data:", error);
         }
@@ -79,10 +79,22 @@ const QuizAnswer = () => {
 
     const timer = setTimeout(fetchResults, 500);
     return () => clearTimeout(timer);
-  }, [axiosPublic, category, user]);
+  }, [category, user]);
+
+  useEffect(() => {
+    // Reset copy status after 3 seconds
+    if (linkCopied) {
+      const timer = setTimeout(() => {
+        setLinkCopied(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [linkCopied]);
 
   useEffect(() => {
     const hasPosted = localStorage.getItem(`history_posted`);
+    const storedQuiz = localStorage.getItem("quiz_questions");
+    const storedAnswers = localStorage.getItem("userAnswers");
 
     if (user && score && questions.length > 0 && !hasPosted) {
       axiosPublic
@@ -91,6 +103,8 @@ const QuizAnswer = () => {
           date: new Date(),
           category: category,
           score: score,
+          questions: JSON.parse(storedQuiz),
+          answers: JSON.parse(storedAnswers),
         })
         .then((res) => {
           console.log("History saved:", res.data);
@@ -108,6 +122,7 @@ const QuizAnswer = () => {
     localStorage.removeItem("history_posted");
     navigate("/start-quiz");
   };
+  
 
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem("quiz_questions");
@@ -137,6 +152,7 @@ const QuizAnswer = () => {
       setIsFetchingFeedback(false);
     }
   };
+  
 
   if (loading) {
     return (
@@ -170,50 +186,50 @@ const QuizAnswer = () => {
     );
   }
 
-  return (
-    <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Score Banner */}
-        {showScore && (
-          <div
-            className={`mb-10 p-6 rounded-xl border ${
-              score >= 70
-                ? "border-green-500/30 bg-green-900/10"
-                : score >= 40
-                ? "border-yellow-500/30 bg-yellow-900/10"
-                : "border-red-500/30 bg-red-900/10"
-            } text-center`}
-          >
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Your Score:{" "}
-              <span
-                className={
-                  score >= 70
-                    ? "text-green-400"
-                    : score >= 40
-                    ? "text-yellow-400"
-                    : "text-red-400"
-                }
-              >
-                {score}%
-              </span>
-            </h2>
-            <p className="text-gray-300">
-              {score >= 70
-                ? "Excellent work!"
-                : score >= 40
-                ? "Good effort!"
-                : "Keep practicing!"}{" "}
-              You answered{" "}
-              {
-                Object.values(userAnswers).filter(
-                  (ans, i) => ans === correctAnswers[i]
-                ).length
-              }{" "}
-              out of {questions.length} questions correctly.
-            </p>
-          </div>
-        )}
+    return (
+      <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Score Banner */}
+          {showScore && (
+            <div
+              className={`mb-10 p-6 rounded-xl border ${
+                score >= 70
+                  ? "border-green-500/30 bg-green-900/10"
+                  : score >= 40
+                  ? "border-yellow-500/30 bg-yellow-900/10"
+                  : "border-red-500/30 bg-red-900/10"
+              } text-center`}
+            >
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Your Score:{" "}
+                <span
+                  className={
+                    score >= 70
+                      ? "text-green-400"
+                      : score >= 40
+                      ? "text-yellow-400"
+                      : "text-red-400"
+                  }
+                >
+                  {score}%
+                </span>
+              </h2>
+              <p className="text-gray-300">
+                {score >= 70
+                  ? "Excellent work!"
+                  : score >= 40
+                  ? "Good effort!"
+                  : "Keep practicing!"}{" "}
+                You answered{" "}
+                {
+                  Object.values(userAnswers).filter(
+                    (ans, i) => ans === correctAnswers[i]
+                  ).length
+                }{" "}
+                out of {questions.length} questions correctly.
+              </p>
+            </div>
+          )}
 
         {/* Questions List */}
         <div className="space-y-6">
@@ -289,33 +305,33 @@ const QuizAnswer = () => {
           })}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-10">
-          <button
-            onClick={handleGetFeedback}
-            disabled={isFetchingFeedback}
-            className={`flex-1 py-4 rounded-xl font-bold transition-all ${
-              isFetchingFeedback
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
-            }`}
-          >
-            {isFetchingFeedback ? (
-              <span className="flex items-center justify-center">
-                <span className="animate-spin mr-2">🌀</span> Generating
-                Feedback...
-              </span>
-            ) : (
-              "Get AI Feedback"
-            )}
-          </button>
-          <button
-            onClick={handleQuizAgain}
-            className="flex-1 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold hover:bg-gray-700 transition-all"
-          >
-            Try Another Quiz
-          </button>
-        </div>
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-10">
+            <button
+              onClick={handleGetFeedback}
+              disabled={isFetchingFeedback}
+              className={`flex-1 py-4 rounded-xl font-bold transition-all ${
+                isFetchingFeedback
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+              }`}
+            >
+              {isFetchingFeedback ? (
+                <span className="flex items-center justify-center">
+                  <span className="animate-spin mr-2">🌀</span> Generating
+                  Feedback...
+                </span>
+              ) : (
+                "Get AI Feedback"
+              )}
+            </button>
+            <button
+              onClick={handleQuizAgain}
+              className="flex-1 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold hover:bg-gray-700 transition-all"
+            >
+              Try Another Quiz
+            </button>
+          </div>
 
         {/* AI Feedback Section */}
         {feedback && (
@@ -358,28 +374,28 @@ const QuizAnswer = () => {
           </div>
         )}
 
-        {/* If not logged in */}
-        {!user && (
-          <div className="mt-16 bg-gray-800/40 border border-gray-700 backdrop-blur-lg rounded-2xl shadow-lg p-8 text-center">
-            <h2 className="text-2xl font-bold text-white mb-2">
-              You're not logged in
-            </h2>
-            <p className="text-sm text-gray-400 mb-6">
-              Sign in to save your progress and get personalized
-              recommendations.
-            </p>
-            <button
-              onClick={() => navigate("/login")}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
-            >
-              <FaSignInAlt className="inline-block mr-2" />
-              Log In
-            </button>
-          </div>
-        )}
+          {/* If not logged in */}
+          {!user && (
+            <div className="mt-16 bg-gray-800/40 border border-gray-700 backdrop-blur-lg rounded-2xl shadow-lg p-8 text-center">
+              <h2 className="text-2xl font-bold text-white mb-2">
+                You're not logged in
+              </h2>
+              <p className="text-sm text-gray-400 mb-6">
+                Sign in to save your progress and get personalized
+                recommendations.
+              </p>
+              <button
+                onClick={() => navigate("/login")}
+                className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
+              >
+                <FaSignInAlt className="inline-block mr-2" />
+                Log In
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default QuizAnswer;

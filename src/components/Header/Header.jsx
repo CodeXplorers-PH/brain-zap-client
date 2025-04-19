@@ -6,6 +6,7 @@ import LockedErr from "../ui/LockedErr";
 import { motion } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import streakImg from "../../assets/img/streak.png";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -23,27 +24,36 @@ const Header = () => {
       .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
+        // Utility to get date in local YYYY-MM-DD format
+        const formatDateLocal = (dateStr) => {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
+        };
 
-        // ✅ Streak Calculation Logic Here
+        // Extract unique quiz dates (formatted locally)
         const quizDaysSet = new Set(
-          history.map((q) => new Date(q.date).toISOString().split("T")[0])
+          history.map((q) => formatDateLocal(q.date))
         );
 
-        const quizDates = Array.from(quizDaysSet).sort(
-          (a, b) => new Date(b) - new Date(a)
-        );
+        const today = new Date();
+        const todayStr = today.toLocaleDateString("en-CA");
 
-        let streakCount = 0;
-        let today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // 🛑 If user didn't give quiz today, streak = 0
+        if (!quizDaysSet.has(todayStr)) {
+          setStreak(0);
+          return;
+        }
 
-        for (let i = 0; i < quizDates.length; i++) {
-          const date = new Date(quizDates[i]);
-          date.setHours(0, 0, 0, 0);
+        // ✅ Start with today counted
+        let streakCount = 1;
 
-          const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+        // 🔁 Check previous consecutive days
+        for (let i = 1; ; i++) {
+          const prevDate = new Date();
+          prevDate.setDate(today.getDate() - i);
+          const prevStr = prevDate.toLocaleDateString("en-CA");
 
-          if (diffDays === 0 || diffDays === streakCount) {
+          if (quizDaysSet.has(prevStr)) {
             streakCount++;
           } else {
             break;
@@ -175,22 +185,18 @@ const Header = () => {
                 tabIndex={0}
                 role="button"
                 aria-label="User profile"
-                className="relative flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-pointer"
+                className="relative flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
               >
-                {user?.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt="User avatar"
-                    className="w-full h-full rounded-full object-cover"
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full rounded-full bg-purple-600 text-white flex items-center justify-center font-medium">
-                    {user?.displayName?.charAt(0).toUpperCase() ||
-                      user?.email?.charAt(0).toUpperCase() ||
-                      "U"}
-                  </div>
+                {user?.photoURL && (
+                  <Avatar>
+                    <AvatarImage
+                      src={user?.photoURL}
+                      alt={`Photo of ${user?.displayName}`}
+                    />
+                    <AvatarFallback>
+                      {user?.displayName?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 )}
               </div>
               <ul

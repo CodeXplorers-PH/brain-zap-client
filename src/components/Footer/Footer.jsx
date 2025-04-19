@@ -22,7 +22,7 @@ const Footer = () => {
 
           {/* Links */}
           <div className="flex flex-wrap justify-center gap-6">
-            {["Profile", "Pricing", "Blog", "Contact"].map((link) => (
+            {["Profile", "Pricing", "Blogs", "Contact"].map((link) => (
               <Link
                 key={link}
                 to={`/${link.toLowerCase()}`}
