@@ -3,9 +3,33 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import { FiX, FiImage, FiSave, FiAlertCircle } from "react-icons/fi";
 import RichTextEditor from "./RichTextEditor";
+import { useQuery, gql, ApolloClient, InMemoryCache } from "@apollo/client";
 
 // API URL from environment or default
 const API_BASE_URL = import.meta.env.VITE_ServerUrl;
+
+const apolloClient = new ApolloClient({
+  uri: `${import.meta.env.VITE_ServerUrl}/graphql`,
+  cache: new InMemoryCache(),
+});
+
+// GraphQL query to fetch a single blog post
+const GET_BLOG = gql`
+  query GetBlogPost($id: ID!) {
+    blog(_id: $id) {
+      _id
+      title
+      blog
+      publish_date
+      img
+      category
+      likes
+      author_id
+      author_name
+      author_avatar
+    }
+  }
+`;
 
 const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
   const [title, setTitle] = useState("");
@@ -13,7 +37,6 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [content, setContent] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -21,12 +44,33 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
 
   const { user } = useAuth();
 
-  // Fetch blog data when modal opens and blogId changes
-  useEffect(() => {
-    if (isOpen && blogId) {
-      fetchBlogData();
-    }
-  }, [isOpen, blogId]);
+  // GraphQL query for fetching blog data
+  const { loading, data } = useQuery(GET_BLOG, {
+    variables: { id: blogId },
+    client: apolloClient,
+    skip: !isOpen || !blogId,
+    onCompleted: (data) => {
+      if (data?.blog) {
+        const blogData = data.blog;
+        setOriginalBlog(blogData);
+        setTitle(blogData.title || "");
+        setContent(blogData.blog || "");
+        setCategory(blogData.category || "Technology");
+        if (blogData.img) {
+          setImagePreview(blogData.img);
+        }
+
+        // Verify ownership
+        if (blogData.author_id !== user?.uid) {
+          setError("You don't have permission to edit this blog");
+        }
+      }
+    },
+    onError: (error) => {
+      console.error("Error fetching blog:", error);
+      setError("Failed to load blog data. Please try again.");
+    },
+  });
 
   // Handle escape key
   useEffect(() => {
@@ -39,38 +83,6 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen]);
-
-  const fetchBlogData = async () => {
-    try {
-      setIsLoading(true);
-      setError("");
-      
-      const response = await axios.get(`${API_BASE_URL}/blogs/${blogId}`, {
-        withCredentials: true
-      });
-      
-      const blogData = response.data.blog;
-      setOriginalBlog(blogData);
-      
-      // Populate form fields with existing data
-      setTitle(blogData.title || "");
-      setContent(blogData.blog || "");
-      setCategory(blogData.category || "Technology");
-      if (blogData.img) {
-        setImagePreview(blogData.img);
-      }
-      
-      // Verify ownership
-      if (blogData.author_id !== user?.uid) {
-        setError("You don't have permission to edit this blog");
-      }
-    } catch (err) {
-      console.error("Error fetching blog:", err);
-      setError("Failed to load blog data. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -114,7 +126,6 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
   };
 
   const resetForm = () => {
-    // Reset to original values or empty if modal is closing
     if (originalBlog) {
       setTitle(originalBlog.title || "");
       setContent(originalBlog.blog || "");
@@ -161,7 +172,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
         title,
         blog: content,
         category,
-        userId: user.uid // For ownership verification on the server
+        userId: user.uid,
       };
 
       // Only include image if it was changed
@@ -169,28 +180,27 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
         updateData.imageBase64 = image;
       }
 
+      // Still using REST for mutations (updates)
       const response = await axios.put(
         `${API_BASE_URL}/blogs/${blogId}`,
         updateData,
         {
           withCredentials: true,
           headers: {
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
 
       if (response.data.success) {
-        // Refresh the blog data with updates
         const updatedBlog = {
           ...originalBlog,
           title,
           blog: content,
           category,
-          // If image was updated, we'll get the new URL from the API
-          // Otherwise keep the existing image
+          img: response.data.imageUrl || originalBlog.img,
         };
-        
+
         onUpdate(updatedBlog);
         onClose();
       } else {
@@ -200,8 +210,8 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
       console.error("Error updating blog:", err);
       setError(
         err.response?.data?.message ||
-        err.message ||
-        "Failed to update post. Please try again."
+          err.message ||
+          "Failed to update post. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -231,7 +241,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
         <div className="flex items-center justify-between p-4 border-b border-gray-800">
           <h2 className="text-xl font-medium text-white">Edit Post</h2>
           <button
-            type="button" 
+            type="button"
             onClick={handleCancel}
             className="text-gray-400 hover:text-white"
           >
@@ -248,7 +258,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
         )}
 
         {/* Loading state */}
-        {isLoading ? (
+        {loading ? (
           <div className="flex-1 flex items-center justify-center p-8">
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 border-4 border-t-purple-600 border-purple-200 rounded-full animate-spin"></div>
@@ -292,7 +302,9 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
                   ) : (
                     <label className="cursor-pointer h-full w-full flex flex-col items-center justify-center text-gray-400">
                       <FiImage size={24} className="mb-2" />
-                      <span className="text-sm">Drop image or click to upload</span>
+                      <span className="text-sm">
+                        Drop image or click to upload
+                      </span>
                       <input
                         type="file"
                         accept="image/*"
@@ -302,7 +314,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
                     </label>
                   )}
                 </div>
-                
+
                 {/* Title Input */}
                 <input
                   type="text"
@@ -312,13 +324,13 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
                   placeholder="Title"
                   autoFocus
                 />
-                
+
                 {/* Category Select - Horizontal Pills */}
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (
                     <button
                       key={cat}
-                      type="button" 
+                      type="button"
                       onClick={() => setCategory(cat)}
                       className={`px-3 py-1.5 rounded-full text-sm ${
                         category === cat
@@ -337,7 +349,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
                     content={content}
                     onUpdate={(newContent) => setContent(newContent)}
                     placeholder="Write your post..."
-                    formId="editPostForm" 
+                    formId="editPostForm"
                   />
                 </div>
               </div>
@@ -347,7 +359,11 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
 
         {/* Action Buttons - Fixed at bottom */}
         <div className="p-4 border-t border-gray-800">
-          <form id="editPostForm" onSubmit={handleSubmit} className="flex justify-end space-x-3">
+          <form
+            id="editPostForm"
+            onSubmit={handleSubmit}
+            className="flex justify-end space-x-3"
+          >
             <button
               type="button"
               onClick={handleCancel}
@@ -358,7 +374,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
             <button
               type="submit"
               className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2"
-              disabled={isSubmitting || isLoading}
+              disabled={isSubmitting || loading}
             >
               {isSubmitting ? (
                 <span>Updating...</span>
