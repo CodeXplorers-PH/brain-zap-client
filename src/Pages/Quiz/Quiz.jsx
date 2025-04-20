@@ -1,12 +1,17 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const optionLabels = ['A.', 'B.', 'C.', 'D.'];
 
 const Quiz = ({ questions }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const { category } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const queryParams = new URLSearchParams(location.search);
+  const difficulty = queryParams.get('difficulty');
+
   const handleOptionSelect = (questionIndex, option) => {
     setSelectedOptions(prev => ({
       ...prev,
@@ -24,7 +29,7 @@ const Quiz = ({ questions }) => {
 
     localStorage.setItem('userAnswers', JSON.stringify(selectedOptions));
     localStorage.removeItem(`history_posted`);
-    navigate(`/quiz/${category}/answer`);
+    navigate(`/quiz/${category}/answer`, { state: { difficulty } });
   };
 
   // 🧠 Helper to render question + code
