@@ -13,6 +13,8 @@ const useAxiosSecure = () => {
     // Request Interceptor
     const reqInterceptor = axiosInstance.interceptors.request.use(
       config => {
+        config.headers.email = user?.email;
+
         return config;
       },
       error => {
