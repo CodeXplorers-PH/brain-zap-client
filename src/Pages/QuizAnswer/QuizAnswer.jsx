@@ -135,6 +135,7 @@ const QuizAnswer = () => {
     localStorage.removeItem('history_posted');
     navigate('/start-quiz');
   };
+  
 
   const handleGetFeedback = async () => {
     const storedQuiz = localStorage.getItem('quiz_questions');
@@ -167,10 +168,10 @@ const QuizAnswer = () => {
 
   // Print function to handle printing the quiz results
   const handlePrintResult = () => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
 
     if (!printWindow) {
-      alert('Please allow pop-ups to print your results.');
+      alert("Please allow pop-ups to print your results.");
       return;
     }
 
@@ -201,17 +202,17 @@ const QuizAnswer = () => {
               margin-bottom: 20px;
               border-radius: 8px;
               border: 1px solid ${
-                score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444'
+                score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
               };
               background-color: ${
-                score >= 70 ? '#d1fae5' : score >= 40 ? '#fef3c7' : '#fee2e2'
+                score >= 70 ? "#d1fae5" : score >= 40 ? "#fef3c7" : "#fee2e2"
               };
             }
             .score-text {
               font-size: 24px;
               font-weight: bold;
               color: ${
-                score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444'
+                score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
               };
             }
             .question-container {
@@ -287,9 +288,9 @@ const QuizAnswer = () => {
         <body>
           <div class="header">
             <h1>BrainZap Quiz Results</h1>
-            <p>Category: ${category || 'General Knowledge'}</p>
+            <p>Category: ${category || "General Knowledge"}</p>
             <p>Date: ${currentDate}</p>
-            ${user ? `<p>User: ${user.displayName}</p>` : ''}
+            ${user ? `<p>User: ${user.displayName}</p>` : ""}
           </div>
           
           <div class="score-banner">
@@ -297,10 +298,10 @@ const QuizAnswer = () => {
             <p>
               ${
                 score >= 70
-                  ? 'Excellent work!'
+                  ? "Excellent work!"
                   : score >= 40
-                  ? 'Good effort!'
-                  : 'Keep practicing!'
+                  ? "Good effort!"
+                  : "Keep practicing!"
               } 
               You answered ${
                 Object.values(userAnswers).filter(
@@ -331,33 +332,33 @@ const QuizAnswer = () => {
                         const isSelected = userSelected === option;
                         const isCorrectOption = correctAnswer === option;
 
-                        let className = 'option';
+                        let className = "option";
                         if (isSelected && isCorrect)
-                          className += ' selected-correct';
+                          className += " selected-correct";
                         else if (isSelected && isWrong)
-                          className += ' selected-wrong';
+                          className += " selected-wrong";
                         else if (isCorrectOption)
-                          className += ' correct-option';
+                          className += " correct-option";
 
                         return `
                         <div class="${className}">
                           <span>${optionLabels[i]}</span> ${option}
-                          ${isSelected && isCorrect ? ' ✓' : ''}
-                          ${isSelected && isWrong ? ' ✗' : ''}
+                          ${isSelected && isCorrect ? " ✓" : ""}
+                          ${isSelected && isWrong ? " ✗" : ""}
                           ${
                             !isSelected && isCorrectOption
-                              ? ' (Correct Answer)'
-                              : ''
+                              ? " (Correct Answer)"
+                              : ""
                           }
                         </div>
                       `;
                       })
-                      .join('')}
+                      .join("")}
                   </div>
                 </div>
               `;
               })
-              .join('')}
+              .join("")}
           </div>
           
           ${
@@ -370,7 +371,7 @@ const QuizAnswer = () => {
                 <h3>🌟 Strengths</h3>
                 <p>${
                   feedback[0]?.Strengths ||
-                  'No specific strengths were identified.'
+                  "No specific strengths were identified."
                 }</p>
               </div>
               
@@ -378,7 +379,7 @@ const QuizAnswer = () => {
                 <h3>⚠️ Weaknesses</h3>
                 <p>${
                   feedback[1]?.Weaknesses ||
-                  'No significant weaknesses were found.'
+                  "No significant weaknesses were found."
                 }</p>
               </div>
               
@@ -386,12 +387,12 @@ const QuizAnswer = () => {
                 <h3>📚 Recommendations</h3>
                 <p>${
                   feedback[2]?.Recommendations ||
-                  'No specific recommendations available.'
+                  "No specific recommendations available."
                 }</p>
               </div>
             </div>
           `
-              : ''
+              : ""
           }
           
           <div class="footer">
@@ -412,31 +413,31 @@ const QuizAnswer = () => {
   };
 
   // Social media sharing
-  const handleShareSocial = platform => {
+  const handleShareSocial = (platform) => {
     const shareText = `I scored ${score}% on the ${category} quiz! Can you beat my score?`;
     const url = encodeURIComponent(shareableLink);
 
-    let shareUrl = '';
+    let shareUrl = "";
 
     switch (platform) {
-      case 'facebook':
+      case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encodeURIComponent(
           shareText
         )}`;
         break;
-      case 'twitter':
+      case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           shareText
         )}&url=${url}`;
         break;
-      case 'linkedin':
+      case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${encodeURIComponent(
           shareText
         )}`;
         break;
-      case 'whatsapp':
+      case "whatsapp":
         shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-          shareText + ' ' + shareableLink
+          shareText + " " + shareableLink
         )}`;
         break;
       default:
@@ -446,8 +447,8 @@ const QuizAnswer = () => {
     if (shareUrl) {
       window.open(
         shareUrl,
-        '_blank',
-        'width=600,height=400,noopener,noreferrer'
+        "_blank",
+        "width=600,height=400,noopener,noreferrer"
       );
     }
 
@@ -462,8 +463,8 @@ const QuizAnswer = () => {
       .then(() => {
         setLinkCopied(true);
       })
-      .catch(err => {
-        console.error('Could not copy text: ', err);
+      .catch((err) => {
+        console.error("Could not copy text: ", err);
       });
   };
 
@@ -514,10 +515,10 @@ const QuizAnswer = () => {
           <div
             className={`mb-10 p-6 rounded-xl border ${
               score >= 70
-                ? 'border-green-500/30 bg-green-900/10'
+                ? "border-green-500/30 bg-green-900/10"
                 : score >= 40
-                ? 'border-yellow-500/30 bg-yellow-900/10'
-                : 'border-red-500/30 bg-red-900/10'
+                ? "border-yellow-500/30 bg-yellow-900/10"
+                : "border-red-500/30 bg-red-900/10"
             } text-center relative`}
             id="shareableContent"
           >
@@ -530,14 +531,14 @@ const QuizAnswer = () => {
             </button>
 
             <h2 className="text-2xl font-bold text-white mb-2">
-              Your Score:{' '}
+              Your Score:{" "}
               <span
                 className={
                   score >= 70
-                    ? 'text-green-400'
+                    ? "text-green-400"
                     : score >= 40
-                    ? 'text-yellow-400'
-                    : 'text-red-400'
+                    ? "text-yellow-400"
+                    : "text-red-400"
                 }
               >
                 {score}%
@@ -545,16 +546,16 @@ const QuizAnswer = () => {
             </h2>
             <p className="text-gray-300">
               {score >= 70
-                ? 'Excellent work!'
+                ? "Excellent work!"
                 : score >= 40
-                ? 'Good effort!'
-                : 'Keep practicing!'}{' '}
-              You answered{' '}
+                ? "Good effort!"
+                : "Keep practicing!"}{" "}
+              You answered{" "}
               {
                 Object.values(userAnswers).filter(
                   (ans, i) => ans === correctAnswers[i]
                 ).length
-              }{' '}
+              }{" "}
               out of {questions.length} questions correctly.
             </p>
           </div>
@@ -641,8 +642,8 @@ const QuizAnswer = () => {
             disabled={isFetchingFeedback}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
               isFetchingFeedback
-                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
             }`}
           >
             {isFetchingFeedback ? (
@@ -651,7 +652,7 @@ const QuizAnswer = () => {
                 Feedback...
               </span>
             ) : (
-              'Get AI Feedback'
+              "Get AI Feedback"
             )}
           </button>
           <button
@@ -721,7 +722,7 @@ const QuizAnswer = () => {
               recommendations.
             </p>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate("/login")}
               className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
             >
               <FaSignInAlt className="inline-block mr-2" />
@@ -756,7 +757,7 @@ const QuizAnswer = () => {
                 <div>
                   <p className="text-gray-300 text-sm">Quiz Results</p>
                   <p className="text-white font-medium">
-                    {category || 'General Knowledge'}
+                    {category || "General Knowledge"}
                   </p>
                 </div>
               </div>
@@ -768,7 +769,7 @@ const QuizAnswer = () => {
             {/* Social Media Share Buttons */}
             <div className="grid grid-cols-4 gap-4 mb-6">
               <button
-                onClick={() => handleShareSocial('facebook')}
+                onClick={() => handleShareSocial("facebook")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 <FaFacebookF className="text-white text-xl mb-1" />
@@ -776,7 +777,7 @@ const QuizAnswer = () => {
               </button>
 
               <button
-                onClick={() => handleShareSocial('twitter')}
+                onClick={() => handleShareSocial("twitter")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-gray-900 hover:bg-black transition-colors"
               >
                 <FaXTwitter className="text-white text-xl mb-1" />
@@ -784,7 +785,7 @@ const QuizAnswer = () => {
               </button>
 
               <button
-                onClick={() => handleShareSocial('linkedin')}
+                onClick={() => handleShareSocial("linkedin")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors"
               >
                 <FaLinkedinIn className="text-white text-xl mb-1" />
@@ -792,7 +793,7 @@ const QuizAnswer = () => {
               </button>
 
               <button
-                onClick={() => handleShareSocial('whatsapp')}
+                onClick={() => handleShareSocial("whatsapp")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-green-600 hover:bg-green-700 transition-colors"
               >
                 <FaWhatsapp className="text-white text-xl mb-1" />
@@ -809,7 +810,7 @@ const QuizAnswer = () => {
                 onClick={copyToClipboard}
                 className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg transition-colors"
               >
-                {linkCopied ? 'Copied!' : <FaLink />}
+                {linkCopied ? "Copied!" : <FaLink />}
               </button>
             </div>
 
