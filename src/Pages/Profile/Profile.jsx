@@ -197,21 +197,21 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row items-center gap-6">
             {/* Avatar */}
             <div className="relative">
-                {photoURL ? (
-                  <Avatar className="w-24 h-24 md:w-32 md:h-32 text-2xl overflow-hidden border-4 border-purple-600">
-                    <AvatarImage
-                      src={photoURL}
-                      alt={`Photo of ${user?.displayName}`}
-                    />
-                    <AvatarFallback>
-                      {user?.displayName?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                ) : (
-                  <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
-                    {getInitials()}
-                  </div>
-                )}
+              {photoURL ? (
+                <Avatar className="w-24 h-24 md:w-32 md:h-32 text-2xl overflow-hidden border-4 border-purple-600">
+                  <AvatarImage
+                    src={photoURL}
+                    alt={`Photo of ${user?.displayName}`}
+                  />
+                  <AvatarFallback>
+                    {user?.displayName?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
+                  {getInitials()}
+                </div>
+              )}
               <button
                 onClick={() => setIsEditing(true)}
                 className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-lg transition-all duration-200"

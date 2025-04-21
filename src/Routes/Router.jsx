@@ -16,6 +16,9 @@ import CheckoutPage from "@/Pages/Checkout/Checkout";
 import BlogDetail from "@/Pages/Blog/BlogDetail";
 import PrivateRoute from "./PrivateRoute";
 import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
+import AdminRoute from "./AdminRoute";
+import AdminDashboard from "@/Layouts/AdminDashboard";
+import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
 import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
 
 export const router = createBrowserRouter([
@@ -76,7 +79,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ) /* Profile Page */,
       },
-      {
+  {
         path: "/leaderBoard",
         element: (
           <PrivateRoute>
@@ -108,6 +111,33 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ) /* Quiz Answer Page */,
       },
+    ],
+  },
+  // Admin Dashboard
+  {
+    path: "dashboard",
+    element: (
+      <AdminRoute>
+        <AdminDashboard></AdminDashboard>
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "adminHome",
+        element: (
+          <AdminRoute>
+            <AdminHome></AdminHome>
+          </AdminRoute>
+        ),
+      },
+      // {
+      //   path: "adminHome",
+      //   element: (
+      //     <AdminRoute>
+      //       <AdminHome></AdminHome>
+      //     </AdminRoute>
+      //   ),
+      // },
     ],
   },
 ]);
