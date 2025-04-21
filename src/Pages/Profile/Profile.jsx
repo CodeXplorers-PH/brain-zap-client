@@ -429,6 +429,7 @@ const Profile = () => {
                       (xpPoints >= 100 && (
                         <img className="w-[30px]" src={medal1} alt="" />
                       )) || (
+                        // Default badge
                         <div>
                           <Award className="text-gray-400" />
                         </div>
