@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import streakImg from "../../assets/img/streak.png";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import useAdmin from "@/hooks/useAdmin";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -14,7 +15,7 @@ const Header = () => {
   const [streak, setStreak] = useState(null);
   const axiosPublic = useAxiosPublic();
   const location = useLocation(); // Get the current route
-
+  const { admin, isAdminLoading } = useAdmin();
   // Streaks Code Starts Here
   useEffect(() => {
     if (!user) return;

@@ -811,7 +811,7 @@ const QuizAnswer = () => {
       )}
 
       {/* Add print-specific styles */}
-      <style jsx global>{`
+      <style jsx="true" global="true">{`
         @media print {
           nav,
           footer,
