@@ -103,7 +103,7 @@ const ZapChatWidget = () => {
                 key={idx}
                 className={`p-2 rounded-lg w-fit break-words whitespace-pre-wrap ${
                   msg.from === "user"
-                    ? "bg-purple-700 ml-16 text-right"
+                    ? "bg-purple-700 ml-auto text-right"
                     : "bg-purple-900 mr-auto text-left"
                 }`}
               >
