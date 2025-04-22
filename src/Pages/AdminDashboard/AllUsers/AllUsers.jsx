@@ -205,14 +205,16 @@ const AllUsers = () => {
         axiosPublic
           .patch(`/makeAdmin/${id}/${user?.email}`)
           .then((response) => {
-            if (response?.data?.message === "User has been promoted to admin.") {
+            if (
+              response?.data?.message === "User has been promoted to admin."
+            ) {
               // ✅ Update the local state to reflect new admin role
               setUsers((prevUsers) =>
                 prevUsers.map((u) =>
                   u._id === id ? { ...u, role: "admin" } : u
                 )
               );
-  
+
               Swal.fire({
                 title: "Success!",
                 text: "User has been granted admin access.",
@@ -251,7 +253,7 @@ const AllUsers = () => {
           });
       }
     });
-  };  
+  };
 
   const filteredUsers = users.filter(
     (u) =>
@@ -280,7 +282,7 @@ const AllUsers = () => {
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
           {filteredUsers.map((user, i) => {
             const gradient =
               gradients[Math.floor(Math.random() * gradients.length)];
