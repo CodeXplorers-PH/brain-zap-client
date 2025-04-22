@@ -19,6 +19,7 @@ import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
 import AdminRoute from "./AdminRoute";
 import AdminDashboard from "@/Layouts/AdminDashboard";
 import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
+import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
 
 export const router = createBrowserRouter([
   {
@@ -121,14 +122,14 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
-      // {
-      //   path: "adminHome",
-      //   element: (
-      //     <AdminRoute>
-      //       <AdminHome></AdminHome>
-      //     </AdminRoute>
-      //   ),
-      // },
+      {
+        path: "allUsers",
+        element: (
+          <AdminRoute>
+            <AllUsers></AllUsers>
+          </AdminRoute>
+        ),
+      },
     ],
   },
 ]);
