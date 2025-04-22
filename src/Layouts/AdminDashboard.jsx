@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="relative bg-gray-900 min-h-screen flex">
+    <div className="relative h-screen bg-gray-900 flex overflow-hidden">
       {/* Topbar (Mobile Only) */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-900 to-violet-950 z-50 flex items-center justify-between px-4 py-3">
         <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
@@ -27,7 +27,7 @@ const AdminDashboard = () => {
 
       {/* Sidebar */}
       <div
-        className={`min-h-screen fixed md:static top-0 left-0 z-40 w-72 h-full bg-gradient-to-b from-purple-950 to-violet-950 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed md:static top-0 left-0 z-40 w-72 h-full bg-gradient-to-b from-purple-950 to-violet-950 transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } pt-16 md:pt-0 overflow-y-auto flex flex-col justify-between`}
       >
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
           <div className="hidden md:flex md:flex-col gap-4 mb-6 text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 items-center justify-center">
             <img
               className="w-32 rounded-full"
-              src={`https://i.ibb.co.com/XkMbmbq6/Chat-GPT-Image-Apr-21-2025-04-15-04-PM.png`}
+              src="https://i.ibb.co.com/XkMbmbq6/Chat-GPT-Image-Apr-21-2025-04-15-04-PM.png"
               alt=""
             />
             BrainZap
@@ -118,7 +118,7 @@ const AdminDashboard = () => {
 
         {/* Footer pushed to bottom */}
         <div className="text-center text-purple-300 p-4 text-sm">
-        © {new Date().getFullYear()} BrainZap. All rights reserved.
+          © {new Date().getFullYear()} BrainZap. All rights reserved.
         </div>
       </div>
 
@@ -130,8 +130,8 @@ const AdminDashboard = () => {
         />
       )}
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto w-full pt-16 md:pt-0 bg-[#1e1b3a] p-6">
+      {/* Content Scrolls Only */}
+      <div className="ml-0 flex-1 h-screen overflow-y-auto pt-16 md:pt-0 p-6">
         <Outlet />
       </div>
     </div>
