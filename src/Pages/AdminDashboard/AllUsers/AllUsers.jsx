@@ -135,22 +135,48 @@ const AllUsers = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Locked!",
-          text: "User has been locked for 1 hr.",
-          icon: "success",
-          background: "rgba(30, 30, 60, 0.85)",
-          color: "#fff",
-          backdrop: `rgba(0, 0, 0, 0.4)`,
-          customClass: {
-            popup:
-              "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-            title: "text-blue-400 text-lg font-semibold",
-            confirmButton:
-              "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-            htmlContainer: "text-sm text-gray-300",
-          },
-        });
+        const unlockTime = Date.now() + 3600000;
+
+        axiosPublic
+          .post(`/lockoutUser/${id}/${user?.email}`, { unlockTime })
+          .then((response) => {
+            // Show success message on success
+            Swal.fire({
+              title: "Locked!",
+              text: "User has been locked for 1 hr.",
+              icon: "success",
+              background: "rgba(30, 30, 60, 0.85)",
+              color: "#fff",
+              backdrop: `rgba(0, 0, 0, 0.4)`,
+              customClass: {
+                popup:
+                  "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+                title: "text-blue-400 text-lg font-semibold",
+                confirmButton:
+                  "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+                htmlContainer: "text-sm text-gray-300",
+              },
+            });
+          })
+          .catch((error) => {
+            // Handle any errors here
+            Swal.fire({
+              title: "Error!",
+              text: "There was an issue locking the user.",
+              icon: "error",
+              background: "rgba(30, 30, 60, 0.85)",
+              color: "#fff",
+              backdrop: `rgba(0, 0, 0, 0.4)`,
+              customClass: {
+                popup:
+                  "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+                title: "text-red-400 text-lg font-semibold",
+                confirmButton:
+                  "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
+                htmlContainer: "text-sm text-gray-300",
+              },
+            });
+          });
       }
     });
   };
