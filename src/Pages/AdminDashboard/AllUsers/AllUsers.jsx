@@ -63,24 +63,53 @@ const AllUsers = () => {
         htmlContainer: "text-sm text-gray-300",
       },
     }).then((result) => {
-      axiosPublic.delete("/");
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "User has been deleted.",
-          icon: "success",
-          background: "rgba(30, 30, 60, 0.85)",
-          color: "#fff",
-          backdrop: `rgba(0, 0, 0, 0.4)`,
-          customClass: {
-            popup:
-              "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-            title: "text-blue-400 text-lg font-semibold",
-            confirmButton:
-              "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-            htmlContainer: "text-sm text-gray-300",
-          },
-        });
+        axiosPublic
+          .delete(`/deleteUser/${id}/${user?.email}`)
+          .then((res) => {
+            if (res.data?.message === "User deleted successfully.") {
+              setUsers((prevUsers) => prevUsers.filter((u) => u._id !== id));
+              Swal.fire({
+                title: "Deleted!",
+                text: "User has been deleted.",
+                icon: "success",
+                background: "rgba(30, 30, 60, 0.85)",
+                color: "#fff",
+                backdrop: `rgba(0, 0, 0, 0.4)`,
+                customClass: {
+                  popup:
+                    "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+                  title: "text-blue-400 text-lg font-semibold",
+                  confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+                  htmlContainer: "text-sm text-gray-300",
+                },
+              });
+            } else {
+              throw new Error("User not found or could not be deleted.");
+            }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: "Error",
+              text:
+                error.response?.data?.message ||
+                error.message ||
+                "Something went wrong.",
+              icon: "error",
+              background: "rgba(30, 30, 60, 0.85)",
+              color: "#fff",
+              backdrop: `rgba(0, 0, 0, 0.4)`,
+              customClass: {
+                popup:
+                  "rounded-xl shadow-lg border border-red-500 backdrop-blur-lg",
+                title: "text-red-400 text-lg font-semibold",
+                confirmButton:
+                  "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
+                htmlContainer: "text-sm text-gray-300",
+              },
+            });
+          });
       }
     });
   };
