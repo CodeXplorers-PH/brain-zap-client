@@ -20,6 +20,7 @@ import AdminRoute from "./AdminRoute";
 import AdminDashboard from "@/Layouts/AdminDashboard";
 import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
 import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
+import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,14 @@ export const router = createBrowserRouter([
             <Profile />
           </PrivateRoute>
         ) /* Profile Page */,
+      },
+  {
+        path: "/leaderBoard",
+        element: (
+          <PrivateRoute>
+            <Leaderboard />
+          </PrivateRoute>
+        ), // Leaderboard Page
       },
       {
         path: "/quiz/:category",

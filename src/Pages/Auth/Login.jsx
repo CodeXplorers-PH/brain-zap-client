@@ -5,6 +5,8 @@ import { AuthContext } from "@/provider/AuthProvider";
 import SocialLogin from "./SocialLogin";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const { userLogin, setUser, passwordResetEmail } = useContext(AuthContext);
@@ -14,6 +16,8 @@ const Login = () => {
   const [isResetting, setIsResetting] = useState(false);
   const emailRef = useRef();
   const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
+
 
   const [loginAttempt, setLoginAttempt] = useState(() => {
     const storedAttempt = localStorage.getItem("loginAttempt");
@@ -116,6 +120,7 @@ const Login = () => {
         localStorage.removeItem("loginAttempt");
         localStorage.removeItem("loginAttemptEmail");
         setLoginAttempt(0);
+        navigate("/");
       })
       .catch((error) => {
         let errorMessage = "Login failed. Please try again.";

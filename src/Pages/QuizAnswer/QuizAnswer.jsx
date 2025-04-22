@@ -1,17 +1,18 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, useRef } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   FaSignInAlt,
   FaPrint,
   FaFacebookF,
-  FaTwitter,
   FaLinkedinIn,
   FaWhatsapp,
   FaLink,
   FaShareAlt,
-} from "react-icons/fa";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import useAuth from "@/hooks/useAuth";
+} from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
+import useAuth from '@/hooks/useAuth';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -19,29 +20,33 @@ const QuizAnswer = () => {
   const [userAnswers, setUserAnswers] = useState({});
   const [correctAnswers, setCorrectAnswers] = useState({});
   const [loading, setLoading] = useState(true);
-  const { category } = useParams();
   const [feedback, setFeedback] = useState(null);
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
-  const axiosPublic = useAxiosPublic();
+
+  const { category } = useParams();
+  const { state } = useLocation();
   const navigate = useNavigate();
-  const optionLabels = ["A.", "B.", "C.", "D."];
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
+
+  const optionLabels = ['A.', 'B.', 'C.', 'D.'];
   const printContentRef = useRef(null);
   const shareableLink = window.location.href;
 
   // Scroll to top view
   useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem("quiz_questions");
-      const storedAnswers = localStorage.getItem("userAnswers");
-      const hasPosted = localStorage.getItem("history_posted");
+      const storedQuiz = localStorage.getItem('quiz_questions');
+      const storedAnswers = localStorage.getItem('userAnswers');
+      const hasPosted = localStorage.getItem('history_posted');
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -68,10 +73,10 @@ const QuizAnswer = () => {
           setScore(finalScore);
           setShowScore(true);
         } catch (error) {
-          console.error("Error parsing localStorage data:", error);
+          console.error('Error parsing localStorage data:', error);
         }
       } else {
-        console.warn("Quiz data or user answers not found in localStorage.");
+        console.warn('Quiz data or user answers not found in localStorage.');
       }
 
       setLoading(false);
@@ -93,12 +98,13 @@ const QuizAnswer = () => {
 
   useEffect(() => {
     const hasPosted = localStorage.getItem(`history_posted`);
-    const storedQuiz = localStorage.getItem("quiz_questions");
-    const storedAnswers = localStorage.getItem("userAnswers");
+    const storedQuiz = localStorage.getItem('quiz_questions');
+    const storedAnswers = localStorage.getItem('userAnswers');
 
-    if (user && score && questions.length > 0 && !hasPosted) {
+    if (user && questions.length > 0 && !hasPosted) {
+      // Save History
       axiosPublic
-        .post("/quiz_history", {
+        .post('/quiz_history', {
           email: user?.email,
           date: new Date(),
           category: category,
@@ -106,29 +112,37 @@ const QuizAnswer = () => {
           questions: JSON.parse(storedQuiz),
           answers: JSON.parse(storedAnswers),
         })
-        .then((res) => {
-          console.log("History saved:", res.data);
-          localStorage.setItem(`history_posted`, "true");
+        .then(res => {
+          localStorage.setItem(`history_posted`, 'true');
         })
-        .catch((err) => {
-          console.log("Error saving history:", err);
+        .catch(err => {
+          console.log('Error saving history:', err);
         });
+
+      // Update User Level
+      axiosSecure
+        .put('/update_user_level', {
+          score,
+          difficulty: state.difficulty,
+        })
+        .catch(err => console.log('Level Update Error --> ', err.message));
     }
-  }, [user, score, category, questions]);
+  }, [user, category, questions]);
 
   const handleQuizAgain = () => {
-    localStorage.removeItem("quiz_questions");
-    localStorage.removeItem("userAnswers");
-    localStorage.removeItem("history_posted");
-    navigate("/start-quiz");
+    localStorage.removeItem('quiz_questions');
+    localStorage.removeItem('userAnswers');
+    localStorage.removeItem('history_posted');
+    navigate('/start-quiz');
   };
+  
 
   const handleGetFeedback = async () => {
-    const storedQuiz = localStorage.getItem("quiz_questions");
-    const storedAnswers = localStorage.getItem("userAnswers");
+    const storedQuiz = localStorage.getItem('quiz_questions');
+    const storedAnswers = localStorage.getItem('userAnswers');
 
     if (!storedQuiz || !storedAnswers) {
-      alert("No quiz data found!");
+      alert('No quiz data found!');
       return;
     }
 
@@ -138,15 +152,15 @@ const QuizAnswer = () => {
     setIsFetchingFeedback(true);
 
     try {
-      const { data: result } = await axiosPublic.post("/quiz_feedback", {
+      const { data: result } = await axiosPublic.post('/quiz_feedback', {
         quizData,
         userAnswers: parsedAnswers,
       });
 
       setFeedback(result);
     } catch (error) {
-      console.error("Error fetching AI feedback:", error);
-      alert("Failed to fetch feedback from AI.");
+      console.error('Error fetching AI feedback:', error);
+      alert('Failed to fetch feedback from AI.');
     } finally {
       setIsFetchingFeedback(false);
     }
@@ -560,14 +574,14 @@ const QuizAnswer = () => {
                 key={index}
                 className={`rounded-xl p-6 border ${
                   isCorrect
-                    ? "border-green-500/30 bg-green-900/10"
+                    ? 'border-green-500/30 bg-green-900/10'
                     : isWrong
-                    ? "border-red-500/30 bg-red-900/10"
-                    : "border-gray-700 bg-gray-800/50"
+                    ? 'border-red-500/30 bg-red-900/10'
+                    : 'border-gray-700 bg-gray-800/50'
                 }`}
               >
                 <h3 className="text-xl font-semibold text-white mb-4">
-                  <span className="text-purple-400">Q{index + 1}:</span>{" "}
+                  <span className="text-purple-400">Q{index + 1}:</span>{' '}
                   {q.question}
                 </h3>
 
@@ -581,17 +595,17 @@ const QuizAnswer = () => {
                         key={i}
                         className={`p-4 rounded-lg flex items-start border ${
                           isSelected && isCorrect
-                            ? "border-green-500 bg-green-900/30"
+                            ? 'border-green-500 bg-green-900/30'
                             : isSelected && isWrong
-                            ? "border-red-500 bg-red-900/30"
+                            ? 'border-red-500 bg-red-900/30'
                             : isCorrectOption
-                            ? "border-green-500 bg-green-900/30"
-                            : "border-gray-700 bg-gray-800"
+                            ? 'border-green-500 bg-green-900/30'
+                            : 'border-gray-700 bg-gray-800'
                         }`}
                       >
                         <span
                           className={`font-mono mr-3 mt-0.5 ${
-                            isCorrectOption ? "text-green-400" : "text-gray-400"
+                            isCorrectOption ? 'text-green-400' : 'text-gray-400'
                           }`}
                         >
                           {optionLabels[i]}
@@ -609,7 +623,7 @@ const QuizAnswer = () => {
                     </p>
                   ) : isWrong ? (
                     <p className="text-red-400">
-                      <span className="mr-2">✗</span> The correct answer was:{" "}
+                      <span className="mr-2">✗</span> The correct answer was:{' '}
                       <span className="text-green-400 font-medium">
                         {correctAnswer}
                       </span>
@@ -670,7 +684,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[0]?.Strengths ||
-                    "No specific strengths were identified."}
+                    'No specific strengths were identified.'}
                 </p>
               </div>
 
@@ -680,7 +694,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[1]?.Weaknesses ||
-                    "No significant weaknesses were found."}
+                    'No significant weaknesses were found.'}
                 </p>
               </div>
 
@@ -690,7 +704,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[2]?.Recommendations ||
-                    "No specific recommendations available."}
+                    'No specific recommendations available.'}
                 </p>
               </div>
             </div>
@@ -764,15 +778,15 @@ const QuizAnswer = () => {
 
               <button
                 onClick={() => handleShareSocial("twitter")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-sky-500 hover:bg-sky-600 transition-colors"
+                className="flex flex-col items-center justify-center p-3 rounded-lg bg-gray-900 hover:bg-black transition-colors"
               >
-                <FaTwitter className="text-white text-xl mb-1" />
+                <FaXTwitter className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">Twitter</span>
               </button>
 
               <button
                 onClick={() => handleShareSocial("linkedin")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-700 hover:bg-blue-800 transition-colors"
+                className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors"
               >
                 <FaLinkedinIn className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">LinkedIn</span>

@@ -85,7 +85,7 @@ const PricingPlan = () => {
             Pricing Plans
           </h2>
 
-          <p className="text-xl text-purple-300 text-center">
+          <p className="text-xl text-gray-400 text-center">
             Choose the plan that fits your learning journey
           </p>
         </div>

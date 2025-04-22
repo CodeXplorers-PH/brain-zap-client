@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '@/hooks/useAuthContext';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
+
 
 const categories = [
   {
@@ -149,11 +152,31 @@ const categories = [
   },
 ];
 
+const generateDifficulty = level => {
+  const difficulty =
+    level > 8
+      ? 'so_hard'
+      : level <= 8 && level > 6
+      ? 'hard'
+      : level <= 6 && level > 4
+      ? 'medium'
+      : level <= 4 && level > 2
+      ? 'easy'
+      : 'so_easy';
+
+  return difficulty;
+};
+
 const QuizCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [difficulty, setDifficulty] = useState('medium');
+  const [quizzesNumber, setQuizzesNumber] = useState(10);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [userLevel, setUserLevel] = useState(0);
+  const { user } = useAuthContext();
 
   const navigate = useNavigate();
+  const axiosPublic = useAxiosPublic();
 
   const categoryColors = {
     'Web Development': 'from-indigo-600 to-purple-600',
@@ -167,6 +190,13 @@ const QuizCategories = () => {
     selectedCategory === 'All'
       ? categories
       : categories.filter(category => category.type === selectedCategory);
+  
+  useEffect(() => {
+    axiosPublic
+      .get(`/userInfo/${user.email}`)
+      .then(res => setUserLevel(res.data.level.level));
+  }, []);
+
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">
@@ -232,7 +262,9 @@ const QuizCategories = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
             <Link
-              to={`/quiz/${category.link}?difficulty=medium&quizzesNumber=10`}
+              to={`/quiz/${category.link}?difficulty=${generateDifficulty(
+                userLevel
+              )}&quizzesNumber=10`}
               key={index}
               className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
               onMouseEnter={() => setHoveredCard(index)}
