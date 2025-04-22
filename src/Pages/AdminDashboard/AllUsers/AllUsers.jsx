@@ -202,25 +202,56 @@ const AllUsers = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Admin!",
-          text: "User is also an admin now.",
-          icon: "success",
-          background: "rgba(30, 30, 60, 0.85)",
-          color: "#fff",
-          backdrop: `rgba(0, 0, 0, 0.4)`,
-          customClass: {
-            popup:
-              "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-            title: "text-blue-400 text-lg font-semibold",
-            confirmButton:
-              "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-            htmlContainer: "text-sm text-gray-300",
-          },
-        });
+        axiosPublic
+          .patch(`/makeAdmin/${id}/${user?.email}`)
+          .then((response) => {
+            if (response?.data?.message === "User has been promoted to admin.") {
+              // ✅ Update the local state to reflect new admin role
+              setUsers((prevUsers) =>
+                prevUsers.map((u) =>
+                  u._id === id ? { ...u, role: "admin" } : u
+                )
+              );
+  
+              Swal.fire({
+                title: "Success!",
+                text: "User has been granted admin access.",
+                icon: "success",
+                background: "rgba(30, 30, 60, 0.85)",
+                color: "#fff",
+                backdrop: `rgba(0, 0, 0, 0.4)`,
+                customClass: {
+                  popup:
+                    "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+                  title: "text-blue-400 text-lg font-semibold",
+                  confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+                  htmlContainer: "text-sm text-gray-300",
+                },
+              });
+            }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: "Error!",
+              text: "There was an issue making the user an admin.",
+              icon: "error",
+              background: "rgba(30, 30, 60, 0.85)",
+              color: "#fff",
+              backdrop: `rgba(0, 0, 0, 0.4)`,
+              customClass: {
+                popup:
+                  "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+                title: "text-red-400 text-lg font-semibold",
+                confirmButton:
+                  "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
+                htmlContainer: "text-sm text-gray-300",
+              },
+            });
+          });
       }
     });
-  };
+  };  
 
   const filteredUsers = users.filter(
     (u) =>
@@ -286,13 +317,19 @@ const AllUsers = () => {
                     <Lock size={14} className="inline mr-1" />
                     Lock
                   </button>
-                  <button
-                    onClick={() => handleMakeAdmin(user._id)}
-                    className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
-                  >
-                    <ShieldCheck size={14} className="inline mr-1" />
-                    Admin
-                  </button>
+                  {user.role === "admin" ? (
+                    <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
+                      Admin Account
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleMakeAdmin(user._id)}
+                      className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
+                    >
+                      <ShieldCheck size={14} className="inline mr-1" />
+                      Admin
+                    </button>
+                  )}
                 </div>
               </Card>
             );
