@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { User, Trash2, ShieldCheck, Lock } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Card = ({ children }) => {
   return (
@@ -24,25 +25,66 @@ const AllUsers = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    axiosPublic.get(`/api/users/${user?.email}`).then((res) => setUsers(res.data));
+    axiosPublic
+      .get(`/api/users/${user?.email}`)
+      .then((res) => setUsers(res.data));
     axiosPublic.get("/api/messages").then((res) => setMessages(res.data));
   }, [axiosPublic, user?.email]);
 
   const handleDelete = (id) => {
-    console.log("Deleting user:", id);
+    alert("Deleting user:", id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      background: "rgba(30, 30, 60, 0.85)",
+      color: "#fff",
+      backdrop: `rgba(0, 0, 0, 0.4)`,
+      customClass: {
+        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+        title: "text-blue-400 text-lg font-semibold",
+        confirmButton:
+          "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+        htmlContainer: "text-sm text-gray-300",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+          background: "rgba(30, 30, 60, 0.85)",
+          color: "#fff",
+          backdrop: `rgba(0, 0, 0, 0.4)`,
+          customClass: {
+            popup:
+              "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+            title: "text-blue-400 text-lg font-semibold",
+            confirmButton:
+              "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+            htmlContainer: "text-sm text-gray-300",
+          },
+        });
+      }
+    });
   };
 
   const handleLock = (id) => {
-    console.log("Locking user:", id);
+    alert("Locking user:", id);
   };
 
   const handleMakeAdmin = (id) => {
-    console.log("Making admin:", id);
+    alert("Making admin:", id);
   };
 
-  const filteredUsers = users.filter((u) =>
-    u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = users.filter(
+    (u) =>
+      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -65,12 +107,15 @@ const AllUsers = () => {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {filteredUsers.map((user) => (
           <Card key={user._id}>
             <div className="flex items-center gap-4 mb-4">
               <img
-                src={user?.photoURL || "https://i.ibb.co/0jqHpnp/default-user.png"}
+                src={
+                  user?.photoURL ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                }
                 alt={user.name}
                 className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md"
               />
