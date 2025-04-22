@@ -1,13 +1,75 @@
 import { Link, useLocation } from "react-router-dom";
-import { useContext } from "react";
-import { LogOut, User } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { ChartNoAxesCombined, LogOut, User } from "lucide-react";
 import { AuthContext } from "@/provider/AuthProvider";
 import LockedErr from "../ui/LockedErr";
 import { motion } from "framer-motion";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import streakImg from "../../assets/img/streak.png";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import useAdmin from "@/hooks/useAdmin";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
+  const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const [streak, setStreak] = useState(null);
+  const axiosPublic = useAxiosPublic();
   const location = useLocation(); // Get the current route
+  const { admin, isAdminLoading } = useAdmin();
+  // Streaks Code Starts Here
+  useEffect(() => {
+    if (!user) return;
+
+    axiosPublic
+      .get(`/quiz_history/${user?.email}`)
+      .then((res) => {
+        const history = res?.data || [];
+        setUserQuizHistory(history);
+        // Utility to get date in local YYYY-MM-DD format
+        const formatDateLocal = (dateStr) => {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
+        };
+
+        // Extract unique quiz dates (formatted locally)
+        const quizDaysSet = new Set(
+          history.map((q) => formatDateLocal(q.date))
+        );
+
+        const today = new Date();
+        const todayStr = today.toLocaleDateString("en-CA");
+
+        // 🛑 If user didn't give quiz today, streak = 0
+        if (!quizDaysSet.has(todayStr)) {
+          setStreak(0);
+          return;
+        }
+
+        // ✅ Start with today counted
+        let streakCount = 1;
+
+        // 🔁 Check previous consecutive days
+        for (let i = 1; ; i++) {
+          const prevDate = new Date();
+          prevDate.setDate(today.getDate() - i);
+          const prevStr = prevDate.toLocaleDateString("en-CA");
+
+          if (quizDaysSet.has(prevStr)) {
+            streakCount++;
+          } else {
+            break;
+          }
+        }
+
+        setStreak(streakCount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user, location?.pathname]);
+
+  // Streaks Code Ends Here
+
   // Nav items
   const Navs = [
     { path: "/", pathName: "Home" },
@@ -24,43 +86,7 @@ const Header = () => {
       <div className="navbar bg-gray-900/80 backdrop-blur-md rounded-full shadow-2xl max-w-6xl w-full px-6 border border-gray-800/50">
         {/* Logo Section */}
         <div className="navbar-start">
-          <Link to="/" className="font-bold text-xl text-white">
-            BrainZap
-          </Link>
-        </div>
-
-        {/* Desktop Navigation - Center */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal">
-            {Navs.map((navlink, index) => (
-              <li key={`navlink-${index}`}>
-                <Link
-                  to={navlink.path}
-                  className={`font-medium mx-1 relative overflow-hidden group ${
-                    location.pathname === navlink.path
-                      ? "text-purple-400 font-semibold"
-                      : "text-gray-300"
-                  }`}
-                >
-                  {navlink.pathName}
-                  {/* Underline animation */}
-                  <span
-                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${
-                      location.pathname === navlink.path
-                        ? "scale-x-100"
-                        : "scale-x-0"
-                    } group-hover:scale-x-100 transition-transform duration-300`}
-                  ></span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Auth Section and Mobile Menu - End */}
-        <div className="navbar-end">
-          {/* Mobile menu hamburger - navigation only */}
-          <div className="dropdown dropdown-end scale-110 lg:hidden mr-2">
+          <div className="dropdown dropdown-content scale-110 lg:hidden mr-2">
             <motion.button
               tabIndex={0}
               whileHover={{ scale: 1.2, color: "#ffffff" }}
@@ -101,30 +127,77 @@ const Header = () => {
               ))}
             </ul>
           </div>
+          <Link
+            to="/"
+            className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400"
+          >
+            BrainZap
+          </Link>
+        </div>
+
+        {/* Desktop Navigation - Center */}
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal">
+            {Navs.map((navlink, index) => (
+              <li key={`navlink-${index}`}>
+                <Link
+                  to={navlink.path}
+                  className={`font-medium mx-1 relative overflow-hidden group ${
+                    location.pathname === navlink.path
+                      ? "text-purple-400 font-semibold"
+                      : "text-gray-300"
+                  }`}
+                >
+                  {navlink.pathName}
+                  {/* Underline animation */}
+                  <span
+                    className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${
+                      location.pathname === navlink.path
+                        ? "scale-x-100"
+                        : "scale-x-0"
+                    } group-hover:scale-x-100 transition-transform duration-300`}
+                  ></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Auth Section and Mobile Menu - End */}
+        <div className="navbar-end">
+          {/* Mobile menu hamburger - navigation only */}
 
           {/* User Profile or Get Started button */}
+          {user && (
+            <div className="relative w-9 h-9 flex items-center justify-center mr-3">
+              <img
+                className="w-full h-full opacity-80"
+                src={streakImg}
+                alt="Streak"
+              />
+              <span className="absolute top-1 left-0 w-full h-full flex items-center justify-center text-lg font-bold text-white">
+                {streak}
+              </span>
+            </div>
+          )}
           {user ? (
             <div className="dropdown dropdown-end">
               <div
                 tabIndex={0}
                 role="button"
                 aria-label="User profile"
-                className="relative flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-pointer"
+                className="relative flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
               >
-                {user?.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt="User avatar"
-                    className="w-full h-full rounded-full object-cover"
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full rounded-full bg-purple-600 text-white flex items-center justify-center font-medium">
-                    {user?.displayName?.charAt(0).toUpperCase() ||
-                      user?.email?.charAt(0).toUpperCase() ||
-                      "U"}
-                  </div>
+                {user?.photoURL && (
+                  <Avatar>
+                    <AvatarImage
+                      src={user?.photoURL}
+                      alt={`Photo of ${user?.displayName}`}
+                    />
+                    <AvatarFallback>
+                      {user?.displayName?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 )}
               </div>
               <ul
@@ -141,6 +214,16 @@ const Header = () => {
                   >
                     <User size={16} />
                     Profile
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/leaderBoard"
+                    className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
+                  >
+                     <ChartNoAxesCombined size={16} />
+                    Leaderboard
                   </Link>
                 </li>
                 <li>

@@ -4,6 +4,9 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { AuthContext } from "@/provider/AuthProvider";
 import SocialLogin from "./SocialLogin";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const { userLogin, setUser, passwordResetEmail } = useContext(AuthContext);
@@ -11,12 +14,14 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-
   const emailRef = useRef();
   const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
+
 
   const [loginAttempt, setLoginAttempt] = useState(() => {
-    return JSON.parse(localStorage.getItem("loginAttempt")) || 0;
+    const storedAttempt = localStorage.getItem("loginAttempt");
+    return storedAttempt ? JSON.parse(storedAttempt) : 0;
   });
 
   useEffect(() => {
@@ -24,31 +29,69 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      errors?.submit === "Firebase: Error (auth/invalid-credential)." ||
-      errors?.submit === "auth/too-many-requests"
-    ) {
+    const handleLoginAttempt = async () => {
+      if (
+        !errors?.submit ||
+        (errors.submit !== "Firebase: Error (auth/invalid-credential)." &&
+          errors.submit !== "auth/too-many-requests")
+      ) {
+        return;
+      }
+
+      const currentEmail = emailRef.current?.value;
+      if (!currentEmail) return;
+
+      const existingEmail = localStorage.getItem("loginAttemptEmail");
+
+      if (existingEmail && existingEmail !== currentEmail) {
+        localStorage.removeItem("loginAttempt");
+        localStorage.removeItem("loginAttemptEmail");
+        setLoginAttempt(0);
+        return;
+      }
+
+      localStorage.setItem("loginAttemptEmail", currentEmail);
+
       if (loginAttempt >= 3) {
         const newUnlockTime = Date.now() + 60 * 60 * 1000;
 
-        axiosPublic.post("/account_lockout", {
-          email: emailRef.current.value,
-          isLocked: true,
-          date: new Date(),
-          unlockTime: newUnlockTime,
-        });
+        try {
+          await axiosPublic.post("/account_lockout", {
+            email: currentEmail,
+            isLocked: true,
+            date: new Date(),
+            unlockTime: newUnlockTime,
+          });
+
+          setErrors({
+            submit: `Your account has been temporarily locked due to multiple failed login attempts. Please try again after ${format(
+              newUnlockTime,
+              "h:mm a"
+            )}.`,
+          });
+        } catch (err) {
+          console.error("Error locking account:", err);
+        }
       } else {
         const newAttempt = loginAttempt + 1;
         setLoginAttempt(newAttempt);
         localStorage.setItem("loginAttempt", JSON.stringify(newAttempt));
+
+        const remaining = 3 - newAttempt;
+        setErrors({
+          submit: `Incorrect credentials. You have ${remaining} attempt${
+            remaining !== 1 ? "s" : ""
+          } remaining before your account is temporarily locked.`,
+        });
       }
-    }
-  }, [errors]);
+    };
+
+    handleLoginAttempt();
+  }, [axiosPublic, errors, loginAttempt]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Reset previous errors and notifications
     setErrors({});
     setResetEmailSent(false);
 
@@ -56,7 +99,6 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    // Validate form fields
     const newErrors = {};
     if (!email) {
       newErrors.email = "Email is required";
@@ -74,34 +116,41 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         setUser(user);
+        // Reset login attempts on successful login
+        localStorage.removeItem("loginAttempt");
+        localStorage.removeItem("loginAttemptEmail");
+        setLoginAttempt(0);
+        navigate("/");
       })
       .catch((error) => {
-        // Handle specific error types
+        let errorMessage = "Login failed. Please try again.";
         const errorCode = error.code;
+
         if (
           errorCode === "auth/user-not-found" ||
           errorCode === "auth/wrong-password"
         ) {
-          setErrors({ submit: "Invalid email or password. Please try again." });
+          errorMessage = "Invalid email or password. Please try again.";
         } else if (errorCode === "auth/too-many-requests") {
-          setErrors({
-            submit: "Too many failed login attempts. Please try again later.",
-          });
+          errorMessage =
+            "Too many failed login attempts. Please try again later.";
         } else if (errorCode === "auth/invalid-email") {
           setErrors({ email: "Invalid email format." });
+          return;
         } else {
-          setErrors({ submit: error.message });
+          errorMessage = error.message;
         }
+
+        setErrors({ submit: errorMessage });
       });
   };
 
   const handleForget = (e) => {
     e.preventDefault();
-
     setResetEmailSent(false);
     setErrors({});
 
-    const email = emailRef.current.value;
+    const email = emailRef.current?.value;
     if (!email) {
       setErrors({
         email: "Please enter your email address for password reset.",
@@ -120,7 +169,7 @@ const Login = () => {
     passwordResetEmail(email)
       .then(() => {
         setResetEmailSent(true);
-        setIsResetting(false);
+        setErrors({});
       })
       .catch((error) => {
         setIsResetting(false);
@@ -134,12 +183,18 @@ const Login = () => {
         } else {
           setErrors({ email: "Failed to send reset email. Please try again." });
         }
+      })
+      .finally(() => {
+        setIsResetting(false);
       });
   };
 
   const handleLoginSuccess = (user) => {
-    console.log("User login successful");
     setUser(user);
+    // Reset login attempts on successful login
+    localStorage.removeItem("loginAttempt");
+    localStorage.removeItem("loginAttemptEmail");
+    setLoginAttempt(0);
   };
 
   const handleLoginError = (errorMessage) => {
@@ -160,14 +215,12 @@ const Login = () => {
           <h5 className="mt-3 text-gray-400">Login to test your knowledge</h5>
         </div>
 
-        {/* Display submit errors */}
         {errors.submit && (
           <div className="mb-6 p-3 bg-red-900/40 border border-red-800 text-red-300 rounded-md text-sm">
             {errors.submit}
           </div>
         )}
 
-        {/* Password reset success message */}
         {resetEmailSent && (
           <div className="mb-6 p-3 bg-green-900/40 border border-green-800 text-green-300 rounded-md text-sm">
             Password reset email has been sent. Please check your inbox.
@@ -243,7 +296,6 @@ const Login = () => {
             )}
           </div>
 
-          {/* Remember me checkbox */}
           <div className="flex items-start space-x-3 pt-2">
             <input
               type="checkbox"

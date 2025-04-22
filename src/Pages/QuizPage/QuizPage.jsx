@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import Quiz from '../Quiz/Quiz';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import Quiz from "../Quiz/Quiz";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const QuizPage = () => {
   const { category } = useParams();
@@ -14,10 +14,14 @@ const QuizPage = () => {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
 
-  const difficulty = queryParams.get('difficulty');
-  const quizzesNumber = queryParams.get('quizzesNumber');
+  const difficulty = queryParams.get("difficulty");
+  const quizzesNumber = queryParams.get("quizzesNumber");
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+
     let abortController = new AbortController();
 
     const localStorageKey = `quiz_questions`;
@@ -43,12 +47,9 @@ const QuizPage = () => {
           localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
         }
       } catch (err) {
-        if (err.name === 'AbortError') {
-          console.log('Fetch request was aborted.');
-        } else {
-          console.error('Error fetching questions:', err);
-          setError('Failed to load questions. Please try again later.');
-        }
+        console.error("Error fetching questions:", err);
+        setError("Failed to load questions. Please try again later.");
+
       } finally {
         if (!signal.aborted) {
           setLoading(false);
@@ -61,9 +62,13 @@ const QuizPage = () => {
     };
   }, [category, difficulty, quizzesNumber]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
-      <h2 className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12">
+      <h2 className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 capitalize">
         {category} Quiz
       </h2>
 

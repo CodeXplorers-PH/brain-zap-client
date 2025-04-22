@@ -11,9 +11,13 @@ import {
   X,
   CircleCheck,
   Crown,
+  Zap,
+  Flame,
 } from "lucide-react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -23,13 +27,16 @@ const Profile = () => {
   const axiosPublic = useAxiosPublic();
   const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
+  const [streak, setStreak] = useState(0);
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
-  
+
   // Form state
   const [displayName, setDisplayName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+
+  const navigate = useNavigate();
 
   // Update local state when user data changes
   useEffect(() => {
@@ -44,7 +51,6 @@ const Profile = () => {
       .get(`/quiz_history/${user?.email}`)
       .then((res) => {
         setUserQuizHistory(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -66,11 +72,64 @@ const Profile = () => {
     fetchUserInfo();
   }, [axiosPublic, user]);
 
+  // Streaks Code Starts Here
+  useEffect(() => {
+    if (!user) return;
+
+    axiosPublic
+      .get(`/quiz_history/${user?.email}`)
+      .then((res) => {
+        const history = res?.data || [];
+        setUserQuizHistory(history);
+        // Utility to get date in local YYYY-MM-DD format
+        const formatDateLocal = (dateStr) => {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
+        };
+
+        // Extract unique quiz dates (formatted locally)
+        const quizDaysSet = new Set(
+          history.map((q) => formatDateLocal(q.date))
+        );
+
+        const today = new Date();
+        const todayStr = today.toLocaleDateString("en-CA");
+
+        // 🛑 If user didn't give quiz today, streak = 0
+        if (!quizDaysSet.has(todayStr)) {
+          setStreak(0);
+          return;
+        }
+
+        // ✅ Start with today counted
+        let streakCount = 1;
+
+        // 🔁 Check previous consecutive days
+        for (let i = 1; ; i++) {
+          const prevDate = new Date();
+          prevDate.setDate(today.getDate() - i);
+          const prevStr = prevDate.toLocaleDateString("en-CA");
+
+          if (quizDaysSet.has(prevStr)) {
+            streakCount++;
+          } else {
+            break;
+          }
+        }
+
+        setStreak(streakCount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [axiosPublic, user]);
+  // Streaks Code Ends Here
+
   // Sample stats - replace with actual data from your application
   const stats = {
     quizzesTaken: userQuizHistory?.length,
     totalPoints: xpPoints,
-    avgScore: avgScore.toFixed(2),
+    avgScore: avgScore > 0 ? avgScore.toFixed(2) : 0,
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
@@ -117,6 +176,19 @@ const Profile = () => {
     return "U";
   };
 
+  // Handle View Quiz History
+  const handleViewHistory = (quiz) => {
+    const { category, answers, questions } = quiz;
+
+    if (answers && questions) {
+      localStorage.setItem("quiz_questions", JSON.stringify(questions));
+      localStorage.setItem("userAnswers", JSON.stringify(answers));
+      localStorage.setItem("history_posted", true);
+
+      navigate(`/quiz/${category}/answer`);
+    }
+  };
+
   return (
     <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
       <div className="max-w-4xl mx-auto">
@@ -125,20 +197,21 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row items-center gap-6">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-purple-600 shadow-lg">
-                {photoURL ? (
-                  <img
+              {photoURL ? (
+                <Avatar className="w-24 h-24 md:w-32 md:h-32 text-2xl overflow-hidden border-4 border-purple-600">
+                  <AvatarImage
                     src={photoURL}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
+                    alt={`Photo of ${user?.displayName}`}
                   />
-                ) : (
-                  <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
-                    {getInitials()}
-                  </div>
-                )}
-              </div>
+                  <AvatarFallback>
+                    {user?.displayName?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <div className="bg-purple-600 text-white flex items-center justify-center h-full text-4xl">
+                  {getInitials()}
+                </div>
+              )}
               <button
                 onClick={() => setIsEditing(true)}
                 className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full shadow-lg transition-all duration-200"
@@ -217,11 +290,15 @@ const Profile = () => {
 
                     {/* Premium Members Tick */}
                     {userInfo?.subscription === "Pro" && (
-                      <CircleCheck className="text-blue-500 w-6 h-6" />
+                      <div className="tooltip" data-tip="Pro Member">
+                        <CircleCheck className="text-blue-500 w-6 h-6" />
+                      </div>
                     )}
 
                     {userInfo?.subscription === "Elite" && (
-                      <Crown className="text-amber-500 w-6 h-6" />
+                      <div className="tooltip" data-tip="Elite Member">
+                        <Crown className="text-amber-500 w-6 h-6" />
+                      </div>
                     )}
                   </h1>
                   <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
@@ -330,10 +407,11 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Clock size={18} className="text-purple-400 mr-3" />
+                  <Flame size={20} className="text-purple-400 mr-3" />
+
                   <div>
-                    <p className="text-gray-400 text-sm">Last Active</p>
-                    <p className="text-white">{stats.lastActive}</p>
+                    <p className="text-gray-400 text-sm">Streak</p>
+                    <p className="text-white">{streak}</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -450,15 +528,18 @@ const Profile = () => {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-700">
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Quiz
-                      </th>
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Date
-                      </th>
-                      <th className="text-right py-3 text-gray-400 font-medium">
-                        Score
-                      </th>
+                      {["Quiz", "Date", "Score", "Action"].map(
+                        (tHead, index) => (
+                          <th
+                            key={index}
+                            className={`py-3 text-gray-400 font-medium ${
+                              index > 1 ? "text-right" : "text-left"
+                            }`}
+                          >
+                            {tHead}
+                          </th>
+                        )
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -483,6 +564,14 @@ const Profile = () => {
                           >
                             {quiz.score}%
                           </span>
+                        </td>
+                        <td className="py-3 text-right">
+                          <button
+                            onClick={() => handleViewHistory(quiz)}
+                            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium text-purple-400 transition-colors"
+                          >
+                            View
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -519,7 +608,7 @@ const Profile = () => {
             <h2 className="text-xl font-semibold text-white text-left mb-4">
               Transection History
             </h2>
-            {user && userInfo?.transectionId.length > 0 ? (
+            {user && userInfo?.transectionId?.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
