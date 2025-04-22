@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 
+
 const categories = [
   {
     title: 'JavaScript',
@@ -168,6 +169,8 @@ const generateDifficulty = level => {
 
 const QuizCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [difficulty, setDifficulty] = useState('medium');
+  const [quizzesNumber, setQuizzesNumber] = useState(10);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [userLevel, setUserLevel] = useState(0);
   const { user } = useAuthContext();
@@ -187,12 +190,13 @@ const QuizCategories = () => {
     selectedCategory === 'All'
       ? categories
       : categories.filter(category => category.type === selectedCategory);
-
+  
   useEffect(() => {
     axiosPublic
       .get(`/userInfo/${user.email}`)
       .then(res => setUserLevel(res.data.level.level));
   }, []);
+
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">

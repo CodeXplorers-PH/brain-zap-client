@@ -21,7 +21,7 @@ const QuizPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
+
     let abortController = new AbortController();
 
     const localStorageKey = `quiz_questions`;
@@ -49,6 +49,7 @@ const QuizPage = () => {
       } catch (err) {
         console.error("Error fetching questions:", err);
         setError("Failed to load questions. Please try again later.");
+
       } finally {
         if (!signal.aborted) {
           setLoading(false);
