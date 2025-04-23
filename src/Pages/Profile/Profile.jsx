@@ -10,6 +10,7 @@ import FullQuizHistory from './FullQuizHistory';
 import ShortQuizHistory from './ShortQuizHistory';
 import Achievements from './Achievements';
 import About from './About';
+import ProfileTabs from './ProfileTabs';
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -311,62 +312,8 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Rest of the component remains the same */}
         {/* Tabs Navigation */}
-        <div className="flex border-b border-gray-700 mb-6">
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === 'profile'
-                ? 'text-purple-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('profile')}
-          >
-            Profile
-            {activeTab === 'profile' && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === 'history'
-                ? 'text-purple-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('history')}
-          >
-            Quiz History
-            {activeTab === 'history' && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === 'settings'
-                ? 'text-purple-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('settings')}
-          >
-            Settings
-            {activeTab === 'settings' && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-          <button
-            className={`py-3 px-4 font-medium relative ${
-              activeTab === 'transecHistory'
-                ? 'text-purple-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('transecHistory')}
-          >
-            Transaction History
-            {activeTab === 'transecHistory' && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
-            )}
-          </button>
-        </div>
+        <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* Profile Content */}
         {activeTab === 'profile' && (
@@ -393,7 +340,7 @@ const Profile = () => {
         {activeTab === 'settings' && <Settings />}
 
         {/* Transaction history */}
-        {activeTab === 'transecHistory' && (
+        {activeTab === 'transactionHistory' && (
           <TransactionHistory user={user} userInfo={userInfo} format={format} />
         )}
       </div>
