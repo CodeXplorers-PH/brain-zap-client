@@ -1,27 +1,26 @@
-import React, { useContext, useState, useEffect } from "react";
-import { AuthContext } from "@/provider/AuthProvider";
+import React, { useContext, useState, useEffect } from 'react';
+import { AuthContext } from '@/provider/AuthProvider';
 import {
   Edit2,
   Mail,
   Calendar,
   Award,
-  Clock,
   FileText,
   Save,
   X,
   CircleCheck,
   Crown,
-  Zap,
   Flame,
-} from "lucide-react";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from 'lucide-react';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import TransactionHistory from './TransactionHistory';
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const axiosPublic = useAxiosPublic();
@@ -33,26 +32,26 @@ const Profile = () => {
   const avgScore = totalScore / userQuizHistory.length;
 
   // Form state
-  const [displayName, setDisplayName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
+  const [displayName, setDisplayName] = useState('');
+  const [photoURL, setPhotoURL] = useState('');
 
   const navigate = useNavigate();
 
   // Update local state when user data changes
   useEffect(() => {
     if (user) {
-      setDisplayName(user.displayName || "");
-      setPhotoURL(user.photoURL || "");
+      setDisplayName(user.displayName || '');
+      setPhotoURL(user.photoURL || '');
     }
   }, [user]);
 
   useEffect(() => {
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
-      .then((res) => {
+      .then(res => {
         setUserQuizHistory(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, [axiosPublic, user]);
@@ -65,7 +64,7 @@ const Profile = () => {
         const res = await axiosPublic.get(`/userInfo/${user.email}`);
         setUserInfo(res.data);
       } catch (err) {
-        console.error("Error fetching user info:", err);
+        console.error('Error fetching user info:', err);
       }
     };
 
@@ -78,22 +77,20 @@ const Profile = () => {
 
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
-      .then((res) => {
+      .then(res => {
         const history = res?.data || [];
         setUserQuizHistory(history);
         // Utility to get date in local YYYY-MM-DD format
-        const formatDateLocal = (dateStr) => {
+        const formatDateLocal = dateStr => {
           const date = new Date(dateStr);
-          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
+          return date.toLocaleDateString('en-CA'); // gives 'YYYY-MM-DD' format
         };
 
         // Extract unique quiz dates (formatted locally)
-        const quizDaysSet = new Set(
-          history.map((q) => formatDateLocal(q.date))
-        );
+        const quizDaysSet = new Set(history.map(q => formatDateLocal(q.date)));
 
         const today = new Date();
-        const todayStr = today.toLocaleDateString("en-CA");
+        const todayStr = today.toLocaleDateString('en-CA');
 
         // 🛑 If user didn't give quiz today, streak = 0
         if (!quizDaysSet.has(todayStr)) {
@@ -108,7 +105,7 @@ const Profile = () => {
         for (let i = 1; ; i++) {
           const prevDate = new Date();
           prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString("en-CA");
+          const prevStr = prevDate.toLocaleDateString('en-CA');
 
           if (quizDaysSet.has(prevStr)) {
             streakCount++;
@@ -119,7 +116,7 @@ const Profile = () => {
 
         setStreak(streakCount);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, [axiosPublic, user]);
@@ -133,7 +130,7 @@ const Profile = () => {
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
-    lastActive: "Now",
+    lastActive: 'Now',
   };
 
   const handleSaveProfile = async () => {
@@ -142,8 +139,8 @@ const Profile = () => {
 
       // Create a new profile update object
       const profileUpdates = {
-        displayName: displayName.trim() || user.displayName || "",
-        photoURL: photoURL.trim() || user.photoURL || "",
+        displayName: displayName.trim() || user.displayName || '',
+        photoURL: photoURL.trim() || user.photoURL || '',
       };
 
       // Update the profile
@@ -152,8 +149,8 @@ const Profile = () => {
       // Reset state
       setIsEditing(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -161,8 +158,8 @@ const Profile = () => {
 
   const cancelEditing = () => {
     // Reset to current user values
-    setDisplayName(user?.displayName || "");
-    setPhotoURL(user?.photoURL || "");
+    setDisplayName(user?.displayName || '');
+    setPhotoURL(user?.photoURL || '');
     setIsEditing(false);
   };
 
@@ -173,17 +170,17 @@ const Profile = () => {
     if (user?.email) {
       return user.email.charAt(0).toUpperCase();
     }
-    return "U";
+    return 'U';
   };
 
   // Handle View Quiz History
-  const handleViewHistory = (quiz) => {
+  const handleViewHistory = quiz => {
     const { category, answers, questions } = quiz;
 
     if (answers && questions) {
-      localStorage.setItem("quiz_questions", JSON.stringify(questions));
-      localStorage.setItem("userAnswers", JSON.stringify(answers));
-      localStorage.setItem("history_posted", true);
+      localStorage.setItem('quiz_questions', JSON.stringify(questions));
+      localStorage.setItem('userAnswers', JSON.stringify(answers));
+      localStorage.setItem('history_posted', true);
 
       navigate(`/quiz/${category}/answer`);
     }
@@ -235,7 +232,7 @@ const Profile = () => {
                       type="text"
                       id="displayName"
                       value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
+                      onChange={e => setDisplayName(e.target.value)}
                       placeholder="Display Name"
                       className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white focus:border-purple-500 focus:outline-none"
                     />
@@ -252,7 +249,7 @@ const Profile = () => {
                       type="text"
                       id="photoURL"
                       value={photoURL}
-                      onChange={(e) => setPhotoURL(e.target.value)}
+                      onChange={e => setPhotoURL(e.target.value)}
                       placeholder="https://i.ibb.co.com/..."
                       className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white focus:border-purple-500 focus:outline-none"
                     />
@@ -260,18 +257,18 @@ const Profile = () => {
 
                   <div className="flex items-center justify-center md:justify-start text-gray-400 mt-2">
                     <Mail size={16} className="mr-2" />
-                    <span>{user?.email || "user@example.com"}</span>
+                    <span>{user?.email || 'user@example.com'}</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-start gap-2 mt-3">
                     <button
                       onClick={handleSaveProfile}
                       disabled={loading}
                       className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center ${
-                        loading ? "opacity-50 cursor-not-allowed" : ""
+                        loading ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
                       <Save size={16} className="mr-2" />
-                      {loading ? "Saving..." : "Save Changes"}
+                      {loading ? 'Saving...' : 'Save Changes'}
                     </button>
                     <button
                       onClick={cancelEditing}
@@ -286,16 +283,16 @@ const Profile = () => {
               ) : (
                 <>
                   <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 flex items-center gap-2">
-                    {user?.displayName || "BrainZapper"}
+                    {user?.displayName || 'BrainZapper'}
 
                     {/* Premium Members Tick */}
-                    {userInfo?.subscription === "Pro" && (
+                    {userInfo?.subscription === 'Pro' && (
                       <div className="tooltip" data-tip="Pro Member">
                         <CircleCheck className="text-blue-500 w-6 h-6" />
                       </div>
                     )}
 
-                    {userInfo?.subscription === "Elite" && (
+                    {userInfo?.subscription === 'Elite' && (
                       <div className="tooltip" data-tip="Elite Member">
                         <Crown className="text-amber-500 w-6 h-6" />
                       </div>
@@ -303,7 +300,7 @@ const Profile = () => {
                   </h1>
                   <div className="flex items-center justify-center md:justify-start text-gray-400 mb-4">
                     <Mail size={16} className="mr-2" />
-                    <span>{user?.email || "user@example.com"}</span>
+                    <span>{user?.email || 'user@example.com'}</span>
                   </div>
                 </>
               )}
@@ -340,60 +337,60 @@ const Profile = () => {
         <div className="flex border-b border-gray-700 mb-6">
           <button
             className={`py-3 px-4 font-medium relative ${
-              activeTab === "profile"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'profile'
+                ? 'text-purple-400'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
-            onClick={() => setActiveTab("profile")}
+            onClick={() => setActiveTab('profile')}
           >
             Profile
-            {activeTab === "profile" && (
+            {activeTab === 'profile' && (
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
             )}
           </button>
           <button
             className={`py-3 px-4 font-medium relative ${
-              activeTab === "history"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'history'
+                ? 'text-purple-400'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
-            onClick={() => setActiveTab("history")}
+            onClick={() => setActiveTab('history')}
           >
             Quiz History
-            {activeTab === "history" && (
+            {activeTab === 'history' && (
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
             )}
           </button>
           <button
             className={`py-3 px-4 font-medium relative ${
-              activeTab === "settings"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'settings'
+                ? 'text-purple-400'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
-            onClick={() => setActiveTab("settings")}
+            onClick={() => setActiveTab('settings')}
           >
             Settings
-            {activeTab === "settings" && (
+            {activeTab === 'settings' && (
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
             )}
           </button>
           <button
             className={`py-3 px-4 font-medium relative ${
-              activeTab === "transecHistory"
-                ? "text-purple-400"
-                : "text-gray-400 hover:text-gray-300"
+              activeTab === 'transecHistory'
+                ? 'text-purple-400'
+                : 'text-gray-400 hover:text-gray-300'
             }`}
-            onClick={() => setActiveTab("transecHistory")}
+            onClick={() => setActiveTab('transecHistory')}
           >
-            Transection History
-            {activeTab === "transecHistory" && (
+            Transaction History
+            {activeTab === 'transecHistory' && (
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
             )}
           </button>
         </div>
 
         {/* Profile Content */}
-        {activeTab === "profile" && (
+        {activeTab === 'profile' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* About Section */}
             <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
@@ -419,7 +416,7 @@ const Profile = () => {
                   <div>
                     <p className="text-gray-400 text-sm">Subscription</p>
                     <p className="text-white">
-                      {userInfo?.subscription || "Free"}
+                      {userInfo?.subscription || 'Free'}
                     </p>
                   </div>
                 </div>
@@ -485,16 +482,16 @@ const Profile = () => {
                             quiz?.category?.slice(1)}
                         </td>
                         <td className="py-3 text-gray-400">
-                          {format(new Date(quiz?.date), "EEEE, MMMM dd, yyyy")}
+                          {format(new Date(quiz?.date), 'EEEE, MMMM dd, yyyy')}
                         </td>
                         <td className="py-3 text-right">
                           <span
                             className={`${
                               quiz.score >= 80
-                                ? "bg-green-500/20 text-green-400"
+                                ? 'bg-green-500/20 text-green-400'
                                 : quiz.score >= 50
-                                ? "bg-yellow-500/20 text-yellow-400"
-                                : "bg-red-500/20 text-red-400"
+                                ? 'bg-yellow-500/20 text-yellow-400'
+                                : 'bg-red-500/20 text-red-400'
                             } py-1 px-2 rounded-md`}
                           >
                             {quiz.score}%
@@ -507,7 +504,7 @@ const Profile = () => {
               </div>
               <div className="mt-4 text-center">
                 <button
-                  onClick={() => setActiveTab("history")}
+                  onClick={() => setActiveTab('history')}
                   className="text-purple-400 hover:text-purple-300 text-sm font-medium"
                 >
                   View All History →
@@ -518,7 +515,7 @@ const Profile = () => {
         )}
 
         {/* Placeholder for other tabs */}
-        {activeTab === "history" && (
+        {activeTab === 'history' && (
           <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
             <h2 className="text-xl font-semibold text-white text-left mb-4">
               Quiz History
@@ -528,12 +525,12 @@ const Profile = () => {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-700">
-                      {["Quiz", "Date", "Score", "Action"].map(
+                      {['Quiz', 'Date', 'Score', 'Action'].map(
                         (tHead, index) => (
                           <th
                             key={index}
                             className={`py-3 text-gray-400 font-medium ${
-                              index > 1 ? "text-right" : "text-left"
+                              index > 1 ? 'text-right' : 'text-left'
                             }`}
                           >
                             {tHead}
@@ -550,16 +547,16 @@ const Profile = () => {
                             quiz?.category?.slice(1)}
                         </td>
                         <td className="py-3 text-gray-400 text-left">
-                          {format(new Date(quiz?.date), "EEEE, MMMM dd, yyyy")}
+                          {format(new Date(quiz?.date), 'EEEE, MMMM dd, yyyy')}
                         </td>
                         <td className="py-3 text-right">
                           <span
                             className={`${
                               quiz.score >= 80
-                                ? "bg-green-500/20 text-green-400"
+                                ? 'bg-green-500/20 text-green-400'
                                 : quiz.score >= 50
-                                ? "bg-yellow-500/20 text-yellow-400"
-                                : "bg-red-500/20 text-red-400"
+                                ? 'bg-yellow-500/20 text-yellow-400'
+                                : 'bg-red-500/20 text-red-400'
                             } py-1 px-2 rounded-md`}
                           >
                             {quiz.score}%
@@ -591,7 +588,7 @@ const Profile = () => {
           </div>
         )}
 
-        {activeTab === "settings" && (
+        {activeTab === 'settings' && (
           <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
             <h2 className="text-xl font-semibold text-white mb-2">
               Account Settings
@@ -602,57 +599,9 @@ const Profile = () => {
           </div>
         )}
 
-        {/* Transection history */}
-        {activeTab === "transecHistory" && (
-          <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
-            <h2 className="text-xl font-semibold text-white text-left mb-4">
-              Transection History
-            </h2>
-            {user && userInfo?.transectionId?.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-700">
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Type
-                      </th>
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Transection ID
-                      </th>
-                      <th className="text-right py-3 text-gray-400 font-medium">
-                        Valid Till
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-700/50">
-                      <td className="py-3 text-white text-left">
-                        {userInfo?.subscription}
-                      </td>
-                      <td className="py-3 text-white text-left">
-                        {userInfo?.transectionId}
-                      </td>
-                      <td className="py-3 text-right text-white">
-                        {format(
-                          new Date(userInfo?.subscriptionLastTime),
-                          "MMMM dd, yyyy"
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div>
-                <h2 className="text-xl font-semibold text-white mb-2">
-                  Transaction History
-                </h2>
-                <p className="text-gray-400">
-                  Your Transaction History would be displayed here.
-                </p>
-              </div>
-            )}
-          </div>
+        {/* Transaction history */}
+        {activeTab === 'transecHistory' && (
+          <TransactionHistory user={user} userInfo={userInfo} format={format} />
         )}
       </div>
     </div>
