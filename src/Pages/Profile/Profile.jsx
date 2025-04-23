@@ -19,6 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import TransactionHistory from './TransactionHistory';
 import Settings from './Settings';
 import FullQuizHistory from './FullQuizHistory';
+import QuizHistoryTable from './QuizHistoryTable';
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -173,19 +174,6 @@ const Profile = () => {
       return user.email.charAt(0).toUpperCase();
     }
     return 'U';
-  };
-
-  // Handle View Quiz History
-  const handleViewHistory = quiz => {
-    const { category, answers, questions } = quiz;
-
-    if (answers && questions) {
-      localStorage.setItem('quiz_questions', JSON.stringify(questions));
-      localStorage.setItem('userAnswers', JSON.stringify(answers));
-      localStorage.setItem('history_posted', true);
-
-      navigate(`/quiz/${category}/answer`);
-    }
   };
 
   return (
@@ -462,48 +450,9 @@ const Profile = () => {
                 Recent Performance
               </h2>
               <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-700">
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Quiz
-                      </th>
-                      <th className="text-left py-3 text-gray-400 font-medium">
-                        Date
-                      </th>
-                      <th className="text-right py-3 text-gray-400 font-medium">
-                        Score
-                      </th>
-                    </tr>
-                  </thead>
-
-                  {userQuizHistory?.slice(0, 5)?.map((quiz, index) => (
-                    <tbody key={index}>
-                      <tr className="border-b border-gray-700/50">
-                        <td className="py-3 text-white">
-                          {quiz?.category?.charAt(0).toUpperCase() +
-                            quiz?.category?.slice(1)}
-                        </td>
-                        <td className="py-3 text-gray-400">
-                          {format(new Date(quiz?.date), 'EEEE, MMMM dd, yyyy')}
-                        </td>
-                        <td className="py-3 text-right">
-                          <span
-                            className={`${
-                              quiz.score >= 80
-                                ? 'bg-green-500/20 text-green-400'
-                                : quiz.score >= 50
-                                ? 'bg-yellow-500/20 text-yellow-400'
-                                : 'bg-red-500/20 text-red-400'
-                            } py-1 px-2 rounded-md`}
-                          >
-                            {quiz.score}%
-                          </span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
+                <QuizHistoryTable
+                  userQuizHistory={userQuizHistory?.slice(0, 5)}
+                />
               </div>
               <div className="mt-4 text-center">
                 <button
@@ -519,12 +468,7 @@ const Profile = () => {
 
         {/* Placeholder for other tabs */}
         {activeTab === 'history' && (
-          <FullQuizHistory
-            user={user}
-            userQuizHistory={userQuizHistory}
-            handleViewHistory={handleViewHistory}
-            format={format}
-          />
+          <FullQuizHistory user={user} userQuizHistory={userQuizHistory} />
         )}
 
         {activeTab === 'settings' && <Settings />}
