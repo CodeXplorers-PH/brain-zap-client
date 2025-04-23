@@ -5,7 +5,6 @@ import {
   Mail,
   Calendar,
   Award,
-  FileText,
   Save,
   X,
   CircleCheck,
@@ -14,13 +13,12 @@ import {
 } from 'lucide-react';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import TransactionHistory from './TransactionHistory';
 import Settings from './Settings';
 import FullQuizHistory from './FullQuizHistory';
-import QuizHistoryTable from './QuizHistoryTable';
 import ShortQuizHistory from './ShortQuizHistory';
+import Achievements from './Achievements';
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -38,7 +36,6 @@ const Profile = () => {
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
 
-  const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
 
   // Update local state when user data changes
@@ -415,35 +412,7 @@ const Profile = () => {
             </div>
 
             {/* Achievement Section */}
-            <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                Achievements
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-                  <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                    <Award size={24} className="text-purple-400" />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">Quiz Master</p>
-                    <p className="text-gray-400 text-sm">
-                      Completed 25+ quizzes
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-                  <div className="bg-gray-600/20 p-2 rounded-lg mr-3">
-                    <FileText size={24} className="text-gray-400" />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">Perfect Score</p>
-                    <p className="text-gray-400 text-sm">
-                      Get 100% on any quiz (0/1)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Achievements />
 
             {/* Recent Performance */}
             <ShortQuizHistory
