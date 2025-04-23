@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
-import { ChartNoAxesCombined, LogOut, User } from 'lucide-react';
+import { ChartNoAxesCombined, LogOut, ShieldUser, User } from 'lucide-react';
 import { AuthContext } from '@/provider/AuthProvider';
 import LockedErr from '../ui/LockedErr';
 import { motion } from 'framer-motion';
@@ -222,6 +222,14 @@ const Header = () => {
                   >
                     <ChartNoAxesCombined size={16} />
                     Leaderboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard"
+                    className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
+                  >
+                    <ShieldUser size={16} /> Admin Dashboard
                   </Link>
                 </li>
                 <li>
