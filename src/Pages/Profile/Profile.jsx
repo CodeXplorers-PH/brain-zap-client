@@ -17,6 +17,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import TransactionHistory from './TransactionHistory';
+import Settings from './Settings';
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -588,16 +589,7 @@ const Profile = () => {
           </div>
         )}
 
-        {activeTab === 'settings' && (
-          <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
-            <h2 className="text-xl font-semibold text-white mb-2">
-              Account Settings
-            </h2>
-            <p className="text-gray-400">
-              Account settings and preferences would be displayed here.
-            </p>
-          </div>
-        )}
+        {activeTab === 'settings' && <Settings />}
 
         {/* Transaction history */}
         {activeTab === 'transecHistory' && (
