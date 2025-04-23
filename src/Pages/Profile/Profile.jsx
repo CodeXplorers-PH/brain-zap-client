@@ -1,16 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '@/provider/AuthProvider';
-import {
-  Edit2,
-  Mail,
-  Calendar,
-  Award,
-  Save,
-  X,
-  CircleCheck,
-  Crown,
-  Flame,
-} from 'lucide-react';
+import { Edit2, Mail, Save, X, CircleCheck, Crown } from 'lucide-react';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import { format } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -19,6 +9,7 @@ import Settings from './Settings';
 import FullQuizHistory from './FullQuizHistory';
 import ShortQuizHistory from './ShortQuizHistory';
 import Achievements from './Achievements';
+import About from './About';
 
 const Profile = () => {
   const { user, updateUserProfile } = useContext(AuthContext);
@@ -381,35 +372,7 @@ const Profile = () => {
         {activeTab === 'profile' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* About Section */}
-            <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">About</h2>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <Calendar size={18} className="text-purple-400 mr-3" />
-                  <div>
-                    <p className="text-gray-400 text-sm">Member Since</p>
-                    <p className="text-white">{stats.memberSince}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Flame size={20} className="text-purple-400 mr-3" />
-
-                  <div>
-                    <p className="text-gray-400 text-sm">Streak</p>
-                    <p className="text-white">{streak}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Award size={18} className="text-purple-400 mr-3" />
-                  <div>
-                    <p className="text-gray-400 text-sm">Subscription</p>
-                    <p className="text-white">
-                      {userInfo?.subscription || 'Free'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <About userInfo={userInfo} stats={stats} streak={streak} />
 
             {/* Achievement Section */}
             <Achievements />
