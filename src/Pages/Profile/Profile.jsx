@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import useAuth from '@/hooks/useAuth';
 
@@ -26,6 +25,7 @@ const Profile = () => {
 
   const axiosPublic = useAxiosPublic();
 
+  // Get Quiz History
   useEffect(() => {
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
@@ -35,8 +35,9 @@ const Profile = () => {
       .catch(err => {
         console.log(err);
       });
-  }, [axiosPublic, user]);
+  }, [user]);
 
+  // Get User Information
   useEffect(() => {
     if (!user?.email) return; // Prevent running if email is not loaded yet
 
@@ -50,7 +51,7 @@ const Profile = () => {
     };
 
     fetchUserInfo();
-  }, [axiosPublic, user]);
+  }, [user]);
 
   // Streaks Code Starts Here
   useEffect(() => {
@@ -100,7 +101,7 @@ const Profile = () => {
       .catch(err => {
         console.log(err);
       });
-  }, [axiosPublic, user]);
+  }, [user]);
   // Streaks Code Ends Here
 
   // Sample stats - replace with actual data from your application
@@ -149,7 +150,7 @@ const Profile = () => {
 
         {/* Transaction history */}
         {activeTab === 'transactionHistory' && (
-          <TransactionHistory user={user} userInfo={userInfo} format={format} />
+          <TransactionHistory user={user} userInfo={userInfo} />
         )}
       </div>
     </div>

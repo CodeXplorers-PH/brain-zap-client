@@ -1,6 +1,7 @@
 import React from 'react';
+import { format } from 'date-fns';
 
-const TransactionHistory = ({ user, userInfo, format }) => {
+const TransactionHistory = ({ user, userInfo }) => {
   return (
     <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
       <h2 className="text-xl font-semibold text-white text-left mb-4">
