@@ -1,13 +1,13 @@
-import { Link, useLocation } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { ChartNoAxesCombined, LogOut, User } from "lucide-react";
-import { AuthContext } from "@/provider/AuthProvider";
-import LockedErr from "../ui/LockedErr";
-import { motion } from "framer-motion";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import streakImg from "../../assets/img/streak.png";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import useAdmin from "@/hooks/useAdmin";
+import { Link, useLocation } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { ChartNoAxesCombined, LogOut, ShieldUser, User } from 'lucide-react';
+import { AuthContext } from '@/provider/AuthProvider';
+import LockedErr from '../ui/LockedErr';
+import { motion } from 'framer-motion';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
+import streakImg from '../../assets/img/streak.png';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import useAdmin from '@/hooks/useAdmin';
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -22,22 +22,20 @@ const Header = () => {
 
     axiosPublic
       .get(`/quiz_history/${user?.email}`)
-      .then((res) => {
+      .then(res => {
         const history = res?.data || [];
         setUserQuizHistory(history);
         // Utility to get date in local YYYY-MM-DD format
-        const formatDateLocal = (dateStr) => {
+        const formatDateLocal = dateStr => {
           const date = new Date(dateStr);
-          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
+          return date.toLocaleDateString('en-CA'); // gives 'YYYY-MM-DD' format
         };
 
         // Extract unique quiz dates (formatted locally)
-        const quizDaysSet = new Set(
-          history.map((q) => formatDateLocal(q.date))
-        );
+        const quizDaysSet = new Set(history.map(q => formatDateLocal(q.date)));
 
         const today = new Date();
-        const todayStr = today.toLocaleDateString("en-CA");
+        const todayStr = today.toLocaleDateString('en-CA');
 
         // 🛑 If user didn't give quiz today, streak = 0
         if (!quizDaysSet.has(todayStr)) {
@@ -52,7 +50,7 @@ const Header = () => {
         for (let i = 1; ; i++) {
           const prevDate = new Date();
           prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString("en-CA");
+          const prevStr = prevDate.toLocaleDateString('en-CA');
 
           if (quizDaysSet.has(prevStr)) {
             streakCount++;
@@ -63,7 +61,7 @@ const Header = () => {
 
         setStreak(streakCount);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, [axiosPublic, user, location?.pathname]);
@@ -72,12 +70,12 @@ const Header = () => {
 
   // Nav items
   const Navs = [
-    { path: "/", pathName: "Home" },
+    { path: '/', pathName: 'Home' },
     // { path: "/features", pathName: "Features" },
-    { path: "/start-quiz", pathName: "Start Quiz" },
-    { path: "/pricing", pathName: "Pricing" },
-    { path: "/blogs", pathName: "Blog" },
-    { path: "/contact", pathName: "Contact" },
+    { path: '/start-quiz', pathName: 'Start Quiz' },
+    { path: '/pricing', pathName: 'Pricing' },
+    { path: '/blogs', pathName: 'Blog' },
+    { path: '/contact', pathName: 'Contact' },
   ];
 
   return (
@@ -89,7 +87,7 @@ const Header = () => {
           <div className="dropdown dropdown-content scale-110 lg:hidden mr-2">
             <motion.button
               tabIndex={0}
-              whileHover={{ scale: 1.2, color: "#ffffff" }}
+              whileHover={{ scale: 1.2, color: '#ffffff' }}
               className="p-2 text-gray-300"
             >
               <svg
@@ -117,8 +115,8 @@ const Header = () => {
                     to={navlink.path}
                     className={`${
                       location.pathname === navlink.path
-                        ? "text-purple-400 font-semibold"
-                        : "text-gray-300"
+                        ? 'text-purple-400 font-semibold'
+                        : 'text-gray-300'
                     } hover:bg-gray-700/50`}
                   >
                     {navlink.pathName}
@@ -144,8 +142,8 @@ const Header = () => {
                   to={navlink.path}
                   className={`font-medium mx-1 relative overflow-hidden group ${
                     location.pathname === navlink.path
-                      ? "text-purple-400 font-semibold"
-                      : "text-gray-300"
+                      ? 'text-purple-400 font-semibold'
+                      : 'text-gray-300'
                   }`}
                 >
                   {navlink.pathName}
@@ -153,8 +151,8 @@ const Header = () => {
                   <span
                     className={`absolute left-0 bottom-0 w-full h-0.5 bg-purple-600 transform ${
                       location.pathname === navlink.path
-                        ? "scale-x-100"
-                        : "scale-x-0"
+                        ? 'scale-x-100'
+                        : 'scale-x-0'
                     } group-hover:scale-x-100 transition-transform duration-300`}
                   ></span>
                 </Link>
@@ -181,7 +179,7 @@ const Header = () => {
             </div>
           )}
           {user ? (
-            <div className="dropdown dropdown-end">
+            <div className={'dropdown dropdown-end'}>
               <div
                 tabIndex={0}
                 role="button"
@@ -222,8 +220,16 @@ const Header = () => {
                     to="/leaderBoard"
                     className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
                   >
-                     <ChartNoAxesCombined size={16} />
+                    <ChartNoAxesCombined size={16} />
                     Leaderboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard"
+                    className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
+                  >
+                    <ShieldUser size={16} /> Admin Dashboard
                   </Link>
                 </li>
                 <li>
