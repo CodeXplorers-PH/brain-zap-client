@@ -21,50 +21,43 @@ const QuizPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  let abortController = new AbortController();
 
-    let abortController = new AbortController();
+  const localStorageKey = `quiz_questions`;
+  const storedQuiz = localStorage.getItem(localStorageKey);
 
-    const localStorageKey = `quiz_questions`;
-    const storedQuiz = localStorage.getItem(localStorageKey);
+  if (storedQuiz) {
+    setQuestions(JSON.parse(storedQuiz));
+    setLoading(false);
+  } else {
+    fetchQuestions(abortController.signal);
+  }
 
-    if (storedQuiz) {
-      setQuestions(JSON.parse(storedQuiz));
-      setLoading(false);
-    } else {
-      fetchQuestions(abortController.signal);
-    }
+  async function fetchQuestions(signal) {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: generatedQuiz } = await axiosPublic.get(
+        `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
+      );
 
-    async function fetchQuestions(signal) {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data: generatedQuiz } = await axiosPublic.get(
-          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
-        );
-
-        if (!signal.aborted) {
-          setQuestions(generatedQuiz);
-          localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
-        }
-      } catch (err) {
-        console.error("Error fetching questions:", err);
-        setError("Failed to load questions. Please try again later.");
-
-      } finally {
-        if (!signal.aborted) {
-          setLoading(false);
-        }
+      if (!signal.aborted) {
+        setQuestions(generatedQuiz);
+        localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
+      }
+    } catch (err) {
+      console.error("Error fetching questions:", err);
+      setError("Failed to load questions. Please try again later.");
+    } finally {
+      if (!signal.aborted) {
+        setLoading(false);
       }
     }
 
     return () => {
       abortController.abort();
     };
-  }, [category, difficulty, quizzesNumber]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
