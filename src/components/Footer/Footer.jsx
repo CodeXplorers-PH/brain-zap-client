@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Github, Twitter, Linkedin } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -42,7 +43,7 @@ const Footer = () => {
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
               aria-label="GitHub"
             >
-              <Github size={18} />
+              <FaGithub size={18} />
             </a>
             <a
               href="https://twitter.com"
@@ -51,7 +52,25 @@ const Footer = () => {
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
               aria-label="Twitter"
             >
-              <Twitter size={18} />
+              <FaXTwitter size={18} />
+            </a>
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+              aria-label="LinkedIn"
+            >
+              <FaInstagram size={18} />
+            </a>
+            <a
+              href="https://www.facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+              aria-label="LinkedIn"
+            >
+              <FaFacebook size={18} />
             </a>
             <a
               href="https://linkedin.com"
@@ -60,7 +79,7 @@ const Footer = () => {
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
               aria-label="LinkedIn"
             >
-              <Linkedin size={18} />
+              <FaLinkedin size={18} />
             </a>
           </div>
         </div>

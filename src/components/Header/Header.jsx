@@ -173,12 +173,10 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <motion.div
-          initial={false}
-          animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 200 : -50 }}
+          initial={{y:200}}
+          animate={{ opacity: isOpen ? 1 : 0, }}
           transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
+            ease: "easeInOut",
             delay: isOpen ? 0.05 : 0,
           }}
           className="lg:hidden flex flex-col absolute left-1/2 -translate-1/2 text-center space-y-4"
