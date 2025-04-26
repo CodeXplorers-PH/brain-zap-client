@@ -1,52 +1,52 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Full application routes
-import Error from '@/Pages/404/Error';
-import Layout from '@/Layouts/Layout';
-import Blog from '@/Pages/Blog/Blog';
-import Home from '@/Pages/Home/Home';
-import Login from '@/Pages/Auth/Login';
-import Pricing from '@/Pages/Pricing/Pricing';
-import StartQuiz from '@/Pages/StartQuiz/StartQuiz';
-import Signup from '@/Pages/Auth/Signup';
-import QuizPage from '@/Pages/QuizPage/QuizPage';
-import QuizAnswer from '@/Pages/QuizAnswer/QuizAnswer';
-import Contact from '@/Pages/Contact/Contact';
-import Profile from '@/Pages/Profile/Profile';
-import CheckoutPage from '@/Pages/Checkout/Checkout';
-import BlogDetail from '@/Pages/Blog/BlogDetail';
-import PrivateRoute from './PrivateRoute';
-import PersonalizedQuiz from '@/Pages/QuizPersonalized/PersonalizedQuiz';
-import AdminRoute from './AdminRoute';
-import AdminDashboard from '@/Layouts/AdminDashboard';
-import AdminHome from '@/Pages/AdminDashboard/AdminHome/AdminHome';
-import AllUsers from '@/Pages/AdminDashboard/AllUsers/AllUsers';
-import Leaderboard from '@/Pages/Leaderboard/Leaderboard';
+import Error from "@/Pages/404/Error";
+import Layout from "@/Layouts/Layout";
+import Blog from "@/Pages/Blog/Blog";
+import Home from "@/Pages/Home/Home";
+import Login from "@/Pages/Auth/Login";
+import Pricing from "@/Pages/Pricing/Pricing";
+import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
+import Signup from "@/Pages/Auth/Signup";
+import QuizPage from "@/Pages/QuizPage/QuizPage";
+import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
+import Contact from "@/Pages/Contact/Contact";
+import Profile from "@/Pages/Profile/Profile";
+import CheckoutPage from "@/Pages/Checkout/Checkout";
+import BlogDetail from "@/Pages/Blog/BlogDetail";
+import PrivateRoute from "./PrivateRoute";
+import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
+import AdminRoute from "./AdminRoute";
+import AdminDashboard from "@/Layouts/AdminDashboard";
+import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
+import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
+import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Layout />, // Default Outlet
     errorElement: <Error />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Home /> /* Home Page */,
       },
       {
-        path: '/pricing',
+        path: "/pricing",
         element: <Pricing />,
       },
       {
-        path: '/blogs',
+        path: "/blogs",
         element: <Blog /> /* Blog Page */,
       },
       {
-        path: '/blogs/:id',
+        path: "/blogs/:id",
         element: <BlogDetail /> /* Blog Page */,
       },
       {
-        path: '/start-quiz',
+        path: "/start-quiz",
         element: (
           <PrivateRoute>
             <StartQuiz />
@@ -54,11 +54,11 @@ export const router = createBrowserRouter([
         ) /* Start Quiz Page */,
       },
       {
-        path: '/contact',
+        path: "/contact",
         element: <Contact />,
       },
       {
-        path: '/checkout',
+        path: "/checkout",
         element: (
           <PrivateRoute>
             <CheckoutPage />
@@ -66,15 +66,15 @@ export const router = createBrowserRouter([
         ) /* CheckoutPage Page */,
       },
       {
-        path: '/login',
+        path: "/login",
         element: <Login /> /* Login Page */,
       },
       {
-        path: '/signup',
+        path: "/signup",
         element: <Signup /> /* Signup Page */,
       },
       {
-        path: '/profile',
+        path: "/profile",
         element: (
           <PrivateRoute>
             <Profile />
@@ -82,7 +82,7 @@ export const router = createBrowserRouter([
         ) /* Profile Page */,
       },
       {
-        path: '/leaderBoard',
+        path: "/leaderBoard",
         element: (
           <PrivateRoute>
             <Leaderboard />
@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
         ), // Leaderboard Page
       },
       {
-        path: '/quiz/:category',
+        path: "/quiz/:category",
         element: (
           <PrivateRoute>
             <QuizPage />
@@ -98,7 +98,7 @@ export const router = createBrowserRouter([
         ) /* Quiz Page */,
       },
       {
-        path: '/create_quiz',
+        path: "/create_quiz",
         element: (
           <PrivateRoute>
             <PersonalizedQuiz /> {/* Personalized Page */}
@@ -106,7 +106,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/quiz/:category/answer',
+        path: "/quiz/:category/answer",
         element: (
           <PrivateRoute>
             <QuizAnswer />
@@ -117,7 +117,7 @@ export const router = createBrowserRouter([
   },
   // Admin Dashboard
   {
-    path: 'dashboard',
+    path: "dashboard",
     element: (
       <AdminRoute>
         <AdminDashboard />
@@ -125,7 +125,11 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'adminHome',
+        path: "",
+        element: <Navigate to="adminHome" replace />,
+      },
+      {
+        path: "adminHome",
         element: (
           <AdminRoute>
             <AdminHome />
@@ -133,7 +137,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'allUsers',
+        path: "allUsers",
         element: (
           <AdminRoute>
             <AllUsers />
