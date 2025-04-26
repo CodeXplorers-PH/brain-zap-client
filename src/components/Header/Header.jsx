@@ -75,6 +75,7 @@ const Header = () => {
     // { path: "/features", pathName: "Features" },
     { path: "/start-quiz", pathName: "Start Quiz" },
     { path: "/pricing", pathName: "Pricing" },
+    { path: "/leaderBoard", pathName: "Leaderboard" },
     { path: "/blogs", pathName: "Blog" },
     { path: "/contact", pathName: "Contact" },
   ];
@@ -213,16 +214,6 @@ const Header = () => {
                   >
                     <User size={16} />
                     Profile
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    to="/leaderBoard"
-                    className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
-                  >
-                     <ChartNoAxesCombined size={16} />
-                    Leaderboard
                   </Link>
                 </li>
                 <li>
