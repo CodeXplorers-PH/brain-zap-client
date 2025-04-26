@@ -16,16 +16,29 @@ const AdminDashboard = () => {
   return (
     <div className="relative h-screen bg-gray-900 flex overflow-hidden">
       {/* Topbar (Mobile Only) */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-900 to-violet-950 z-50 flex items-center justify-between px-4 py-3">
-        <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
-          BrainZap
-        </div>
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-900 to-violet-950 z-50 flex items-center px-4 py-3 gap-3">
         <button
           className="text-white focus:outline-none"
           onClick={handleToggleSidebar}
         >
-          <FaBars size={22} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h8m-8 6h16"
+            />
+          </svg>
         </button>
+        <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+          BrainZap
+        </div>
       </div>
 
       {/* Sidebar */}
@@ -36,7 +49,7 @@ const AdminDashboard = () => {
       >
         {/* Sidebar Background Glass Layer */}
         <div
-          className="absolute inset-0 backdrop-blur-md border-r border-gray-800 h-152"
+          className="absolute inset-0 backdrop-blur-md h-screen"
           style={{ background: "rgba(17, 24, 39, 0.7)" }}
         />
 
@@ -149,11 +162,12 @@ const AdminDashboard = () => {
                 <RiLogoutBoxFill /> Logout
               </NavLink>
             </li>
-          </ul>
-
-          <div className="text-center text-purple-300 p-4 text-sm">
+            <div className="text-center text-purple-300 p-4 text-sm">
             © {new Date().getFullYear()} BrainZap. All rights reserved.
           </div>
+          </ul>
+
+          
         </div>
       </div>
 
@@ -161,7 +175,7 @@ const AdminDashboard = () => {
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-black/40 z-30 md:hidden"
+          className="fixed inset-0 bg-black/50 z-30 backdrop-blur-sm md:hidden"
         />
       )}
 
