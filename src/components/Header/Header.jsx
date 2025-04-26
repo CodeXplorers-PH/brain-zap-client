@@ -9,6 +9,7 @@ import streakImg from "../../assets/img/streak.png";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import useAdmin from "@/hooks/useAdmin";
 import { useWindowSize } from "react-use";
+import { Toaster } from "react-hot-toast";
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -87,6 +88,7 @@ const Header = () => {
 
   return (
     <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
+      <Toaster />
       <LockedErr />
       <motion.div
         animate={{ paddingBottom: isOpen ? "200px" : "8px" }}
@@ -173,8 +175,8 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <motion.div
-          initial={{y:200}}
-          animate={{ opacity: isOpen ? 1 : 0, }}
+          initial={{ y: 200 }}
+          animate={{ opacity: isOpen ? 1 : 0 }}
           transition={{
             ease: "easeInOut",
             delay: isOpen ? 0.05 : 0,

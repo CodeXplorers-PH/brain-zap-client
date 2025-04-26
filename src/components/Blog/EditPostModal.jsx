@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import { FiX, FiImage, FiSave, FiAlertCircle } from "react-icons/fi";
 import RichTextEditor from "./RichTextEditor";
 import { useQuery, gql, ApolloClient, InMemoryCache } from "@apollo/client";
+import { CustomToast } from "../ui/CustomToast";
 
 // API URL from environment or default
 const API_BASE_URL = import.meta.env.VITE_ServerUrl;
@@ -203,8 +204,23 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
 
         onUpdate(updatedBlog);
         onClose();
+        CustomToast({
+          photoURL: user?.photoURL,
+          displayName: user?.displayName,
+          title: "Blog Updated Successfully!",
+          description: "Your blog post has been successfully updated.",
+        });
       } else {
         setError(response.data.message || "Failed to update post");
+        CustomToast({
+          photoURL: user?.photoURL,
+          displayName: user?.displayName,
+          title: response.data.error || "Error",
+          description:
+            response.data.message ||
+            "Failed to updated post. Please try again.",
+          type: "error",
+        });
       }
     } catch (err) {
       console.error("Error updating blog:", err);
@@ -213,6 +229,15 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
           err.message ||
           "Failed to update post. Please try again."
       );
+      CustomToast({
+        photoURL: user?.photoURL,
+        displayName: user?.displayName,
+        title: err.response.data.error || "Error",
+        description:
+          err.response.data.message ||
+          "Failed to updated post. Please try again.",
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
