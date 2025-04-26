@@ -5,6 +5,7 @@ import useAuth from "@/hooks/useAuth";
 import EditPostModal from "../../components/Blog/EditPostModal";
 import { useQuery } from "@apollo/client";
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
+import { CustomToast } from "@/components/ui/CustomToast";
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
@@ -71,12 +72,28 @@ const BlogDetail = () => {
       });
       setShowDeleteModal(false);
       // Redirect to blogs list page after successful deletion
+      CustomToast({
+        photoURL: user?.photoURL,
+        displayName: user?.displayName,
+        title: "Blog Deleted Successfully!",
+        description: "Your blog post has been successfully deleted.",
+      });
+
       navigate("/blogs");
     } catch (error) {
       console.error("Error deleting blog:", error);
       setError("Failed to delete blog");
       setDeleteLoading(false);
       setShowDeleteModal(false);
+      CustomToast({
+        photoURL: user?.photoURL,
+        displayName: user?.displayName,
+        title: error.response.data.error || "Error",
+        description:
+          error.response.data.message ||
+          "Failed to deleted post. Please try again.",
+        type: "error",
+      });
     }
   };
 
