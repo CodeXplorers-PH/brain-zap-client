@@ -266,7 +266,7 @@ const UserProfileMenu = ({ user, logOut }) => (
       </li>
       <li>
         <Link
-          to="/dashboard"
+          to="/dashboard/adminHome"
           className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
         >
           <ShieldUser size={16} /> Admin Dashboard

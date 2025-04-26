@@ -3,7 +3,20 @@ import { motion } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { Mail, User } from "lucide-react";
 import { MdOutlineAttachMoney } from "react-icons/md";
-import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Sector,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Cell,
+} from "recharts";
 import useAuth from "@/hooks/useAuth";
 
 const SummaryCard = ({ icon, title, value, gradient, description }) => (
@@ -145,7 +158,40 @@ const AdminHome = () => {
 
   return (
     <div className="px-4 py-6 space-y-10">
-      <h2 className="text-2xl font-bold text-white mb-6">Dashboard Overview</h2>
+      {/* Enhanced Floating Particles */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full opacity-80"
+            style={{
+              width: `${Math.random() * 6 + 2}px`,
+              height: `${Math.random() * 6 + 2}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              background:
+                i % 3 === 0
+                  ? "rgba(168, 85, 247, 0.4)"
+                  : i % 3 === 1
+                  ? "rgba(59, 130, 246, 0.4)"
+                  : "rgba(236, 72, 153, 0.3)",
+              animation: `float ${Math.random() * 15 + 15}s linear infinite`,
+              animationDelay: `${Math.random() * 5}s`,
+              boxShadow: "0 0 10px 2px rgba(139, 92, 246, 0.15)",
+            }}
+          ></div>
+        ))}
+      </div>
+
+      {/* Heading */}
+      <h1 className="text-2xl md:text-4xl font-bold text-white mb-4 text-center">
+        Welcome to BrainZap Dashboard
+      </h1>
+      <p className="text-gray-300 mb-8 text-center">
+        Track platform activity and manage insights effortlessly.
+      </p>
+
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <SummaryCard
           icon={<User size={24} />}
@@ -169,7 +215,11 @@ const AdminHome = () => {
           gradient={gradients[2]}
         />
       </div>
-      <div className="h-[400px] w-full">
+      <h2 className="text-2xl md:text-4xl font-semibold text-white mb-6 text-center">
+        User Overview
+      </h2>
+
+      <div className="h-[300px] w-full">
         <ResponsiveContainer>
           <PieChart>
             <Pie
@@ -189,6 +239,10 @@ const AdminHome = () => {
             </Pie>
           </PieChart>
         </ResponsiveContainer>
+      </div>
+
+      <div className="flex items-center justify-center h-64 rounded-xl border border-dashed border-gray-600">
+        <p className="text-gray-400">Analytics will be available soon.</p>
       </div>
     </div>
   );

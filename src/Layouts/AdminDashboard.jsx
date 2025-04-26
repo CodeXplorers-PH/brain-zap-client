@@ -1,7 +1,8 @@
 import useAuth from "@/hooks/useAuth";
+import { House, LogOut, MailCheck, TicketCheck, Users } from "lucide-react";
 import React, { useState } from "react";
 import { FaHome, FaUser, FaBars } from "react-icons/fa";
-import { MdMessage, MdQuiz } from "react-icons/md";
+import { MdMessage, MdOutlineQuiz, MdQuiz } from "react-icons/md";
 import { RiCoupon3Fill, RiLogoutBoxFill } from "react-icons/ri";
 import { NavLink, Outlet } from "react-router-dom";
 
@@ -72,56 +73,58 @@ const AdminDashboard = () => {
               <NavLink
                 to="/dashboard/adminHome"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-lg transition-all ${
+                  `flex items-center gap-2 p-3 rounded-lg transition-all ${
                     isActive
                       ? "bg-purple-700 text-white"
                       : "hover:bg-purple-800/50"
                   }`
                 }
               >
-                <FaHome /> Admin Home
+                <House size={20}/> Admin Home
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/messages"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-lg transition-all ${
+                  `flex items-center gap-2 p-3 rounded-lg transition-all ${
                     isActive
                       ? "bg-purple-700 text-white"
                       : "hover:bg-purple-800/50"
                   }`
                 }
               >
-                <MdMessage /> Messages
+                
+                <MailCheck size={20}/> Messages
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/coupons"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-lg transition-all ${
+                  `flex items-center gap-2 p-3 rounded-lg transition-all ${
                     isActive
                       ? "bg-purple-700 text-white"
                       : "hover:bg-purple-800/50"
                   }`
                 }
               >
-                <RiCoupon3Fill /> Manage Coupons
+                
+                <TicketCheck size={20}/> Manage Coupons
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/dashboard/allUsers"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-lg transition-all ${
+                  `flex items-center gap-2 p-3 rounded-lg transition-all ${
                     isActive
                       ? "bg-purple-700 text-white"
                       : "hover:bg-purple-800/50"
                   }`
                 }
               >
-                <FaUser /> All Users
+                <Users size={20} /> All Users
               </NavLink>
             </li>
           </ul>
@@ -143,7 +146,7 @@ const AdminDashboard = () => {
                 to="/"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-800/50 transition-all"
               >
-                <FaHome /> Home
+                <House size={20} /> Home
               </NavLink>
             </li>
             <li>
@@ -151,15 +154,16 @@ const AdminDashboard = () => {
                 to="/start-quiz"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-800/50 transition-all"
               >
-                <MdQuiz /> Start Quiz
+                <MdOutlineQuiz className="text-lg" />
+                Start Quiz
               </NavLink>
             </li>
             <li>
               <NavLink
                 onClick={logOut}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-800/50 transition-all"
+                className="flex items-center gap-2 p-3 rounded-lg hover:bg-purple-800/50 transition-all"
               >
-                <RiLogoutBoxFill /> Logout
+                <LogOut size={18} /> Logout
               </NavLink>
             </li>
             <div className="text-center text-purple-300 p-4 text-sm">
