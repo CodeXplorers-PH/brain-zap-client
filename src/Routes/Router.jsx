@@ -1,4 +1,7 @@
+import { createBrowserRouter, Navigate } from "react-router-dom";
+
 // Full application routes
+import Error from "@/Pages/404/Error";
 import Layout from "@/Layouts/Layout";
 import Blog from "@/Pages/Blog/Blog";
 import Home from "@/Pages/Home/Home";
@@ -6,16 +9,18 @@ import Login from "@/Pages/Auth/Login";
 import Pricing from "@/Pages/Pricing/Pricing";
 import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
 import Signup from "@/Pages/Auth/Signup";
-import { createBrowserRouter } from "react-router-dom";
 import QuizPage from "@/Pages/QuizPage/QuizPage";
 import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 import Contact from "@/Pages/Contact/Contact";
-import Error from "@/Pages/404/Error";
 import Profile from "@/Pages/Profile/Profile";
 import CheckoutPage from "@/Pages/Checkout/Checkout";
 import BlogDetail from "@/Pages/Blog/BlogDetail";
 import PrivateRoute from "./PrivateRoute";
 import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
+import AdminRoute from "./AdminRoute";
+import AdminDashboard from "@/Layouts/AdminDashboard";
+import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
+import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
 import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
 
 export const router = createBrowserRouter([
@@ -107,6 +112,37 @@ export const router = createBrowserRouter([
             <QuizAnswer />
           </PrivateRoute>
         ) /* Quiz Answer Page */,
+      },
+    ],
+  },
+  // Admin Dashboard
+  {
+    path: "dashboard",
+    element: (
+      <AdminRoute>
+        <AdminDashboard />
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <Navigate to="adminHome" replace />,
+      },
+      {
+        path: "adminHome",
+        element: (
+          <AdminRoute>
+            <AdminHome />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "allUsers",
+        element: (
+          <AdminRoute>
+            <AllUsers />
+          </AdminRoute>
+        ),
       },
     ],
   },

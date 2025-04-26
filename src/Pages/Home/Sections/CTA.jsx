@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const CTA = () => {
   return (
-    <section className="px-4 py-12 md:px-8 lg:px-60 bg-gray-900">
+    <section className="px-4 py-12 md:px-8 lg:px-56 bg-gray-900">
       <div className="bg-gray-900 rounded-3xl border border-gray-700 p-8 md:p-12 shadow-xl">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-2">

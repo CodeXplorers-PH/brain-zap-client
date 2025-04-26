@@ -10,7 +10,7 @@ const Leaderboard = () => {
     axiosPublic.get(`/userBoard/${user?.email}`).then((res) => {
       console.log("User info", res.data);
     });
-  }, []);
+  }, [axiosPublic, user]);
   return <div className="h-screen"></div>;
 };
 

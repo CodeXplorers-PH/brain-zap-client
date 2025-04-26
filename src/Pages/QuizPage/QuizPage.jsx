@@ -61,10 +61,6 @@ const QuizPage = () => {
     };
   }, [category, difficulty, quizzesNumber]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
       <h2 className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 capitalize">

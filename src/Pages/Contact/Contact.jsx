@@ -88,7 +88,7 @@ const Contact = () => {
       name: "AJM Fajlay Rabby",
       role: "Frontend Lead & Product Visionary",
       bio: "A product-focused frontend lead turning vision into experience and ideas into interface.",
-      image: "https://i.ibb.co.com/HNkhYGc/00000-PORTRAIT-00000-BURST20190124113738260-2.jpg",
+      image: "https://i.ibb.co.com/MVMr1kZ/250px.jpg",
       links: {
         linkedin: "https://www.linkedin.com/in/ornobaadi/",
         github: "https://github.com/ornobaadi",
