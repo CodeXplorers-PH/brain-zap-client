@@ -34,7 +34,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
               </div>
             </>
           )) ||
-            (xpPoints >= 400 && (
+            (xpPoints >= 2000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge3} alt="" />
@@ -47,7 +47,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 300 && (
+            (xpPoints >= 1500 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge3} alt="" />
@@ -60,7 +60,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 200 && (
+            (xpPoints >= 1000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge2} alt="" />
@@ -73,7 +73,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 100 && (
+            (xpPoints >= 500 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge1} alt="" />
