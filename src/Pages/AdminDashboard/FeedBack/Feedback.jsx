@@ -109,7 +109,7 @@ const Feedback = () => {
       <div className="mb-10 text-center">
         {/* Title */}
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 flex items-center justify-center gap-2">
-          <MailCheck size={26} className="border w-12 rounded-full" />
+          <MailCheck size={26} className="border w-14 rounded-full" />
           All Feedback
         </h2>
       </div>

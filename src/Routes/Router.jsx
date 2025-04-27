@@ -23,6 +23,7 @@ import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
 import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
 import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
 import Feedback from "@/Pages/AdminDashboard/FeedBack/Feedback";
+import MakeEvents from "@/Pages/AdminDashboard/MakeEvents/MakeEvents";
 
 export const router = createBrowserRouter([
   {
@@ -150,6 +151,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <Feedback />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "makeEvents",
+        element: (
+          <AdminRoute>
+            <MakeEvents />
           </AdminRoute>
         ),
       },
