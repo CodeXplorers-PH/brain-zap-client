@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const categories = [
   {
@@ -170,8 +177,10 @@ const QuizCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [difficulty, setDifficulty] = useState("medium");
   const [quizzesNumber, setQuizzesNumber] = useState(10);
+  const [selectedQuiz, setSelectedQuiz] = useState("");
   const [hoveredCard, setHoveredCard] = useState(null);
   const [userLevel, setUserLevel] = useState(0);
+  const [open, setOpen] = useState(false);
   const { user } = useAuthContext();
 
   const navigate = useNavigate();
@@ -196,6 +205,18 @@ const QuizCategories = () => {
       .then((res) => setUserLevel(res?.data?.level?.level));
   }, [axiosPublic, user.email]);
 
+  const handleSelectType = (category, quizzesType) => {
+    navigate(
+      `/quiz/${category.link}?difficulty=${generateDifficulty(
+        userLevel
+      )}&quizzesNumber=10&type=${quizzesType}`
+    );
+  };
+
+  const handleQuizCardClick = (category) => {
+    setSelectedQuiz(category);
+    setOpen(true);
+  };
   return (
     <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">
       <div className="text-center mb-12">
@@ -255,16 +276,46 @@ const QuizCategories = () => {
         </button>
       </div>
 
-      {/* Categories Grid */}
       <div>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="bg-[#1f1f3a] text-white rounded-xl border border-purple-500 shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl text-purple-400">
+                Select Quiz Type
+              </DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Please choose the type of quiz you want to create.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-4 mt-6">
+              <button
+                onClick={() => {
+                  handleSelectType(selectedQuiz, "tf");
+                  setOpen(false);
+                }}
+                className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg font-bold hover:from-indigo-600 hover:to-purple-600 transition"
+              >
+                True / False
+              </button>
+              <button
+                onClick={() => {
+                  handleSelectType(selectedQuiz, "mc");
+                  setOpen(false);
+                }}
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-lg font-bold hover:from-pink-600 hover:to-red-600 transition"
+              >
+                Multiple Choice
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
-            <Link
-              to={`/quiz/${category.link}?difficulty=${generateDifficulty(
-                userLevel
-              )}&quizzesNumber=10`}
+            <div
+              onClick={() => handleQuizCardClick(category)}
               key={index}
-              className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
+              className={`relative cursor-pointer overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
             >
@@ -301,7 +352,6 @@ const QuizCategories = () => {
                 </p>
 
                 <div className="mt-6 flex justify-between items-center">
-                  <div></div>
                   <button
                     onClick={() => localStorage.removeItem(`history_posted`)}
                     className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white transition-colors"
@@ -319,7 +369,7 @@ const QuizCategories = () => {
                   }`}
                 ></div>
               )}
-            </Link>
+            </div>
           ))}
         </div>
       </div>

@@ -16,6 +16,7 @@ const QuizPage = () => {
 
   const difficulty = queryParams.get("difficulty");
   const quizzesNumber = queryParams.get("quizzesNumber");
+  const quizzesType = queryParams.get("type");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,7 +40,9 @@ const QuizPage = () => {
       setError(null);
       try {
         const { data: generatedQuiz } = await axiosPublic.get(
-          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
+          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}&type=${
+            quizzesType || "mc"
+          }`
         );
 
         if (!signal.aborted) {
