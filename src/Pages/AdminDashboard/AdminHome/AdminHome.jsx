@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
-import { Mail, User } from "lucide-react";
+import { Mail, User, Calendar, CheckCircle } from "lucide-react";
 import { MdOutlineAttachMoney } from "react-icons/md";
-import {
-  PieChart,
-  Pie,
-  Sector,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Cell,
-} from "recharts";
+import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
 import useAuth from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const SummaryCard = ({ icon, title, value, gradient, description }) => (
   <motion.div
@@ -43,6 +31,38 @@ const SummaryCard = ({ icon, title, value, gradient, description }) => (
     </div>
   </motion.div>
 );
+
+const feedbacks = [
+  {
+    name: "John Doe",
+    email: "john.doe@email.com",
+    message: "Loving the platform!",
+    feedbackType: "Feedback",
+    date: "2025-04-27",
+  },
+  {
+    name: "Jane Smith",
+    email: "jane.smith@email.com",
+    message:
+      "Smooth and intuitiveajsdhbasjbdaashb d sd asdbabsdbahdbhadas dasd ashdasd ad .",
+    feedbackType: "Bug Report",
+    date: "2025-04-26",
+  },
+  {
+    name: "Alice Johnson",
+    email: "alice.j@email.com",
+    message: "Support was quick.",
+    feedbackType: "General Question",
+    date: "2025-04-25",
+  },
+  {
+    name: "Alice Johnson",
+    email: "alice.j@email.com",
+    message: "Support was quick.",
+    feedbackType: "Feature Request",
+    date: "2025-04-25",
+  },
+];
 
 const AdminHome = () => {
   const { user } = useAuth();
@@ -158,41 +178,21 @@ const AdminHome = () => {
 
   return (
     <div className="px-4 py-6 space-y-10">
-      {/* Enhanced Floating Particles */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full opacity-80"
-            style={{
-              width: `${Math.random() * 6 + 2}px`,
-              height: `${Math.random() * 6 + 2}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              background:
-                i % 3 === 0
-                  ? "rgba(168, 85, 247, 0.4)"
-                  : i % 3 === 1
-                  ? "rgba(59, 130, 246, 0.4)"
-                  : "rgba(236, 72, 153, 0.3)",
-              animation: `float ${Math.random() * 15 + 15}s linear infinite`,
-              animationDelay: `${Math.random() * 5}s`,
-              boxShadow: "0 0 10px 2px rgba(139, 92, 246, 0.15)",
-            }}
-          ></div>
-        ))}
-      </div>
-
       {/* Heading */}
-      <h1 className="text-2xl md:text-4xl font-bold text-white mb-4 text-center">
-        Welcome to BrainZap Dashboard
-      </h1>
-      <p className="text-gray-300 mb-8 text-center">
-        Track platform activity and manage insights effortlessly.
-      </p>
+      <section>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">
+          Welcome to{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
+            BrainZap Dashboard
+          </span>
+        </h1>
+        <p className="text-gray-300 mb-8 text-center">
+          Track platform activity and manage insights effortlessly.
+        </p>
+      </section>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Stats Cards  Section*/}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <SummaryCard
           icon={<User size={24} />}
           title="Total Users"
@@ -214,35 +214,161 @@ const AdminHome = () => {
           description="Revenue tracking will be available soon"
           gradient={gradients[2]}
         />
-      </div>
-      <h2 className="text-2xl md:text-4xl font-semibold text-white mb-6 text-center">
-        User Overview
-      </h2>
+      </section>
 
-      <div className="h-[300px] w-full">
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie
-              activeIndex={activeIndex}
-              activeShape={renderActiveShape}
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              dataKey="value"
-              onMouseEnter={onPieEnter}
+      {/* User Overview section */}
+      <section className="w-full mt-20">
+        <div>
+          <h2 className="text-4xl md:text-5xl font-semibold text-white mb-6 text-center">
+            User Overview
+          </h2>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-10 items-center">
+          {/* Pie Chart */}
+          <div className="h-[300px] w-full lg:w-1/2">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  activeIndex={activeIndex}
+                  activeShape={renderActiveShape}
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  dataKey="value"
+                  onMouseEnter={onPieEnter}
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          {/* Free / Pro / Elite User Cards */}
+          <div className="flex flex-col md:flex-row gap-6 w-full lg:w-1/2">
+            {[
+              {
+                label: "Free Users",
+                count: totalFreeUsers,
+                color: "from-green-400 to-teal-500",
+              },
+              {
+                label: "Pro Users",
+                count: totalProUsers,
+                color: "from-purple-500 to-indigo-500",
+              },
+              {
+                label: "Elite Users",
+                count: totalEliteUsers,
+                color: "from-cyan-400 to-sky-500",
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+                className="group relative flex-1 overflow-hidden rounded-2xl border border-gray-700 p-5 backdrop-blur-md transition-all duration-300"
+                style={{
+                  background: "rgba(17, 24, 39, 0.7)",
+                }}
+              >
+                <div
+                  className={`absolute -top-24 -right-24 w-60 h-60 bg-gradient-to-br ${item.color} opacity-20 rounded-full blur-3xl group-hover:scale-125 group-hover:opacity-40 transition-all duration-500`}
+                />
+                <div className="relative z-10">
+                  <div
+                    className={`h-2 w-full rounded-full mb-4 bg-gradient-to-r ${item.color}`}
+                  />
+                  <h3 className="text-xl font-semibold text-white">
+                    {item.label}
+                  </h3>
+                  <p className="text-3xl font-bold text-white mt-4">
+                    {item.count}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        <Link
+          to="/dashboard/allUsers"
+          className="text-purple-400 hover:underline text-sm flex justify-end mt-3"
+        >
+          See More →
+        </Link>
+      </section>
+
+      {/* Messages/Feedback Section */}
+      <div className="w-full mt-20">
+        <div>
+          <h2 className="text-4xl md:text-5xl font-semibold text-white mb-6 text-center">
+            Recent Feedback
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {feedbacks.slice(0, 3).map((feedback, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.3 }}
+              className="group relative overflow-hidden rounded-2xl border border-gray-800 p-6 backdrop-blur-md transition-all duration-300"
+              style={{
+                background: "rgba(17, 24, 39, 0.7)",
+              }}
             >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+              {/* Gradient Background Effect */}
+              <div
+                className={`absolute -top-24 -right-24 w-60 h-60 bg-gradient-to-br ${gradients[idx]} opacity-20 rounded-full blur-3xl group-hover:scale-125 group-hover:opacity-40 transition-all duration-500`}
+              />
 
-      <div className="flex items-center justify-center h-64 rounded-xl border border-dashed border-gray-600">
-        <p className="text-gray-400">Analytics will be available soon.</p>
+              {/* Feedback Type (Rounded Badge) */}
+              <div
+                className={`absolute top-4 right-4 px-3 py-1 text-xs text-white font-semibold rounded-full ${
+                  feedback.feedbackType === "Feedback"
+                    ? "bg-green-600"
+                    : feedback.feedbackType === "Feature Request"
+                    ? "bg-blue-500"
+                    : feedback.feedbackType === "Bug Report"
+                    ? "bg-red-500"
+                    : "bg-yellow-500"
+                }`}
+              >
+                {feedback.feedbackType}
+              </div>
+
+              {/* Card Content */}
+              <div className="relative z-10">
+                <h4 className="text-lg font-semibold text-white mb-2">
+                  {feedback.name}
+                </h4>{" "}
+                <p className="text-xs text-white/60 flex items-center gap-1 mb-2">
+                  {" "}
+                  <Mail className="size-4" /> {feedback.email}
+                </p>
+                <p className="text-sm text-white/80">
+                  {feedback.message.length > 40
+                    ? feedback.message.substring(0, 40) + "..."
+                    : feedback.message}
+                </p>
+                {/* Icons for Type and Date */}
+                <div className="flex items-center gap-1 text-xs text-white/60 mt-2">
+                  <Calendar size={14} />
+                  {feedback.date}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <Link
+          to="/dashboard/messages"
+          className="text-purple-400 hover:underline text-sm flex justify-end mt-3"
+        >
+          See More →
+        </Link>
       </div>
     </div>
   );
