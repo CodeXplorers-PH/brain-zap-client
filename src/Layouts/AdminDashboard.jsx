@@ -1,16 +1,30 @@
 import useAuth from "@/hooks/useAuth";
-import { House, LogOut, MailCheck, TicketCheck, Users } from "lucide-react";
-import React, { useState } from "react";
+import {
+  CalendarCheck2,
+  House,
+  LogOut,
+  MailCheck,
+  TicketCheck,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineQuiz } from "react-icons/md";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 const AdminDashboard = () => {
   const { user, logOut } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation(); // Detect route changes
 
   const handleToggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      setIsSidebarOpen(false);
+    }
+  }, [location]);
 
   return (
     <div className="relative h-screen bg-gray-900 flex overflow-hidden">
@@ -99,7 +113,7 @@ const AdminDashboard = () => {
                 <MailCheck size={20} /> Messages
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to="/dashboard/coupons"
                 className={({ isActive }) =>
@@ -111,6 +125,20 @@ const AdminDashboard = () => {
                 }
               >
                 <TicketCheck size={20} /> Manage Coupons
+              </NavLink>
+            </li> */}
+            <li>
+              <NavLink
+                to="/dashboard/makeEvents"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-3 rounded-lg transition-all ${
+                    isActive
+                      ? "bg-purple-700 text-white"
+                      : "hover:bg-purple-800/50"
+                  }`
+                }
+              >
+                <CalendarCheck2 size={20} /> Envents
               </NavLink>
             </li>
             <li>
