@@ -23,12 +23,12 @@ const Header = () => {
   const { scrollY } = useScroll();
   const { width } = useWindowSize();
 
-   // Close the sidebar when the route changes in mobile view
-    useEffect(() => {
-      if (isOpen) {
-        setIsOpen(false);
-      }
-    }, [location]);
+  // Close the sidebar when the route changes in mobile view
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+  }, [location]);
 
   // Fetching and calculating streak
   useEffect(() => {
@@ -90,6 +90,7 @@ const Header = () => {
   const Navs = [
     { path: "/start-quiz", pathName: "Start Quiz" },
     { path: "/pricing", pathName: "Pricing" },
+    { path: "/leaderboard", pathName: "Leaderboard" },
     { path: "/blogs", pathName: "Blog" },
     { path: "/contact", pathName: "Contact" },
   ];
@@ -171,7 +172,7 @@ const Header = () => {
         <div className="navbar-end">
           {user && <UserStreakDisplay streak={streak} />}
           {user ? (
-            <UserProfileMenu user={user} logOut={logOut} isAdmin={isAdmin} isAdminLoading={isAdminLoading}/>
+            <UserProfileMenu user={user} logOut={logOut} isAdmin={isAdmin} isAdminLoading={isAdminLoading} />
           ) : (
             <Link to="/login">
               <button className="btn bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6 border-none shadow-lg hover:shadow-purple-600/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0">
@@ -213,23 +214,21 @@ const NavLinkItem = ({ navlink, location }) => (
   <li className="list-none">
     <Link
       to={navlink.path}
-      className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${
-        location.pathname === navlink.path
+      className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${location.pathname === navlink.path
           ? "text-purple-400 font-semibold"
           : "text-gray-300"
-      }`}
+        }`}
     >
       {navlink.pathName}
       <span
-        className={`absolute left-0 lg:bottom-0 -bottom-1 w-full h-0.5 bg-purple-600 transform ${
-          location.pathname === navlink.path ? "scale-x-100" : "scale-x-0"
-        } group-hover:scale-x-100 transition-transform duration-300`}
+        className={`absolute left-0 lg:bottom-0 -bottom-1 w-full h-0.5 bg-purple-600 transform ${location.pathname === navlink.path ? "scale-x-100" : "scale-x-0"
+          } group-hover:scale-x-100 transition-transform duration-300`}
       ></span>
     </Link>
   </li>
 );
 
-const UserProfileMenu = ({ user, logOut, isAdmin,isAdminLoading }) => (
+const UserProfileMenu = ({ user, logOut, isAdmin, isAdminLoading }) => (
   <div className="dropdown dropdown-end">
     <div
       tabIndex={0}
@@ -263,15 +262,6 @@ const UserProfileMenu = ({ user, logOut, isAdmin,isAdminLoading }) => (
         >
           <User size={16} />
           Profile
-        </Link>
-      </li>
-      <li>
-        <Link
-          to="/leaderBoard"
-          className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
-        >
-          <ChartNoAxesCombined size={16} />
-          Leaderboard
         </Link>
       </li>
 
