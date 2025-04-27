@@ -10,8 +10,9 @@ import Settings from "./Settings";
 import TransactionHistory from "./TransactionHistory";
 import ProfileHeader from "./ProfileHeader";
 import AchievementTab from "./AchievementTab";
-import StreakCalendar from './StreakCalendar';
-import LeaderboardRank from './LeaderboardRank';
+import StreakCalendar from "./StreakCalendar";
+import LeaderboardRank from "./LeaderboardRank";
+
 
 const Profile = () => {
   const { user } = useAuth();

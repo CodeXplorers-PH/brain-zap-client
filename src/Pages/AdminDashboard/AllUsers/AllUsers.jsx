@@ -264,83 +264,81 @@ const AllUsers = () => {
 
   return (
     <section className="min-h-screen py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-10 text-center">
-          {/* Title */}
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 flex items-center justify-center gap-2">
-            <User className="border-2 w-12 rounded-full" />
-            All Registerd Users
-          </h2>
-          {/* Search Input */}
-          <div className="mb-8 flex justify-center">
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              className="px-4 py-2 rounded-md w-full max-w-md bg-[#1f2937]/50 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+      <div className="mb-10 text-center">
+        {/* Title */}
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 flex items-center justify-center gap-2">
+          <User size={26} className="border-2 w-14 rounded-full" />
+          All Registerd Users
+        </h2>
+        {/* Search Input */}
+        <div className="mb-8 flex justify-center">
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            className="px-4 py-2 rounded-md w-full max-w-md bg-[#1f2937]/50 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
+      </div>
 
-        <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
-          {filteredUsers.map((user, i) => {
-            const gradient =
-              gradients[Math.floor(Math.random() * gradients.length)];
+      <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
+        {filteredUsers.map((user, i) => {
+          const gradient =
+            gradients[Math.floor(Math.random() * gradients.length)];
 
-            return (
-              <Card key={user._id} gradient={gradient}>
-                <div className="flex items-center gap-4 mb-4">
-                  {user?.photoURL && (
-                    <Avatar className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md">
-                      <AvatarImage
-                        src={user?.photoURL}
-                        alt={`Photo of ${user?.displayName}`}
-                      />
-                      <AvatarFallback>
-                        {user?.displayName?.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div className="text-white text-base">
-                    <p className="font-semibold text-lg">{user.name}</p>
-                    <p className="text-gray-300 text-sm">{user.email}</p>
-                  </div>
+          return (
+            <Card key={user._id} gradient={gradient}>
+              <div className="flex items-center gap-4 mb-4">
+                {user?.photoURL && (
+                  <Avatar className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md">
+                    <AvatarImage
+                      src={user?.photoURL}
+                      alt={`Photo of ${user?.displayName}`}
+                    />
+                    <AvatarFallback>
+                      {user?.displayName?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <div className="text-white text-base">
+                  <p className="font-semibold text-lg">{user.name}</p>
+                  <p className="text-gray-300 text-sm">{user.email}</p>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-3 gap-2 mt-4">
-                  <button
-                    onClick={() => handleDelete(user._id)}
-                    className="text-xs px-2 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition-all"
-                  >
-                    <Trash2 size={14} className="inline mr-1" />
-                    Delete
+              <div className="grid grid-cols-3 gap-2 mt-4">
+                <button
+                  onClick={() => handleDelete(user._id)}
+                  className="text-xs px-2 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition-all"
+                >
+                  <Trash2 size={14} className="inline mr-1" />
+                  Delete
+                </button>
+                <button
+                  onClick={() => handleLock(user._id)}
+                  className="text-xs px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-600 hover:text-white transition-all"
+                >
+                  <Lock size={14} className="inline mr-1" />
+                  Lock
+                </button>
+                {user.role === "admin" ? (
+                  <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
+                    Admin Account
                   </button>
+                ) : (
                   <button
-                    onClick={() => handleLock(user._id)}
-                    className="text-xs px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-600 hover:text-white transition-all"
+                    onClick={() => handleMakeAdmin(user._id)}
+                    className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
                   >
-                    <Lock size={14} className="inline mr-1" />
-                    Lock
+                    <ShieldCheck size={14} className="inline mr-1" />
+                    Admin
                   </button>
-                  {user.role === "admin" ? (
-                    <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
-                      Admin Account
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleMakeAdmin(user._id)}
-                      className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
-                    >
-                      <ShieldCheck size={14} className="inline mr-1" />
-                      Admin
-                    </button>
-                  )}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+                )}
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </section>
   );
