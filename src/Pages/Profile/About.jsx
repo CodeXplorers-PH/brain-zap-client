@@ -15,7 +15,6 @@ const About = ({ userInfo, stats, streak }) => {
         </div>
         <div className="flex items-center">
           <Flame size={20} className="text-purple-400 mr-3" />
-
           <div>
             <p className="text-gray-400 text-sm">Streak</p>
             <p className="text-white">{streak}</p>

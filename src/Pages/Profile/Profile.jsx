@@ -11,6 +11,16 @@ import Settings from "./Settings";
 import TransactionHistory from "./TransactionHistory";
 import ProfileHeader from "./ProfileHeader";
 import AchievementTab from "./AchievementTab";
+import ProfileTabs from './ProfileTabs';
+import About from './About';
+import Achievements from './Achievements';
+import StreakCalendar from './StreakCalendar';
+import LeaderboardRank from './LeaderboardRank';
+import ShortQuizHistory from './ShortQuizHistory';
+import FullQuizHistory from './FullQuizHistory';
+import Settings from './Settings';
+import TransactionHistory from './TransactionHistory';
+import ProfileHeader from './ProfileHeader';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -139,6 +149,12 @@ const Profile = () => {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
             />
+
+            {/* Streak Calendar */}
+            <StreakCalendar userQuizHistory={userQuizHistory} />
+
+            {/* Leaderboard Rank */}
+            <LeaderboardRank userQuizHistory={userQuizHistory} />
 
             {/* Recent Performance */}
             <ShortQuizHistory

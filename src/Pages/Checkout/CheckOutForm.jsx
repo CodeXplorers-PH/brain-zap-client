@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
-import { useNavigate } from "react-router-dom";
 import { CustomToast } from "@/components/ui/CustomToast";
-import { set } from "date-fns";
 
 const CheckOutForm = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -18,16 +17,26 @@ const CheckOutForm = () => {
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  // const axiosSecure = useAxiosSecure();
   const axiosPublic = useAxiosPublic();
   const { user } = useAuth();
   const [couponApplied, setCouponApplied] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // Auto-apply coupon and select plan from navigation state
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    const { couponCode: navCouponCode, plan } = location.state || {};
+    if (navCouponCode && navCouponCode.toLowerCase() === "brainzap10") {
+      setCouponCode(navCouponCode);
+      setDiscount(10);
+      setCouponApplied(true);
+    }
+    if (plan && ["Pro", "Elite"].includes(plan)) {
+      setSelectedPlan(plan);
+    }
+  }, [location.state]);
 
   // Client Secret
   useEffect(() => {
@@ -35,7 +44,6 @@ const CheckOutForm = () => {
       axiosPublic
         .post("/create-payment-intent", { price: totalPrice })
         .then((res) => {
-          // console.log(res.data.clientSecret);
           setClientSecret(res.data.clientSecret);
         });
     }
@@ -55,7 +63,7 @@ const CheckOutForm = () => {
       return;
     }
 
-    // If strip and elements empty
+    // If stripe and elements empty
     if (!stripe || !elements) {
       return;
     }
@@ -74,9 +82,8 @@ const CheckOutForm = () => {
       card,
     });
 
-    // If transection get any error
+    // If transaction gets any error
     if (error) {
-      // console.log("payment error : ", error);
       setError(error.message);
       CustomToast({
         title: "Payment Error",
@@ -87,11 +94,10 @@ const CheckOutForm = () => {
       });
       setLoading(false);
     } else {
-      // console.log("payment method: ", paymentMethod);
       setError("");
     }
 
-    // payment confrim
+    // Payment confirm
     const { paymentIntent, error: confirmError } =
       await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -104,12 +110,11 @@ const CheckOutForm = () => {
       });
 
     if (confirmError) {
-      // console.log("confirm error:", confirmError);
+      console.log("confirm error:", confirmError);
     } else {
-      // console.log("payment intent", paymentIntent);
       if (paymentIntent.status === "succeeded") {
         setTransectionId(paymentIntent.id);
-        // now save the paymentInfo in the database
+        // Save the paymentInfo in the database
         const paymentInfo = {
           email: user?.email,
           TotalPrice: totalPrice,
@@ -206,7 +211,7 @@ const CheckOutForm = () => {
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-[#0e0e1c] px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-      <div className="w-full lg:mt-10 md:mt-12 mt-20  max-w-6xl mx-4 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 bg-[#151528] rounded-3xl p-6 sm:p-8 border border-violet-700 shadow-[0_0_30px_rgba(128,0,255,0.2)]">
+      <div className="w-full lg:mt-10 md:mt-12 mt-20 max-w-6xl mx-4 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 bg-[#151528] rounded-3xl p-6 sm:p-8 border border-violet-700 shadow-[0_0_30px_rgba(128,0,255,0.2)]">
         {/* 🔮 Left: Category & Duration */}
         <div className="bg-gradient-to-b from-[#1f1f3a] to-[#1b1b33] p-5 sm:p-6 rounded-xl text-white border border-[#2e2e5e] shadow-inner">
           <h3 className="mb-4 sm:mb-6">
@@ -353,9 +358,9 @@ const CheckOutForm = () => {
               disabled={!stripe || !clientSecret || loading}
             >
               {loading ? (
-                <div class="p-2 bg-gradient-to-tr animate-spin from-green-500 to-blue-600 via-purple-500 rounded-full">
-                  <div class="rounded-full">
-                    <div class="rounded-full"></div>
+                <div className="p-2 bg-gradient-to-tr animate-spin from-green-500 to-blue-600 via-purple-500 rounded-full">
+                  <div className="rounded-full">
+                    <div className="rounded-full"></div>
                   </div>
                 </div>
               ) : (
