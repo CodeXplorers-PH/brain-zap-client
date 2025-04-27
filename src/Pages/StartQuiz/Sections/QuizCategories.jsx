@@ -1,203 +1,222 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@/hooks/useAuthContext';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
-
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const categories = [
   {
-    title: 'JavaScript',
-    link: 'javascript',
-    description: 'Test your knowledge of JavaScript fundamentals and concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🟨',
-    type: 'Web Development',
+    title: "JavaScript",
+    link: "javascript",
+    description: "Test your knowledge of JavaScript fundamentals and concepts.",
+    buttonText: "Start Quiz",
+    icon: "🟨",
+    type: "Web Development",
   },
   {
-    title: 'React',
-    link: 'react',
+    title: "React",
+    link: "react",
     description:
-      'Learn and test your React skills with quizzes on components, hooks, and more.',
-    buttonText: 'Start Quiz',
-    icon: '⚛️',
-    type: 'Web Development',
+      "Learn and test your React skills with quizzes on components, hooks, and more.",
+    buttonText: "Start Quiz",
+    icon: "⚛️",
+    type: "Web Development",
   },
   {
-    title: 'HTML',
-    link: 'html',
-    description: 'Test your knowledge of HTML basics and advanced concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🌐',
-    type: 'Web Development',
+    title: "HTML",
+    link: "html",
+    description: "Test your knowledge of HTML basics and advanced concepts.",
+    buttonText: "Start Quiz",
+    icon: "🌐",
+    type: "Web Development",
   },
   {
-    title: 'CSS',
-    link: 'css',
-    description: 'Challenge yourself with CSS styling and layout concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🎨',
-    type: 'Web Development',
+    title: "CSS",
+    link: "css",
+    description: "Challenge yourself with CSS styling and layout concepts.",
+    buttonText: "Start Quiz",
+    icon: "🎨",
+    type: "Web Development",
   },
   {
-    title: 'Python',
-    link: 'python',
+    title: "Python",
+    link: "python",
     description:
-      'Dive into Python programming with fun and interactive quizzes.',
-    buttonText: 'Start Quiz',
-    icon: '🐍',
-    type: 'Backend Development',
+      "Dive into Python programming with fun and interactive quizzes.",
+    buttonText: "Start Quiz",
+    icon: "🐍",
+    type: "Backend Development",
   },
   {
-    title: 'Node.js',
-    link: 'node-js',
+    title: "Node.js",
+    link: "node-js",
     description:
-      'Test your Node.js skills with backend server programming concepts.',
-    buttonText: 'Start Quiz',
-    icon: '🟩',
-    type: 'Backend Development',
+      "Test your Node.js skills with backend server programming concepts.",
+    buttonText: "Start Quiz",
+    icon: "🟩",
+    type: "Backend Development",
   },
   {
-    title: 'Java',
-    link: 'java',
+    title: "Java",
+    link: "java",
     description:
-      'Assess your Java skills with object-oriented programming questions.',
-    buttonText: 'Start Quiz',
-    icon: '☕',
-    type: 'Backend Development',
+      "Assess your Java skills with object-oriented programming questions.",
+    buttonText: "Start Quiz",
+    icon: "☕",
+    type: "Backend Development",
   },
   {
-    title: 'C#',
-    link: 'c-sharp',
+    title: "C#",
+    link: "c-sharp",
     description:
-      'Test your C# skills, from .NET development to game programming.',
-    buttonText: 'Start Quiz',
-    icon: '🎮',
-    type: 'Backend Development',
+      "Test your C# skills, from .NET development to game programming.",
+    buttonText: "Start Quiz",
+    icon: "🎮",
+    type: "Backend Development",
   },
   {
-    title: 'Swift',
-    link: 'swift',
+    title: "Swift",
+    link: "swift",
     description:
-      'Challenge yourself with Swift programming for iOS development.',
-    buttonText: 'Start Quiz',
-    icon: '🍏',
-    type: 'Mobile Development',
+      "Challenge yourself with Swift programming for iOS development.",
+    buttonText: "Start Quiz",
+    icon: "🍏",
+    type: "Mobile Development",
   },
   {
-    title: 'Kotlin',
-    link: 'kotlin',
+    title: "Kotlin",
+    link: "kotlin",
     description:
-      'Evaluate your Kotlin expertise for Android and backend development.',
-    buttonText: 'Start Quiz',
-    icon: '📱',
-    type: 'Mobile Development',
+      "Evaluate your Kotlin expertise for Android and backend development.",
+    buttonText: "Start Quiz",
+    icon: "📱",
+    type: "Mobile Development",
   },
   {
-    title: 'C++',
-    link: 'c-plus-plus',
+    title: "C++",
+    link: "c-plus-plus",
     description:
-      'Challenge yourself with C++ questions covering algorithms & logic.',
-    buttonText: 'Start Quiz',
-    icon: '💻',
-    type: 'General Programming',
+      "Challenge yourself with C++ questions covering algorithms & logic.",
+    buttonText: "Start Quiz",
+    icon: "💻",
+    type: "General Programming",
   },
   {
-    title: 'Go',
-    link: 'go-lang',
+    title: "Go",
+    link: "go-lang",
     description:
-      'Improve your Go (Golang) expertise with performance-based questions.',
-    buttonText: 'Start Quiz',
-    icon: '🐹',
-    type: 'General Programming',
+      "Improve your Go (Golang) expertise with performance-based questions.",
+    buttonText: "Start Quiz",
+    icon: "🐹",
+    type: "General Programming",
   },
   {
-    title: 'Rust',
-    link: 'rust',
-    description: 'Test your memory-safe programming knowledge in Rust.',
-    buttonText: 'Start Quiz',
-    icon: '🦀',
-    type: 'General Programming',
+    title: "Rust",
+    link: "rust",
+    description: "Test your memory-safe programming knowledge in Rust.",
+    buttonText: "Start Quiz",
+    icon: "🦀",
+    type: "General Programming",
   },
   {
-    title: 'PHP',
-    link: 'php',
-    description: 'Test your PHP skills for server-side web development.',
-    buttonText: 'Start Quiz',
-    icon: '🐘',
-    type: 'Web Development',
+    title: "PHP",
+    link: "php",
+    description: "Test your PHP skills for server-side web development.",
+    buttonText: "Start Quiz",
+    icon: "🐘",
+    type: "Web Development",
   },
   {
-    title: 'Ruby',
-    link: 'ruby',
-    description: 'Improve your Ruby knowledge, including Rails development.',
-    buttonText: 'Start Quiz',
-    icon: '💎',
-    type: 'Web Development',
+    title: "Ruby",
+    link: "ruby",
+    description: "Improve your Ruby knowledge, including Rails development.",
+    buttonText: "Start Quiz",
+    icon: "💎",
+    type: "Web Development",
   },
   {
-    title: 'SQL',
-    link: 'sql',
-    description: 'Enhance your database management skills with SQL quizzes.',
-    buttonText: 'Start Quiz',
-    icon: '🗄️',
-    type: 'Database Management',
+    title: "SQL",
+    link: "sql",
+    description: "Enhance your database management skills with SQL quizzes.",
+    buttonText: "Start Quiz",
+    icon: "🗄️",
+    type: "Database Management",
   },
   {
-    title: 'Shell Scripting',
-    link: 'shell-scripting',
-    description: 'Test your Bash and Shell scripting automation skills.',
-    buttonText: 'Start Quiz',
-    icon: '📜',
-    type: 'General Programming',
+    title: "Shell Scripting",
+    link: "shell-scripting",
+    description: "Test your Bash and Shell scripting automation skills.",
+    buttonText: "Start Quiz",
+    icon: "📜",
+    type: "General Programming",
   },
 ];
 
-const generateDifficulty = level => {
+const generateDifficulty = (level) => {
   const difficulty =
     level > 8
-      ? 'so_hard'
+      ? "so_hard"
       : level <= 8 && level > 6
-      ? 'hard'
+      ? "hard"
       : level <= 6 && level > 4
-      ? 'medium'
+      ? "medium"
       : level <= 4 && level > 2
-      ? 'easy'
-      : 'so_easy';
+      ? "easy"
+      : "so_easy";
 
   return difficulty;
 };
 
 const QuizCategories = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [difficulty, setDifficulty] = useState('medium');
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [difficulty, setDifficulty] = useState("medium");
   const [quizzesNumber, setQuizzesNumber] = useState(10);
+  const [selectedQuiz, setSelectedQuiz] = useState("");
   const [hoveredCard, setHoveredCard] = useState(null);
   const [userLevel, setUserLevel] = useState(0);
+  const [open, setOpen] = useState(false);
   const { user } = useAuthContext();
 
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
 
   const categoryColors = {
-    'Web Development': 'from-indigo-600 to-purple-600',
-    'Backend Development': 'from-blue-600 to-cyan-500',
-    'Mobile Development': 'from-emerald-500 to-teal-600',
-    'Database Management': 'from-amber-500 to-orange-500',
-    'General Programming': 'from-violet-600 to-indigo-500',
+    "Web Development": "from-indigo-600 to-purple-600",
+    "Backend Development": "from-blue-600 to-cyan-500",
+    "Mobile Development": "from-emerald-500 to-teal-600",
+    "Database Management": "from-amber-500 to-orange-500",
+    "General Programming": "from-violet-600 to-indigo-500",
   };
 
   const filteredCategories =
-    selectedCategory === 'All'
+    selectedCategory === "All"
       ? categories
-      : categories.filter(category => category.type === selectedCategory);
-  
+      : categories.filter((category) => category.type === selectedCategory);
+
   useEffect(() => {
     axiosPublic
       .get(`/userInfo/${user.email}`)
-      .then(res => setUserLevel(res.data.level.level));
-  }, []);
+      .then((res) => setUserLevel(res?.data?.level?.level));
+  }, [axiosPublic, user.email]);
 
+  const handleSelectType = (category, quizzesType) => {
+    navigate(
+      `/quiz/${category.link}?difficulty=${generateDifficulty(
+        userLevel
+      )}&quizzesNumber=10&type=${quizzesType}`
+    );
+  };
 
+  const handleQuizCardClick = (category) => {
+    setSelectedQuiz(category);
+    setOpen(true);
+  };
   return (
     <div className="px-4 sm:px-6 lg:px-8 pb-20 max-w-7xl mx-auto">
       <div className="text-center mb-12">
@@ -220,10 +239,10 @@ const QuizCategories = () => {
             name="category"
             id="category"
             value={selectedCategory}
-            onChange={e => setSelectedCategory(e.target.value)}
+            onChange={(e) => setSelectedCategory(e.target.value)}
           >
             <option value="All">All Categories</option>
-            {Object.keys(categoryColors).map(cat => (
+            {Object.keys(categoryColors).map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
               </option>
@@ -249,7 +268,7 @@ const QuizCategories = () => {
 
         {/* Create Personalize quiz button */}
         <button
-          onClick={() => navigate('/create_quiz')}
+          onClick={() => navigate("/create_quiz")}
           className="px-3 sm:px-6 md:px-8 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white font-medium hover:from-purple-700 hover:to-blue-700 transition-colors"
           type="submit"
         >
@@ -257,16 +276,46 @@ const QuizCategories = () => {
         </button>
       </div>
 
-      {/* Categories Grid */}
       <div>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="bg-[#1f1f3a] text-white rounded-xl border border-purple-500 shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl text-purple-400">
+                Select Quiz Type
+              </DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Please choose the type of quiz you want to create.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-4 mt-6">
+              <button
+                onClick={() => {
+                  handleSelectType(selectedQuiz, "tf");
+                  setOpen(false);
+                }}
+                className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg font-bold hover:from-indigo-600 hover:to-purple-600 transition"
+              >
+                True / False
+              </button>
+              <button
+                onClick={() => {
+                  handleSelectType(selectedQuiz, "mc");
+                  setOpen(false);
+                }}
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-lg font-bold hover:from-pink-600 hover:to-red-600 transition"
+              >
+                Multiple Choice
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category, index) => (
-            <Link
-              to={`/quiz/${category.link}?difficulty=${generateDifficulty(
-                userLevel
-              )}&quizzesNumber=10`}
+            <div
+              onClick={() => handleQuizCardClick(category)}
               key={index}
-              className={`relative overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
+              className={`relative cursor-pointer overflow-hidden rounded-xl border border-gray-700 bg-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-lg group`}
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
             >
@@ -303,7 +352,6 @@ const QuizCategories = () => {
                 </p>
 
                 <div className="mt-6 flex justify-between items-center">
-                  <div></div>
                   <button
                     onClick={() => localStorage.removeItem(`history_posted`)}
                     className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium text-white transition-colors"
@@ -321,7 +369,7 @@ const QuizCategories = () => {
                   }`}
                 ></div>
               )}
-            </Link>
+            </div>
           ))}
         </div>
       </div>

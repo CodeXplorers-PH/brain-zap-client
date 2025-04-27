@@ -1,4 +1,7 @@
+import { createBrowserRouter, Navigate } from "react-router-dom";
+
 // Full application routes
+import Error from "@/Pages/404/Error";
 import Layout from "@/Layouts/Layout";
 import Blog from "@/Pages/Blog/Blog";
 import Home from "@/Pages/Home/Home";
@@ -6,11 +9,9 @@ import Login from "@/Pages/Auth/Login";
 import Pricing from "@/Pages/Pricing/Pricing";
 import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
 import Signup from "@/Pages/Auth/Signup";
-import { createBrowserRouter } from "react-router-dom";
 import QuizPage from "@/Pages/QuizPage/QuizPage";
 import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
 import Contact from "@/Pages/Contact/Contact";
-import Error from "@/Pages/404/Error";
 import Profile from "@/Pages/Profile/Profile";
 import CheckoutPage from "@/Pages/Checkout/Checkout";
 import BlogDetail from "@/Pages/Blog/BlogDetail";
@@ -19,7 +20,10 @@ import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
 import AdminRoute from "./AdminRoute";
 import AdminDashboard from "@/Layouts/AdminDashboard";
 import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
+import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
 import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
+import Feedback from "@/Pages/AdminDashboard/FeedBack/Feedback";
+import MakeEvents from "@/Pages/AdminDashboard/MakeEvents/MakeEvents";
 
 export const router = createBrowserRouter([
   {
@@ -79,7 +83,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ) /* Profile Page */,
       },
-  {
+      {
         path: "/leaderBoard",
         element: (
           <PrivateRoute>
@@ -118,26 +122,46 @@ export const router = createBrowserRouter([
     path: "dashboard",
     element: (
       <AdminRoute>
-        <AdminDashboard></AdminDashboard>
+        <AdminDashboard />
       </AdminRoute>
     ),
     children: [
       {
+        path: "",
+        element: <Navigate to="adminHome" replace />,
+      },
+      {
         path: "adminHome",
         element: (
           <AdminRoute>
-            <AdminHome></AdminHome>
+            <AdminHome />
           </AdminRoute>
         ),
       },
-      // {
-      //   path: "adminHome",
-      //   element: (
-      //     <AdminRoute>
-      //       <AdminHome></AdminHome>
-      //     </AdminRoute>
-      //   ),
-      // },
+      {
+        path: "allUsers",
+        element: (
+          <AdminRoute>
+            <AllUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "messages",
+        element: (
+          <AdminRoute>
+            <Feedback />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "makeEvents",
+        element: (
+          <AdminRoute>
+            <MakeEvents />
+          </AdminRoute>
+        ),
+      },
     ],
   },
 ]);

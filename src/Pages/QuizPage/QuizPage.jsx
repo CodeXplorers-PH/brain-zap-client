@@ -16,12 +16,13 @@ const QuizPage = () => {
 
   const difficulty = queryParams.get("difficulty");
   const quizzesNumber = queryParams.get("quizzesNumber");
+  const quizzesType = queryParams.get("type");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-
+  useEffect(() => {
     let abortController = new AbortController();
 
     const localStorageKey = `quiz_questions`;
@@ -39,7 +40,9 @@ const QuizPage = () => {
       setError(null);
       try {
         const { data: generatedQuiz } = await axiosPublic.get(
-          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
+          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}&type=${
+            quizzesType || "mc"
+          }`
         );
 
         if (!signal.aborted) {
@@ -49,7 +52,6 @@ const QuizPage = () => {
       } catch (err) {
         console.error("Error fetching questions:", err);
         setError("Failed to load questions. Please try again later.");
-
       } finally {
         if (!signal.aborted) {
           setLoading(false);
@@ -61,10 +63,6 @@ const QuizPage = () => {
       abortController.abort();
     };
   }, [category, difficulty, quizzesNumber]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">

@@ -2,26 +2,19 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { SparklesText } from "@/components/magicui/sparkles-text";
 import { motion } from "framer-motion";
-import { NumberTicker } from "@/components/magicui/number-ticker";
 
 const Hero = () => {
   return (
     <div className="relative overflow-hidden bg-gray-900 min-h-screen">
-      {/* Enhanced Gradient Background */}
+      {/* Background elements remain unchanged */}
       <div className="absolute inset-0 bg-gradient-to-br from-violet-900/40 via-gray-900 to-blue-900/40 z-0"></div>
-      
-      {/* Glowing Orbs */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
       </div>
-
-      {/* Refined Grid Background */}
       <div className="absolute inset-0 z-0 opacity-10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]"></div>
       </div>
-
-      {/* Enhanced Floating Particles */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         {[...Array(30)].map((_, i) => (
           <div
@@ -41,11 +34,9 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Hero Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-24">
         <div className="text-center">
-          {/* Refined Animated Badge */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -53,7 +44,7 @@ const Hero = () => {
           >
             <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
             <span className="text-sm font-medium text-gray-200">
-              AI-Powered Quiz Platform
+              Learning Reimagined by AI
             </span>
           </motion.div>
 
@@ -68,26 +59,23 @@ const Hero = () => {
               Supercharge Your Learning
             </span>
             <br />
-            with{" "}
+            with {" "}
             <SparklesText
               text="Smart Quizzes"
               className="text-white text-5xl md:text-7xl inline-block"
             />
           </motion.h1>
 
-          {/* Enhanced Subheading */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
           >
-            Brain Zap adapts to your learning style, delivering personalized
-            challenges and smart insights to boost your knowledge and
-            confidence.
+            Unlock your full potential with adaptive quizzes, real-time insights, and a personalized path to mastery.
           </motion.p>
 
-          {/* Refined CTA Buttons */}
+          {/* CTA Buttons remain unchanged */}
           <div className="flex flex-col sm:flex-row justify-center gap-5 mb-16">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -125,7 +113,6 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Enhanced Hero Image */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -136,9 +123,9 @@ const Hero = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.15),transparent_50%)]"></div>
           </div>
           <div className="relative h-full w-full flex items-center justify-center rounded-xl overflow-hidden">
-            <img 
-              src="/quiz-result.png" 
-              alt="quiz-result" 
+            <img
+              src="/quiz-result.png"
+              alt="AI-powered quiz interface with personalized feedback"
               className="rounded-xl w-full object-cover shadow-lg transition-all duration-700 hover:scale-[1.01]"
             />
           </div>
