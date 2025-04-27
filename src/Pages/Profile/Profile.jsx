@@ -13,6 +13,7 @@ import AchievementTab from "./AchievementTab";
 import StreakCalendar from "./StreakCalendar";
 import LeaderboardRank from "./LeaderboardRank";
 
+
 const Profile = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("profile");

@@ -1,7 +1,9 @@
 import useAuth from "@/hooks/useAuth";
-import { CalendarCheck2, House, LogOut, MailCheck, Users } from "lucide-react";
+import { CalendarCheck2, House, LogOut, MailCheck, TicketCheck, Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { MdOutlineQuiz } from "react-icons/md";
+import { FaHome, FaUser, FaBars } from "react-icons/fa";
+import { MdMessage, MdOutlineQuiz, MdQuiz } from "react-icons/md";
+import { RiCoupon3Fill, RiLogoutBoxFill } from "react-icons/ri";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 const AdminDashboard = () => {

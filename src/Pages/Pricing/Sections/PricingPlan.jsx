@@ -48,7 +48,7 @@ const pricingPlans = [
     descColor: "text-gray-400",
     highlightColor: "border-blue-500/30",
     badgeColor: "bg-blue-600",
-    glowColor: "shadow-blue-500/10",
+    glowColor: "shadow-blue-500/20",
   },
   {
     title: "Zap Elite",
