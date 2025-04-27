@@ -5,6 +5,7 @@ const tabs = [
   { id: '02', title: 'Quiz History', link: 'history' },
   { id: '03', title: 'Settings', link: 'settings' },
   { id: '04', title: 'Transaction History', link: 'transactionHistory' },
+  { id: '05', title: 'Achievements', link: 'achievements' },
 ];
 
 const ProfileTabs = ({ activeTab, setActiveTab }) => {

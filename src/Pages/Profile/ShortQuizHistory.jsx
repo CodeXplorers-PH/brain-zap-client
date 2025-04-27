@@ -9,7 +9,7 @@ const ShortQuizHistory = ({ userQuizHistory, setActiveTab }) => {
       </h2>
 
       <div className="overflow-x-auto">
-        <QuizHistoryTable userQuizHistory={userQuizHistory?.slice(0, 5)} />
+        <QuizHistoryTable userQuizHistory={userQuizHistory?.slice(0, 3)} />
       </div>
 
       <div className="mt-4 text-center">

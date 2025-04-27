@@ -95,7 +95,7 @@ const Header = () => {
       <motion.div
         animate={{ paddingBottom: isOpen ? "200px" : "8px" }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="relative flex items-center justify-between py-2 px-4 w-full max-w-6xl bg-gray-900/80 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-800/50"
+        className="relative flex items-center justify-between py-2 px-4 w-full max-w-6xl bg-gray-900/80 backdrop-blur-md rounded-full shadow-2xl border border-gray-800/50"
       >
         {/* Logo Section */}
         <div className="navbar-start">

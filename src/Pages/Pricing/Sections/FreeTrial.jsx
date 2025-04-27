@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const FreeTrial = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-gray-900">
       <div className="max-w-6xl mx-auto px-4 py-16">
@@ -25,11 +27,14 @@ const FreeTrial = () => {
               and get 10% off instant.
             </p>
 
-            <Link to={"/checkout"}>
-              <button className="mt-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-white hover:from-indigo-600 hover:to-pink-600 transition-all duration-300 text-xl font-medium py-4 px-10 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                Claim Your Discount{" "}
-              </button>
-            </Link>
+            <button
+              onClick={() =>
+                navigate("/checkout", { state: { couponCode: "BRAINZAP10" } })
+              }
+              className="mt-8 bg-gradient-to-r from-indigo-500 to-pink-500 text-white hover:from-indigo-600 hover:to-pink-600 transition-all duration-300 text-xl font-medium py-4 px-10 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              Claim Your Discount
+            </button>
           </div>
 
           {/* Decorative Shapes */}
