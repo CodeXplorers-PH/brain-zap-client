@@ -10,6 +10,7 @@ import FullQuizHistory from "./FullQuizHistory";
 import Settings from "./Settings";
 import TransactionHistory from "./TransactionHistory";
 import ProfileHeader from "./ProfileHeader";
+import AchievementTab from "./AchievementTab";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -133,7 +134,11 @@ const Profile = () => {
             <About userInfo={userInfo} stats={stats} streak={streak} />
 
             {/* Achievement Section */}
-            <Achievements xpPoints={xpPoints} />
+            <Achievements
+              xpPoints={xpPoints}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
 
             {/* Recent Performance */}
             <ShortQuizHistory
@@ -154,6 +159,8 @@ const Profile = () => {
         {activeTab === "transactionHistory" && (
           <TransactionHistory user={user} userInfo={userInfo} />
         )}
+        {/* Achievement Tab */}
+        {activeTab === "achievements" && <AchievementTab xpPoints={xpPoints} />}
       </div>
     </div>
   );
