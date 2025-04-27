@@ -7,9 +7,10 @@ import { motion, useScroll } from "framer-motion";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import streakImg from "../../assets/img/streak.png";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import useAdmin from "@/hooks/useAdmin";
 import { useWindowSize } from "react-use";
+import useAdmin from "@/hooks/useAdmin";
 import { Toaster } from "react-hot-toast";
+
 
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -18,7 +19,8 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const axiosPublic = useAxiosPublic();
   const location = useLocation();
-  const { admin, isAdminLoading } = useAdmin();
+  const [isAdmin, isAdminLoading] = useAdmin();
+  console.log(isAdmin);
   const { scrollY } = useScroll();
   const { width } = useWindowSize();
 
@@ -163,7 +165,7 @@ const Header = () => {
         <div className="navbar-end">
           {user && <UserStreakDisplay streak={streak} />}
           {user ? (
-            <UserProfileMenu user={user} logOut={logOut} />
+            <UserProfileMenu user={user} logOut={logOut} isAdmin={isAdmin} isAdminLoading={isAdminLoading}/>
           ) : (
             <Link to="/login">
               <button className="btn bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6 border-none shadow-lg hover:shadow-purple-600/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0">
@@ -221,7 +223,7 @@ const NavLinkItem = ({ navlink, location }) => (
   </li>
 );
 
-const UserProfileMenu = ({ user, logOut }) => (
+const UserProfileMenu = ({ user, logOut, isAdmin,isAdminLoading }) => (
   <div className="dropdown dropdown-end">
     <div
       tabIndex={0}
@@ -266,14 +268,18 @@ const UserProfileMenu = ({ user, logOut }) => (
           Leaderboard
         </Link>
       </li>
-      <li>
-        <Link
-          to="/dashboard/adminHome"
-          className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
-        >
-          <ShieldUser size={16} /> Admin Dashboard
-        </Link>
-      </li>
+
+      {!isAdminLoading && isAdmin && (
+        <li>
+          <Link
+            to="/dashboard/adminHome"
+            className="py-2 text-gray-300 hover:bg-gray-700/50 hover:text-white mt-1"
+          >
+            <ShieldUser size={16} /> Admin Dashboard
+          </Link>
+        </li>
+      )}
+
       <li>
         <button
           onClick={logOut}
