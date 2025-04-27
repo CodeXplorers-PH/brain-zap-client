@@ -88,7 +88,7 @@ const Contact = () => {
       name: "AJM Fajlay Rabby",
       role: "Frontend Lead & Product Visionary",
       bio: "A product-focused frontend lead turning vision into experience and ideas into interface.",
-      image: "https://i.ibb.co.com/MVMr1kZ/250px.jpg",
+      image: "https://avatars.githubusercontent.com/u/55575386?v=4",
       links: {
         linkedin: "https://www.linkedin.com/in/ornobaadi/",
         github: "https://github.com/ornobaadi",
@@ -143,7 +143,6 @@ const Contact = () => {
 
   return (
     <div className="relative overflow-hidden bg-gray-900 min-h-screen">
-
       {/* Content Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-20">
         {/* Header */}

@@ -5,6 +5,8 @@ import useAuth from '@/hooks/useAuth';
 import ProfileTabs from './ProfileTabs';
 import About from './About';
 import Achievements from './Achievements';
+import StreakCalendar from './StreakCalendar';
+import LeaderboardRank from './LeaderboardRank';
 import ShortQuizHistory from './ShortQuizHistory';
 import FullQuizHistory from './FullQuizHistory';
 import Settings from './Settings';
@@ -132,6 +134,12 @@ const Profile = () => {
 
             {/* Achievement Section */}
             <Achievements />
+
+            {/* Streak Calendar */}
+            <StreakCalendar userQuizHistory={userQuizHistory} />
+
+            {/* Leaderboard Rank */}
+            <LeaderboardRank userQuizHistory={userQuizHistory} />
 
             {/* Recent Performance */}
             <ShortQuizHistory
