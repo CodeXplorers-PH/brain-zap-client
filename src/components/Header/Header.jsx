@@ -20,7 +20,6 @@ const Header = () => {
   const axiosPublic = useAxiosPublic();
   const location = useLocation();
   const [isAdmin, isAdminLoading] = useAdmin();
-  console.log(isAdmin);
   const { scrollY } = useScroll();
   const { width } = useWindowSize();
 

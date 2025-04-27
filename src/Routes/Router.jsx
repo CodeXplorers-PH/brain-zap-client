@@ -22,6 +22,7 @@ import AdminDashboard from "@/Layouts/AdminDashboard";
 import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
 import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
 import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
+import Feedback from "@/Pages/AdminDashboard/FeedBack/Feedback";
 
 export const router = createBrowserRouter([
   {
@@ -141,6 +142,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AllUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "messages",
+        element: (
+          <AdminRoute>
+            <Feedback />
           </AdminRoute>
         ),
       },

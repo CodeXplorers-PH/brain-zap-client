@@ -4,6 +4,7 @@ import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { User, Trash2, ShieldCheck, Lock } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import Swal from "sweetalert2";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Card = ({ children, gradient }) => {
   return (
@@ -262,7 +263,7 @@ const AllUsers = () => {
   );
 
   return (
-    <section className="min-h-screen bg-gray-900 py-20 px-6">
+    <section className="min-h-screen py-20 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-10 text-center">
           {/* Title */}
@@ -290,14 +291,17 @@ const AllUsers = () => {
             return (
               <Card key={user._id} gradient={gradient}>
                 <div className="flex items-center gap-4 mb-4">
-                  <img
-                    src={
-                      user?.photoURL ||
-                      "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                    }
-                    alt={user.name}
-                    className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md"
-                  />
+                  {user?.photoURL && (
+                    <Avatar className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md">
+                      <AvatarImage
+                        src={user?.photoURL}
+                        alt={`Photo of ${user?.displayName}`}
+                      />
+                      <AvatarFallback>
+                        {user?.displayName?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                   <div className="text-white text-base">
                     <p className="font-semibold text-lg">{user.name}</p>
                     <p className="text-gray-300 text-sm">{user.email}</p>
