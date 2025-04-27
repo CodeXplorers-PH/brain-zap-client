@@ -23,6 +23,13 @@ const Header = () => {
   const { scrollY } = useScroll();
   const { width } = useWindowSize();
 
+   // Close the sidebar when the route changes in mobile view
+    useEffect(() => {
+      if (isOpen) {
+        setIsOpen(false);
+      }
+    }, [location]);
+
   // Fetching and calculating streak
   useEffect(() => {
     if (!user) return;
