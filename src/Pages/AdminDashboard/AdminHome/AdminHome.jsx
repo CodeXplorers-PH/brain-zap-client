@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { Mail, User, Calendar, CheckCircle } from "lucide-react";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
 import useAuth from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const SummaryCard = ({ icon, title, value, gradient, description }) => (
   <motion.div
@@ -66,13 +66,13 @@ const feedbacks = [
 
 const AdminHome = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
   const [users, setUsers] = useState(0);
   const [messages, setMessages] = useState(0);
   const [totalFreeUsers, setTotalFreeUsers] = useState(0);
   const [totalProUsers, setTotalProUsers] = useState(0);
   const [totalEliteUsers, setTotalEliteUsers] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const axiosSecure = useAxiosSecure();
 
   // Pie Charts Starts Here
   const onPieEnter = (_, index) => {
@@ -159,11 +159,25 @@ const AdminHome = () => {
   };
   // Pie Charts Ends Here
 
+  // Getting Admin Dashboard Data By GraphQL
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await axiosPublic.get(`/adminDashboard/${user?.email}`);
-        const data = res?.data;
+        const res = await axiosSecure.post(`/adminDashboard`, {
+          query: `
+            query {
+              adminDashboard {
+                totalUsers
+                totalFeedback
+                totalFreeUsers
+                totalProUsers
+                totalEliteUsers
+              }
+            }
+          `,
+        });
+
+        const data = res?.data?.data?.adminDashboard;
         setUsers(data?.totalUsers || 0);
         setMessages(data?.totalFeedback || 0);
         setTotalFreeUsers(data?.totalFreeUsers || 0);
@@ -177,7 +191,7 @@ const AdminHome = () => {
     if (user?.email) {
       fetchDashboardData();
     }
-  }, [user, axiosPublic]);
+  }, [user, axiosSecure]);
 
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",

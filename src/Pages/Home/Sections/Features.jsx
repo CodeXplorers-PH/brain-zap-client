@@ -141,12 +141,6 @@ const Features = () => {
                 background: "rgba(17, 24, 39, 0.7)",
                 transform: "perspective(1000px)",
               }}
-              whileHover={{
-                translateY: -8,
-                rotateX: 5,
-                rotateY: 5,
-                transition: { duration: 0.4 },
-              }}
             >
               {/* Background gradient */}
               <div

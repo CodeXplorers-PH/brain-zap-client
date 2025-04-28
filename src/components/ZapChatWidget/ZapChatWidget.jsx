@@ -14,7 +14,7 @@ const ZapChatWidget = () => {
   const axiosPublic = useAxiosPublic();
   const bottomRef = useRef(null);
   const [userType] = useUserSubsciptionType();
-  console.log(userType);
+  // console.log(userType);
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -44,7 +44,7 @@ const ZapChatWidget = () => {
         return updated;
       });
     } catch (error) {
-      console.error("ZapAI error:", error);
+      // console.error("ZapAI error:", error);
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
