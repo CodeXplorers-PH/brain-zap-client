@@ -160,15 +160,24 @@ const AdminHome = () => {
   // Pie Charts Ends Here
 
   useEffect(() => {
-    axiosPublic.get(`/adminDashboard/${user?.email}`).then((res) => {
-      setUsers(res?.data?.totalUsers || 0);
-      setMessages(res?.data?.totalFeedback || 0);
-      setTotalFreeUsers(res?.data?.totalFreeUsers || 0);
-      setTotalProUsers(res?.data?.totalProUsers || 0);
-      setTotalEliteUsers(res?.data?.totalEliteUsers || 0);
-      console.log(res?.data);
-    });
-  }, [axiosPublic, user?.email]);
+    const fetchDashboardData = async () => {
+      try {
+        const res = await axiosPublic.get(`/adminDashboard/${user?.email}`);
+        const data = res?.data;
+        setUsers(data?.totalUsers || 0);
+        setMessages(data?.totalFeedback || 0);
+        setTotalFreeUsers(data?.totalFreeUsers || 0);
+        setTotalProUsers(data?.totalProUsers || 0);
+        setTotalEliteUsers(data?.totalEliteUsers || 0);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (user?.email) {
+      fetchDashboardData();
+    }
+  }, [user, axiosPublic]);
 
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",

@@ -11,7 +11,6 @@ import { useWindowSize } from "react-use";
 import useAdmin from "@/hooks/useAdmin";
 import { Toaster } from "react-hot-toast";
 
-
 const Header = () => {
   const { user, logOut } = useContext(AuthContext);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
@@ -102,7 +101,7 @@ const Header = () => {
       <motion.div
         animate={{ paddingBottom: isOpen ? "200px" : "8px" }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="relative flex items-center justify-between py-2 px-4 w-full max-w-6xl bg-gray-900/80 backdrop-blur-md rounded-full shadow-2xl border border-gray-800/50"
+        className="relative flex items-center justify-between py-2 px-4 w-full max-w-6xl bg-gray-900/80 backdrop-blur-md rounded-2xl lg:rounded-full shadow-2xl border border-gray-800/50"
       >
         {/* Logo Section */}
         <div className="navbar-start">
@@ -172,7 +171,12 @@ const Header = () => {
         <div className="navbar-end">
           {user && <UserStreakDisplay streak={streak} />}
           {user ? (
-            <UserProfileMenu user={user} logOut={logOut} isAdmin={isAdmin} isAdminLoading={isAdminLoading} />
+            <UserProfileMenu
+              user={user}
+              logOut={logOut}
+              isAdmin={isAdmin}
+              isAdminLoading={isAdminLoading}
+            />
           ) : (
             <Link to="/login">
               <button className="btn bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6 border-none shadow-lg hover:shadow-purple-600/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0">
@@ -214,15 +218,17 @@ const NavLinkItem = ({ navlink, location }) => (
   <li className="list-none">
     <Link
       to={navlink.path}
-      className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${location.pathname === navlink.path
+      className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${
+        location.pathname === navlink.path
           ? "text-purple-400 font-semibold"
           : "text-gray-300"
-        }`}
+      }`}
     >
       {navlink.pathName}
       <span
-        className={`absolute left-0 lg:bottom-0 -bottom-1 w-full h-0.5 bg-purple-600 transform ${location.pathname === navlink.path ? "scale-x-100" : "scale-x-0"
-          } group-hover:scale-x-100 transition-transform duration-300`}
+        className={`absolute left-0 lg:bottom-0 -bottom-1 w-full h-0.5 bg-purple-600 transform ${
+          location.pathname === navlink.path ? "scale-x-100" : "scale-x-0"
+        } group-hover:scale-x-100 transition-transform duration-300`}
       ></span>
     </Link>
   </li>

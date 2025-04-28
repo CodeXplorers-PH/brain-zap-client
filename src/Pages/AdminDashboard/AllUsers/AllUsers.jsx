@@ -263,7 +263,7 @@ const AllUsers = () => {
   );
 
   return (
-    <section className="min-h-screen py-20 px-6">
+    <section className="max-w-6xl mx-auto min-h-screen py-20 px-6">
       <div className="mb-10 text-center">
         {/* Title */}
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 flex items-center justify-center gap-2">
