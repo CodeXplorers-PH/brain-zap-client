@@ -21,7 +21,7 @@ const SocialLogin = ({ onLoginError }) => {
             const result = await method();
             console.log(result.user);
             console.log("User logged in")
-            navigate('/');
+            navigate("/start-quiz");
         } catch (error) {
             console.error(`${provider} sign-in error:`, error.message);
             setError(`Failed to sign in with ${provider}: ${error.message}`);
