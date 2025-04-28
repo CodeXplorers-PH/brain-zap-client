@@ -74,13 +74,13 @@ const AchievementTab = ({ xpPoints }) => {
           <Confetti width={window.innerWidth} height={window.innerHeight} />
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border bg-gray-800/80 backdrop-blur-md border-gray-700 rounded-2xl shadow-xl p-6 md:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 border bg-gray-800/80 backdrop-blur-md border-gray-700 rounded-2xl shadow-xl p-6 md:p-8">
           {unlockedBadges.map((badge) => (
             <div
               key={badge.id}
               className={`flex flex-col justify-between items-center p-4 rounded-xl transition-all duration-300 w-[150px] h-[200px] mx-auto relative ${
                 badge.unlocked
-                  ? "bg-gradient-to-r from-blue-400 via-teal-400 to-green-400 border border-indigo-400/30 text-white shadow-lg hover:scale-105"
+                  ? "bg-[#1D2838] border border-indigo-400/30 text-white shadow-lg hover:scale-105"
                   : " bg-gradient-to-br from-gray-700 to-gray-900 border-2 border-dashed border-gray-600 opacity-80  text-white cursor-not-allowed"
               } ${badge.id == newlyUnlockedBadgeId ? "glow-animation" : ""}`}
               title={
@@ -92,7 +92,7 @@ const AchievementTab = ({ xpPoints }) => {
               <img
                 src={badge.image}
                 alt={badge.name}
-                className={`w-24 h-24 mb-2 transition-all duration-500 ${
+                className={`w-[90px] h-[90px] mb-2 transition-all duration-500 ${
                   badge.unlocked ? "grayscale-0" : "grayscale opacity-50"
                 }`}
               />

@@ -21,7 +21,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
       </div>
       <div className="space-y-4">
         <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-          {(xpPoints >= 500 && (
+          {(xpPoints >= 2500 && (
             <>
               <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                 <img className="w-6" src={badge4} alt="" />
@@ -86,7 +86,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints < 99 && (
+            (xpPoints < 499 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <Award size={24} className="text-purple-400" />
@@ -106,8 +106,46 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
             <FileText size={24} className="text-gray-400" />
           </div>
           <div>
-            <p className="text-white font-medium">Perfect Score</p>
-            <p className="text-gray-400 text-sm">Get 100% on any quiz (0/1)</p>
+            {(xpPoints >= 2000 && (
+              <>
+                <p className="text-white font-medium">Ultimate Achiever</p>
+                <p className="text-gray-400 text-sm">
+                  Reached 2000 XP - keep growing
+                </p>
+              </>
+            )) ||
+              (xpPoints >= 1500 && (
+                <>
+                  <p className="text-white font-medium">Persistence Award</p>
+                  <p className="text-gray-400 text-sm">
+                    Stayed active for 30 days straight!
+                  </p>
+                </>
+              )) ||
+              (xpPoints >= 1000 && (
+                <>
+                  <p className="text-white font-medium">Challenge Champion</p>
+                  <p className="text-gray-400 text-sm">
+                    Completed 5 coding challenges!
+                  </p>
+                </>
+              )) ||
+              (xpPoints >= 500 && (
+                <>
+                  <p className="text-white font-medium">Quick Learner</p>
+                  <p className="text-gray-400 text-sm">
+                    Completed first lesson in a record time
+                  </p>
+                </>
+              )) ||
+              (xpPoints < 499 && (
+                <>
+                  <p className="text-white font-medium">Halfway Hero</p>
+                  <p className="text-gray-400 text-sm">
+                    Reached 50% of your learning journey
+                  </p>
+                </>
+              ))}
           </div>
         </div>
       </div>
