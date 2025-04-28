@@ -5,6 +5,7 @@ import { ApolloClient, gql, InMemoryCache, useQuery } from "@apollo/client";
 
 import CreatePostModal from "@/components/Blog/CreatePostModal";
 import BlogCard from "@/components/Blog/BlogCard";
+import useUserSubsciptionType from "@/hooks/useUserSubsciptionType";
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
@@ -43,10 +44,11 @@ const Blog = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState("all");
   const [error, setError] = useState(null);
-
   const { user } = useAuth();
   const isAuthenticated = !!user;
   const limit = 6;
+
+  const [userType] = useUserSubsciptionType();
 
   const { data, refetch } = useQuery(GET_BLOG, {
     variables: {
@@ -154,7 +156,7 @@ const Blog = () => {
         )}
 
         {/* User Profile Area */}
-        {isAuthenticated && (
+        {/* {isAuthenticated && (
           <div className="flex items-center justify-between max-w-3xl mx-auto mb-8 bg-gray-800 p-4 rounded-xl">
             <div className="flex items-center">
               <img
@@ -178,6 +180,54 @@ const Blog = () => {
               <FiPlus className="mr-2" />
               Create Post
             </button>
+          </div>
+        )} */}
+
+        {isAuthenticated && (
+          <div className="relative">
+            <div
+              className={`flex items-center justify-between max-w-3xl mx-auto mb-8 bg-gray-800 p-4 rounded-xl 
+      ${
+        userType !== "Pro" && userType !== "Elite"
+          ? "blur-xs pointer-events-none"
+          : ""
+      }
+    `}
+            >
+              <div className="flex items-center">
+                <img
+                  src={user.photoURL || "/default-avatar.png"}
+                  alt={user.displayName || "User"}
+                  referrerPolicy="no-referrer"
+                  className="w-10 h-10 rounded-full mr-3"
+                />
+                <div>
+                  <p className="font-medium text-white">
+                    {user.displayName || "Anonymous User"}
+                  </p>
+                  <p className="text-sm text-gray-400">{user.email}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-medium rounded-lg flex items-center shadow-lg shadow-purple-600/20 transition-all"
+              >
+                <FiPlus className="mr-2" />
+                Create Post
+              </button>
+            </div>
+
+            {/* Overlay for free users */}
+            {userType !== "Pro" && userType !== "Elite" && (
+              <div className="absolute top-6 inset-0 flex items-center justify-center max-w-3xl mx-auto mb-8">
+                <div className="text-center text-white p-6 rounded-xl">
+                  <p className="text-sm md:text-lg font-semibold text-white">
+                    You must be a Pro or Elite user to create a post.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
