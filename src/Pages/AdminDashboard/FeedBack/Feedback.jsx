@@ -1,50 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Mail, MailCheck, CheckCircle, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const Feedback = () => {
-  const feedbacks = [
-    {
-      name: "John Doe",
-      email: "john.doe@email.com",
-      message: "Loving the platform! Keep up the great work.",
-      feedbackType: "Feedback",
-      date: "2025-04-27",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane.smith@email.com",
-      message:
-        "Smooth and intuitive. Looking forward to more features being added. Great job overall!",
-      feedbackType: "Bug Report",
-      date: "2025-04-26",
-      read: "Done",
-    },
-    {
-      name: "Alice Johnson",
-      email: "alice.j@email.com",
-      message:
-        "Feature request: would love a dark mode toggle. ajshdawdvw adhawsvbdb asdasdasbd abs dba sbd as cxgbasvdasghv gabs vdasghsdhbvdhas dashbjvdasgbd as dsqa dvasvd asvd vas dvas dvas d abv dkhd wdfasofjvpasncas c abnidhb wqabsdash dahs  shba schja chja c ahj schja shd asg d s das casbjn chas c ashd as d ahsj da shj s achc as chs a ahsd hashjdvasvd whb dhas das d agsd gas d csac asjhdbdbas d qwhjd ba sc ans shdabashb sbd asd",
-      feedbackType: "Feature Request",
-      date: "2025-04-25",
-    },
-    {
-      name: "Alice Johnson",
-      email: "alice.j@email.com",
-      message: "Support was quick and helpful. No complaints!",
-      feedbackType: "General Question",
-      date: "2025-04-25",
-      read: "Done",
-    },
-    {
-      name: "Alice Johnson",
-      email: "alice.j@email.com",
-      message: "Feature request: would love a dark mode toggle.",
-      feedbackType: "Feature Request",
-      date: "2025-04-25",
-    },
-  ];
+  const [feedbacks, setFeedbacks] = useState([]);
+  const axiosSecure = useAxiosSecure();
+
+  useEffect(() => {
+    axiosSecure
+      .get(`/feedbackMessages`)
+      .then((res) => setFeedbacks(res?.data?.feedbacks));
+  }, [axiosSecure]);
 
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",
@@ -52,7 +20,7 @@ const Feedback = () => {
     "from-green-400 via-emerald-500 to-teal-500",
   ];
 
-  const handleMarkAsRead = () => {
+  const handleMarkAsRead = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -73,12 +41,14 @@ const Feedback = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Message is Read");
+        axiosSecure
+          .patch(`/feedbackRead/${id}`)
+          .then((res) => console.log(res?.data));
       }
     });
   };
 
-  const handleDelteFeedback = () => {
+  const handleDelteFeedback = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -99,7 +69,7 @@ const Feedback = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Message is Deleted");
+        Swal.fire(id);
       }
     });
   };
@@ -174,13 +144,13 @@ const Feedback = () => {
                         : "border border-green-500"
                     }`}
                     title="Mark as Resolved"
-                    onClick={handleMarkAsRead}
+                    onClick={() => handleMarkAsRead(feedback?._id)}
                   >
                     <CheckCircle size={16} />
                   </button>
                   <button
                     className="bg-red-500 p-2 rounded-full text-white hover:bg-red-600 transition duration-200"
-                    onClick={handleDelteFeedback}
+                    onClick={() => handleDelteFeedback(feedback?._id)}
                     title="Delete"
                   >
                     <Trash2 size={16} />

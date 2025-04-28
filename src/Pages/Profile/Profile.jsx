@@ -46,7 +46,7 @@ const Profile = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await axiosPublic.get(`/userInfo/${user.email}`);
-        setUserInfo(res.data);
+        setUserInfo(res?.data);
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
@@ -54,6 +54,8 @@ const Profile = () => {
 
     fetchUserInfo();
   }, [user]);
+
+  console.log(userInfo);
 
   // Streaks Code Starts Here
   useEffect(() => {

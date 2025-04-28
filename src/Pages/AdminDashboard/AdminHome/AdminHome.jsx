@@ -32,38 +32,6 @@ const SummaryCard = ({ icon, title, value, gradient, description }) => (
   </motion.div>
 );
 
-const feedbacks = [
-  {
-    name: "John Doe",
-    email: "john.doe@email.com",
-    message: "Loving the platform!",
-    feedbackType: "Feedback",
-    date: "2025-04-27",
-  },
-  {
-    name: "Jane Smith",
-    email: "jane.smith@email.com",
-    message:
-      "Smooth and intuitiveajsdhbasjbdaashb d sd asdbabsdbahdbhadas dasd ashdasd ad .",
-    feedbackType: "Bug Report",
-    date: "2025-04-26",
-  },
-  {
-    name: "Alice Johnson",
-    email: "alice.j@email.com",
-    message: "Support was quick.",
-    feedbackType: "General Question",
-    date: "2025-04-25",
-  },
-  {
-    name: "Alice Johnson",
-    email: "alice.j@email.com",
-    message: "Support was quick.",
-    feedbackType: "Feature Request",
-    date: "2025-04-25",
-  },
-];
-
 const AdminHome = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState(0);
@@ -71,6 +39,7 @@ const AdminHome = () => {
   const [totalFreeUsers, setTotalFreeUsers] = useState(0);
   const [totalProUsers, setTotalProUsers] = useState(0);
   const [totalEliteUsers, setTotalEliteUsers] = useState(0);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const axiosSecure = useAxiosSecure();
 
@@ -172,17 +141,25 @@ const AdminHome = () => {
                 totalFreeUsers
                 totalProUsers
                 totalEliteUsers
+                latestFeedback {
+      _id
+      name
+      email
+      message
+      feedbackType
+      date
+    }
               }
             }
           `,
         });
-
         const data = res?.data?.data?.adminDashboard;
         setUsers(data?.totalUsers || 0);
         setMessages(data?.totalFeedback || 0);
         setTotalFreeUsers(data?.totalFreeUsers || 0);
         setTotalProUsers(data?.totalProUsers || 0);
         setTotalEliteUsers(data?.totalEliteUsers || 0);
+        setFeedbacks(data?.latestFeedback);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
