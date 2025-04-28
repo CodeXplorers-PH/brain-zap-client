@@ -89,10 +89,6 @@ const Started = () => {
             <div
               key={step.title}
               variants={item}
-              whileHover={{
-                translateY: -8,
-                transition: { duration: 0.1, ease: "easeInOut" },
-              }}
               className="group relative overflow-hidden rounded-xl border border-gray-800 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
               style={{
                 background: "rgba(17, 24, 39, 0.7)",

@@ -5,7 +5,7 @@ import badge2 from "@/assets/img/badge2.png";
 import badge3 from "@/assets/img/badge3.png";
 import badge4 from "@/assets/img/badge4.png";
 const Achievements = ({ xpPoints, setActiveTab }) => {
-  console.log(xpPoints);
+  // console.log(xpPoints);
   return (
     <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
       <div className="flex items-center justify-between mb-3">

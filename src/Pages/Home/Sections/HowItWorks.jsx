@@ -96,10 +96,6 @@ const HowItWorks = () => {
             {processSteps.map((step, index) => (
               <div
                 key={step.title}
-                whileHover={{
-                  scale: 1.03,
-                  transition: { duration: 0.2 },
-                }}
                 className="relative group rounded-xl bg-gray-800/30 backdrop-blur-sm border border-gray-700 p-8 transition-all duration-300 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/10"
               >
                 {/* Step number indicator */}

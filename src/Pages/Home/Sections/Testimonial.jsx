@@ -11,7 +11,7 @@ const testimonialData = [
       "BrainZap has completely transformed my learning experience. The AI-powered quizzes adapt perfectly to my skill level, making studying efficient and engaging.",
     rating: 5,
     avatarColor: "from-violet-400 to-fuchsia-500",
-    initials: "ER"
+    initials: "ER",
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const testimonialData = [
       "As a professional constantly looking to upskill, BrainZap has been a game-changer. The personalized learning paths help me focus on areas that need improvement.",
     rating: 4.5,
     avatarColor: "from-blue-400 to-indigo-500",
-    initials: "MC"
+    initials: "MC",
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ const testimonialData = [
       "I was struggling with consistent learning until I found BrainZap. The platform's intelligent assessment makes learning feel like an exciting challenge.",
     rating: 5,
     avatarColor: "from-emerald-400 to-teal-500",
-    initials: "ST"
+    initials: "ST",
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ const testimonialData = [
       "The spaced repetition system in BrainZap has significantly improved my memory retention. I'm now much more confident in my knowledge base for work meetings.",
     rating: 4.5,
     avatarColor: "from-amber-400 to-orange-500",
-    initials: "DW"
+    initials: "DW",
   },
   {
     id: 5,
@@ -55,7 +55,7 @@ const testimonialData = [
       "BrainZap's algorithm knows exactly when I need to review information. It's like it understands my learning patterns better than I do. Absolutely worth every penny.",
     rating: 5,
     avatarColor: "from-pink-400 to-rose-500",
-    initials: "JL"
+    initials: "JL",
   },
   {
     id: 6,
@@ -66,8 +66,8 @@ const testimonialData = [
       "Learning complex topics has never been easier. BrainZap breaks down information into digestible chunks and reinforces them at exactly the right intervals.",
     rating: 4.5,
     avatarColor: "from-cyan-400 to-blue-500",
-    initials: "CM"
-  }
+    initials: "CM",
+  },
 ];
 
 const StarRating = ({ rating }) => {
@@ -76,8 +76,9 @@ const StarRating = ({ rating }) => {
       {[...Array(5)].map((_, index) => (
         <Star
           key={index}
-          className={`w-4 h-4 ${index < Math.floor(rating) ? "text-amber-400" : "text-gray-600"
-            }`}
+          className={`w-4 h-4 ${
+            index < Math.floor(rating) ? "text-amber-400" : "text-gray-600"
+          }`}
           fill={index < Math.floor(rating) ? "#fbbf24" : "none"}
           strokeWidth={1.5}
         />
@@ -87,7 +88,8 @@ const StarRating = ({ rating }) => {
 };
 
 const TestimonialCard = ({ testimonial }) => {
-  const { name, age, location, feedback, rating, avatarColor, initials } = testimonial;
+  const { name, age, location, feedback, rating, avatarColor, initials } =
+    testimonial;
 
   return (
     <div className="backdrop-blur-lg bg-white/5 rounded-2xl p-6 border border-white/10 h-full flex flex-col justify-between transition-all duration-300 hover:border-white/20 hover:bg-white/10">
@@ -95,9 +97,7 @@ const TestimonialCard = ({ testimonial }) => {
       <Quote className="w-6 h-6 text-white/10 mb-4" />
 
       {/* Testimonial Content */}
-      <p className="text-white/90 leading-relaxed text-sm mb-4">
-        "{feedback}"
-      </p>
+      <p className="text-white/90 leading-relaxed text-sm mb-4">"{feedback}"</p>
 
       <div className="mt-auto">
         {/* Rating */}
@@ -105,15 +105,15 @@ const TestimonialCard = ({ testimonial }) => {
 
         {/* User Profile */}
         <div className="flex items-center space-x-3 mt-4">
-          <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${avatarColor} flex items-center justify-center text-white font-medium`}>
+          <div
+            className={`w-10 h-10 rounded-full bg-gradient-to-br ${avatarColor} flex items-center justify-center text-white font-medium`}
+          >
             {initials}
           </div>
 
           <div>
             <h4 className="text-white font-medium text-sm">{name}</h4>
-            <p className="text-white/60 text-xs">
-              {location}
-            </p>
+            <p className="text-white/60 text-xs">{location}</p>
           </div>
         </div>
       </div>
@@ -149,16 +149,12 @@ const Testimonials = () => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
-        <div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-800/70 border border-gray-700 backdrop-blur-sm mb-6">
             <span className="w-2 h-2 rounded-full bg-violet-500 mr-2 animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-300">Testimonials</span>
+            <span className="text-sm font-medium text-gray-300">
+              Testimonials
+            </span>
           </div>
 
           <h2 className="text-5xl font-bold text-white mb-6 tracking-tight">
@@ -168,18 +164,16 @@ const Testimonials = () => {
           </h2>
 
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Discover how BrainZap is revolutionizing learning through personalized,
-            AI-powered experiences that adapt to your unique journey.
+            Discover how BrainZap is revolutionizing learning through
+            personalized, AI-powered experiences that adapt to your unique
+            journey.
           </p>
         </div>
 
         {/* Testimonial Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {visibleTestimonials.map((testimonial) => (
-            <TestimonialCard
-              key={testimonial.id}
-              testimonial={testimonial}
-            />
+            <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}
         </div>
 
@@ -198,10 +192,11 @@ const Testimonials = () => {
               <button
                 key={index}
                 onClick={() => setCurrentPage(index)}
-                className={`w-2 h-2 rounded-full transition-all ${index === currentPage
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentPage
                     ? "bg-gradient-to-r from-violet-400 to-fuchsia-500 w-6"
                     : "bg-white/20"
-                  }`}
+                }`}
                 aria-label={`Go to page ${index + 1}`}
               />
             ))}

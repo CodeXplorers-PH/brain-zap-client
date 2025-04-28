@@ -77,8 +77,8 @@ const Header = () => {
 
   // Handle scroll and window size
   useEffect(() => {
-    return scrollY.onChange((y) => setIsOpen(y > 20 && false));
-  }, [scrollY]);
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (width >= 1024) {
