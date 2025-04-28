@@ -1,104 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "@/hooks/useAuth";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CircleCheck, Crown } from "lucide-react";
 
-// Static dummy data for 12 users
-const dummyUsers = [
-  {
-    email: "user1@example.com",
-    displayName: "AJM Fajlay Rabby",
-    photoURL: "https://avatars.githubusercontent.com/u/55575386?v=4",
-    stats: { totalPoints: 2500 },
-    subscription: "Elite",
-  },
-  {
-    email: "user2@example.com",
-    displayName: "Atef Abrar Bhuyian",
-    photoURL: "https://avatars.githubusercontent.com/u/122459257?v=4",
-    stats: { totalPoints: 2200 },
-    subscription: "Pro",
-  },
-  {
-    email: "user3@example.com",
-    displayName: "Shahid Hasan Rumon",
-    photoURL: "https://avatars.githubusercontent.com/u/142591239?v=4",
-    stats: { totalPoints: 1900 },
-    subscription: "Pro",
-  },
-  {
-    email: "user4@example.com",
-    displayName: "TriviaTitan",
-    photoURL: "https://i.ibb.co.com/Xx12345/user4.jpg",
-    stats: { totalPoints: 1600 },
-    subscription: "Free",
-  },
-  {
-    email: "user5@example.com",
-    displayName: "SmartSpark",
-    photoURL: "",
-    stats: { totalPoints: 1400 },
-    subscription: "Elite",
-  },
-  {
-    email: "user6@example.com",
-    displayName: "QuizWizard",
-    photoURL: "https://i.ibb.co.com/Xx12345/user6.jpg",
-    stats: { totalPoints: 1200 },
-    subscription: "Pro",
-  },
-  {
-    email: "user7@example.com",
-    displayName: "BrainZapper",
-    photoURL: "",
-    stats: { totalPoints: 1000 },
-    subscription: "Free",
-  },
-  {
-    email: "user8@example.com",
-    displayName: "PointPro",
-    photoURL: "https://i.ibb.co.com/Xx12345/user8.jpg",
-    stats: { totalPoints: 900 },
-    subscription: "Pro",
-  },
-  {
-    email: "user9@example.com",
-    displayName: "LearnLightning",
-    photoURL: "",
-    stats: { totalPoints: 800 },
-    subscription: "Free",
-  },
-  {
-    email: "user10@example.com",
-    displayName: "QuizCrusader",
-    photoURL: "https://i.ibb.co.com/Xx12345/user10.jpg",
-    stats: { totalPoints: 700 },
-    subscription: "Elite",
-  },
-  {
-    email: "user11@example.com",
-    displayName: "MindMaverick",
-    photoURL: "",
-    stats: { totalPoints: 600 },
-    subscription: "Free",
-  },
-  {
-    email: "user12@example.com",
-    displayName: "ScoreSentry",
-    photoURL: "https://i.ibb.co.com/Xx12345/user12.jpg",
-    stats: { totalPoints: 500 },
-    subscription: "Pro",
-  },
-];
-
 const Leaderboard = () => {
   const { user } = useAuth();
-  const [topUsers] = useState(
-    dummyUsers.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints).slice(0, 3)
-  );
-  const [otherUsers] = useState(
-    dummyUsers.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints).slice(3)
-  );
+  const axiosPublic = useAxiosPublic();
+  const [topUsers, setTopUsers] = useState([]);
+  const [otherUsers, setOtherUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axiosPublic
+      .get("/users")
+      .then(res => {
+        if (res.data.success) {
+          // Transform API data to match UI structure
+          const fetchedUsers = res.data.users
+            .map(user => ({
+              email: user.email,
+              displayName: user.name || user.email.split("@")[0],
+              photoURL: user.photoURL || "",
+              stats: { totalPoints: user.totalPoints || 0 },
+              subscription: user.subscription || "Free",
+            }))
+            .sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+
+          setTopUsers(fetchedUsers.slice(0, 3));
+          setOtherUsers(fetchedUsers.slice(3));
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching users:", err);
+        setLoading(false);
+      });
+  }, [axiosPublic]);
 
   // Get initials for avatar fallback
   const getInitials = (name) => {
@@ -108,16 +46,8 @@ const Leaderboard = () => {
     return "U";
   };
 
-  // Define podium styles
+  // Define podium styles (Rank 2, Rank 1, Rank 3 for left-middle-right)
   const podiumStyles = [
-    {
-      rank: 2,
-      color: "from-blue-900 to-gray-800",
-      height: "h-32",
-      zIndex: "z-10",
-      avatarSize: "w-16 h-16 md:w-20 md:h-20",
-      pointsBg: "bg-cyan-500",
-    },
     {
       rank: 1,
       color: "from-blue-900 to-gray-800",
@@ -127,9 +57,17 @@ const Leaderboard = () => {
       pointsBg: "bg-yellow-400",
     },
     {
-      rank: 3,
+      rank: 2,
       color: "from-blue-900 to-gray-800",
       height: "h-32",
+      zIndex: "z-10",
+      avatarSize: "w-16 h-16 md:w-20 md:h-20",
+      pointsBg: "bg-cyan-500",
+    },
+    {
+      rank: 3,
+      color: "from-blue-900 to-gray-800",
+      height: "h-24",
       zIndex: "z-10",
       avatarSize: "w-16 h-16 md:w-20 md:h-20",
       pointsBg: "bg-pink-500",
@@ -147,6 +85,17 @@ const Leaderboard = () => {
     return <span className="text-green-400 text-sm">Free</span>;
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-40 pb-16 px-4">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+          <p className="text-gray-400">Loading leaderboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-40 pb-16 px-4">
       <div className="max-w-5xl mx-auto">
@@ -154,7 +103,7 @@ const Leaderboard = () => {
           BrainZap Leaderboard
         </h1>
 
-        {/* Podium for Top 3 */}
+        {/* Podium for Top 3 (Rank 2 - Rank 1 - Rank 3) */}
         <div className="flex justify-center items-end gap-4 md:gap-6 mb-16">
           {podiumStyles.map((style, index) => {
             const userData = topUsers[index];

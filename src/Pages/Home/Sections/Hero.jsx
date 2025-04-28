@@ -25,10 +25,15 @@ const Hero = () => {
               height: `${Math.random() * 6 + 2}px`,
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              background: i % 3 === 0 ? 'rgba(168, 85, 247, 0.4)' : i % 3 === 1 ? 'rgba(59, 130, 246, 0.4)' : 'rgba(236, 72, 153, 0.3)',
+              background:
+                i % 3 === 0
+                  ? "rgba(168, 85, 247, 0.4)"
+                  : i % 3 === 1
+                  ? "rgba(59, 130, 246, 0.4)"
+                  : "rgba(236, 72, 153, 0.3)",
               animation: `float ${Math.random() * 15 + 15}s linear infinite`,
               animationDelay: `${Math.random() * 5}s`,
-              boxShadow: '0 0 10px 2px rgba(139, 92, 246, 0.15)'
+              boxShadow: "0 0 10px 2px rgba(139, 92, 246, 0.15)",
             }}
           ></div>
         ))}
@@ -36,52 +41,34 @@ const Hero = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-24">
         <div className="text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center px-4 py-1.5 rounded-full bg-gray-800/70 backdrop-blur-sm border border-purple-500/30 mb-8"
-          >
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gray-800/70 backdrop-blur-sm border border-purple-500/30 mb-8">
             <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
             <span className="text-sm font-medium text-gray-200">
               Learning Reimagined by AI
             </span>
-          </motion.div>
+          </div>
 
           {/* Enhanced Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight"
-          >
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
               Supercharge Your Learning
             </span>
             <br />
-            with {" "}
+            with{" "}
             <SparklesText
               text="Smart Quizzes"
               className="text-white text-5xl md:text-7xl inline-block"
             />
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
-          >
-            Unlock your full potential with adaptive quizzes, real-time insights, and a personalized path to mastery.
-          </motion.p>
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Unlock your full potential with adaptive quizzes, real-time
+            insights, and a personalized path to mastery.
+          </p>
 
           {/* CTA Buttons remain unchanged */}
           <div className="flex flex-col sm:flex-row justify-center gap-5 mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
+            <div>
               <Link
                 to="/start-quiz"
                 className="group relative inline-flex items-center px-6 py-3 overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
@@ -95,13 +82,9 @@ const Hero = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600/50 to-blue-600/50 blur-xl scale-110 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                 </div>
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
+            <div>
               <Link
                 to="/pricing"
                 className="group relative inline-flex items-center px-6 py-3 overflow-hidden rounded-lg bg-gray-800/70 backdrop-blur-sm border border-gray-700 text-white font-medium transition-all duration-300"
@@ -109,16 +92,11 @@ const Hero = () => {
                 <span className="relative z-10">View Pricing</span>
                 <div className="absolute inset-0 bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="relative mt-16 rounded-2xl overflow-hidden border border-purple-500/20 bg-gradient-to-br from-gray-800/50 via-gray-900/70 to-gray-800/50 p-1 shadow-2xl"
-        >
+        <div className="relative mt-16 rounded-2xl overflow-hidden border border-purple-500/20 bg-gradient-to-br from-gray-800/50 via-gray-900/70 to-gray-800/50 p-1 shadow-2xl">
           <div className="absolute inset-0 overflow-hidden opacity-20">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.15),transparent_50%)]"></div>
           </div>
@@ -129,7 +107,7 @@ const Hero = () => {
               className="rounded-xl w-full object-cover shadow-lg transition-all duration-700 hover:scale-[1.01]"
             />
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
