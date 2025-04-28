@@ -120,7 +120,7 @@ const Login = () => {
         localStorage.removeItem("loginAttempt");
         localStorage.removeItem("loginAttemptEmail");
         setLoginAttempt(0);
-        navigate("/");
+        navigate("/start-quiz");
       })
       .catch((error) => {
         let errorMessage = "Login failed. Please try again.";

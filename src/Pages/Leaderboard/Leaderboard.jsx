@@ -74,16 +74,6 @@ const Leaderboard = () => {
     },
   ];
 
-  // Subscription icon renderer
-  const renderSubscriptionIcon = (subscription) => {
-    if (subscription === "Pro") {
-      return <CircleCheck className="text-blue-500 w-5 h-5" />;
-    }
-    if (subscription === "Elite") {
-      return <Crown className="text-amber-500 w-5 h-5" />;
-    }
-    return <span className="text-green-400 text-sm">Free</span>;
-  };
 
   if (loading) {
     return (
@@ -176,7 +166,6 @@ const Leaderboard = () => {
                     <th className="p-3">Rank</th>
                     <th className="p-3">User</th>
                     <th className="p-3">Points</th>
-                    <th className="p-3">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -203,9 +192,6 @@ const Leaderboard = () => {
                       </td>
                       <td className="p-3 text-white text-sm md:text-base">
                         {userData.stats.totalPoints}
-                      </td>
-                      <td className="p-3 flex items-center gap-1">
-                        {renderSubscriptionIcon(userData.subscription)}
                       </td>
                     </tr>
                   ))}

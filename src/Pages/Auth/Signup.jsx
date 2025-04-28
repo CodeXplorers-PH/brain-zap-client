@@ -86,7 +86,7 @@ const Signup = () => {
               email,
             });
             // Navigate to Home page
-            navigate('/');
+            navigate("/start-quiz");
           })
           .catch(err => {
             console.log('Error updating user profile', err.message);
