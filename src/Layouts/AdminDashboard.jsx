@@ -133,7 +133,7 @@ const AdminDashboard = () => {
                   }`
                 }
               >
-                <CalendarCheck2 size={20} /> Envents
+                <CalendarCheck2 size={20} /> Events
               </NavLink>
             </li>
             <li>
