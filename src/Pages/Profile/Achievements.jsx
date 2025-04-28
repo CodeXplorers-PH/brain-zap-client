@@ -92,9 +92,9 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   <Award size={24} className="text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">Elite Legend</p>
+                  <p className="text-white font-medium">No Achievements Unlocked</p>
                   <p className="text-gray-400 text-sm">
-                    Achieved the Legendary badge
+                    Keep it up!
                   </p>
                 </div>
               </>
@@ -140,9 +140,9 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
               )) ||
               (xpPoints < 499 && (
                 <>
-                  <p className="text-white font-medium">Halfway Hero</p>
+                  <p className="text-white font-medium">Keep Learning</p>
                   <p className="text-gray-400 text-sm">
-                    Reached 50% of your learning journey
+                   Play Daily Quizzes to achieve badges!
                   </p>
                 </>
               ))}
