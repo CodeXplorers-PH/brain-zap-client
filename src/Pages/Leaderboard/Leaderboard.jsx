@@ -16,7 +16,6 @@ const Leaderboard = () => {
       .get("/users")
       .then(res => {
         if (res.data.success) {
-          // Transform API data to match UI structure
           const fetchedUsers = res.data.users
             .map(user => ({
               email: user.email,
@@ -38,7 +37,6 @@ const Leaderboard = () => {
       });
   }, [axiosPublic]);
 
-  // Get initials for avatar fallback
   const getInitials = (name) => {
     if (name && name.trim()) {
       return name.trim().charAt(0).toUpperCase();
@@ -46,44 +44,35 @@ const Leaderboard = () => {
     return "U";
   };
 
-  // Define podium styles (Rank 2, Rank 1, Rank 3 for left-middle-right)
   const podiumStyles = [
     {
-      rank: 1,
-      color: "from-blue-900 to-gray-800",
-      height: "h-40",
-      zIndex: "z-20",
-      avatarSize: "w-20 h-20 md:w-24 md:h-24",
-      pointsBg: "bg-yellow-400",
-    },
-    {
-      rank: 2,
-      color: "from-blue-900 to-gray-800",
+      rank: 2, // Left (Rank 2)
+      color: "from-silver-700 to-gray-900",
       height: "h-32",
       zIndex: "z-10",
       avatarSize: "w-16 h-16 md:w-20 md:h-20",
-      pointsBg: "bg-cyan-500",
+      pointsBg: "bg-gradient-to-r from-cyan-400 to-cyan-600",
+      glow: "shadow-[0_0_15px_rgba(34,211,238,0.5)]",
     },
     {
-      rank: 3,
-      color: "from-blue-900 to-gray-800",
+      rank: 1, // Middle (Rank 1)
+      color: "from-amber-500 to-yellow-700",
+      height: "h-48",
+      zIndex: "z-20",
+      avatarSize: "w-24 h-24 md:w-28 md:h-28",
+      pointsBg: "bg-gradient-to-r from-yellow-400 to-amber-500",
+      glow: "shadow-[0_0_25px_rgba(255,193,7,0.7)]",
+    },
+    {
+      rank: 3, // Right (Rank 3)
+      color: "from-bronze-600 to-gray-900",
       height: "h-24",
       zIndex: "z-10",
       avatarSize: "w-16 h-16 md:w-20 md:h-20",
-      pointsBg: "bg-pink-500",
+      pointsBg: "bg-gradient-to-r from-pink-400 to-pink-600",
+      glow: "shadow-[0_0_15px_rgba(244,114,182,0.5)]",
     },
   ];
-
-  // Subscription icon renderer
-  const renderSubscriptionIcon = (subscription) => {
-    if (subscription === "Pro") {
-      return <CircleCheck className="text-blue-500 w-5 h-5" />;
-    }
-    if (subscription === "Elite") {
-      return <Crown className="text-amber-500 w-5 h-5" />;
-    }
-    return <span className="text-green-400 text-sm">Free</span>;
-  };
 
   if (loading) {
     return (
@@ -104,63 +93,83 @@ const Leaderboard = () => {
         </h1>
 
         {/* Podium for Top 3 (Rank 2 - Rank 1 - Rank 3) */}
-        <div className="flex justify-center items-end gap-4 md:gap-6 mb-16">
+        <div className="flex justify-center items-end gap-4 md:gap-8 mb-16 relative">
           {podiumStyles.map((style, index) => {
-            const userData = topUsers[index];
+            const userData = topUsers[style.rank - 1]; // Map rank to index: Rank 1 -> topUsers[0], Rank 2 -> topUsers[1], Rank 3 -> topUsers[2]
             return (
               <div
                 key={style.rank}
-                className={`relative flex flex-col items-center transition-all duration-300 transform hover:scale-105 ${style.zIndex} animate-fade-in`}
+                className={`relative flex flex-col items-center transition-all duration-500 transform hover:scale-105 ${style.zIndex} animate-rise`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
-                {/* Avatar Above Podium */}
                 {userData ? (
                   <div className="flex flex-col items-center">
-                    <Avatar className={`${style.avatarSize} mb-2 border-4 border-purple-600 shadow-md shadow-purple-500/30`}>
-                      <AvatarImage
-                        src={userData.photoURL}
-                        alt={userData.displayName || "User"}
-                      />
-                      <AvatarFallback>
-                        {getInitials(userData.displayName)}
-                      </AvatarFallback>
-                    </Avatar>
+                    {/* Avatar Above Podium */}
+                    <div className="relative">
+                      <Avatar
+                        className={`${style.avatarSize} mb-3 border-4 border-gray-800 ${style.glow} rounded-full transition-transform duration-300 hover:scale-110`}
+                      >
+                        <AvatarImage
+                          src={userData.photoURL}
+                          alt={userData.displayName || "User"}
+                        />
+                        <AvatarFallback className="bg-gray-700 text-white font-semibold">
+                          {getInitials(userData.displayName)}
+                        </AvatarFallback>
+                      </Avatar>
+                      {/* Rank 1 Crown */}
+                      {style.rank === 1 && (
+                        <Crown
+                          className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-amber-400"
+                          size={24}
+                        />
+                      )}
+                    </div>
                     {/* Podium Block */}
                     <div
-                      className={`w-24 md:w-28 ${style.height} bg-gradient-to-b ${style.color} rounded-t-lg shadow-xl flex items-center justify-center relative overflow-hidden`}
+                      className={`w-28 md:w-36 ${style.height} bg-gradient-to-b ${style.color} rounded-t-2xl rounded-b-md ${style.glow} flex items-end justify-center relative overflow-hidden`}
                     >
-                      <span className="text-5xl md:text-6xl font-bold text-gray-300/50">
+                      {/* Futuristic Lines */}
+                      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:10px_100%] opacity-50"></div>
+                      {/* Rank Number */}
+                      <span className="text-4xl md:text-5xl font-extrabold text-white/30 mb-4">
                         {style.rank}
                       </span>
-                      {/* Glowing Effect */}
-                      <div className="absolute inset-0 border-t-4 border-purple-600 opacity-20 animate-pulse"></div>
+                      {/* Neon Border Effect */}
+                      <div className="absolute inset-0 border-t-4 border-gray-300/20 animate-pulse"></div>
                     </div>
                     {/* Name and Points Below Podium */}
-                    <p className="text-white font-semibold text-sm md:text-base text-center mt-2 truncate w-full">
+                    <p className="text-white font-semibold text-sm md:text-base text-center mt-3 truncate w-full px-2">
                       {userData.displayName || "Anonymous"}
                     </p>
-                    <div className={`mt-1 ${style.pointsBg} text-black font-semibold text-xs md:text-sm px-3 py-1 rounded-full`}>
+                    <div
+                      className={`${style.pointsBg} text-black font-semibold text-xs md:text-sm px-4 py-1 rounded-full mt-2 shadow-md`}
+                    >
                       {userData.stats.totalPoints} Points
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
-                    <div className={`${style.avatarSize} mb-2 bg-gray-600 rounded-full flex items-center justify-center text-gray-400 text-2xl`}>
+                    <div
+                      className={`${style.avatarSize} mb-3 bg-gray-700 rounded-full flex items-center justify-center text-gray-400 text-2xl ${style.glow}`}
+                    >
                       ?
                     </div>
                     <div
-                      className={`w-24 md:w-28 ${style.height} bg-gradient-to-b ${style.color} rounded-t-lg shadow-xl flex items-center justify-center relative`}
+                      className={`w-28 md:w-36 ${style.height} bg-gradient-to-b ${style.color} rounded-t-2xl rounded-b-md ${style.glow} flex items-end justify-center relative`}
                     >
-                      <span className="text-5xl md:text-6xl font-bold text-gray-300/50">
+                      <span className="text-4xl md:text-5xl font-extrabold text-white/30 mb-4">
                         {style.rank}
                       </span>
                     </div>
-                    <p className="text-gray-400 text-sm mt-2">No User</p>
+                    <p className="text-gray-400 text-sm mt-3">No User</p>
                   </div>
                 )}
               </div>
             );
           })}
+          {/* Background Glow Effect */}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[200px] bg-gradient-to-b from-purple-500/20 to-transparent blur-3xl opacity-50 pointer-events-none"></div>
         </div>
 
         {/* Table for Other Users */}
@@ -176,7 +185,6 @@ const Leaderboard = () => {
                     <th className="p-3">Rank</th>
                     <th className="p-3">User</th>
                     <th className="p-3">Points</th>
-                    <th className="p-3">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -203,9 +211,6 @@ const Leaderboard = () => {
                       </td>
                       <td className="p-3 text-white text-sm md:text-base">
                         {userData.stats.totalPoints}
-                      </td>
-                      <td className="p-3 flex items-center gap-1">
-                        {renderSubscriptionIcon(userData.subscription)}
                       </td>
                     </tr>
                   ))}

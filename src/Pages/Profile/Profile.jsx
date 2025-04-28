@@ -54,6 +54,7 @@ const Profile = () => {
 
     fetchUserInfo();
   }, [user]);
+  console.log(userInfo?.userInfo);
 
   console.log(userInfo);
 
@@ -166,7 +167,7 @@ const Profile = () => {
 
         {/* Transaction history */}
         {activeTab === "transactionHistory" && (
-          <TransactionHistory user={user} userInfo={userInfo} />
+          <TransactionHistory user={user} userInfo={userInfo.userInfo} />
         )}
         {/* Achievement Tab */}
         {activeTab === "achievements" && <AchievementTab xpPoints={xpPoints} />}

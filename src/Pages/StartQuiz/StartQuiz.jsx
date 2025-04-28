@@ -1,16 +1,68 @@
-import { useEffect } from 'react';
-import Banner from './Sections/Banner';
-import QuizCategories from './Sections/QuizCategories';
+import { useEffect, useState } from "react";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import Banner from "../StartQuiz/Sections/Banner";
+import PersonalizedQuizSection from "../QuizPersonalized/PersonalizedQuiz";
+import QuizCategories from "../StartQuiz/Sections/QuizCategories";
 
 const StartQuiz = () => {
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const { user } = useAuthContext();
+  const axiosPublic = useAxiosPublic();
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    localStorage.removeItem("quiz_questions");
 
-    localStorage.removeItem('quiz_questions');
-  });
+    const fetchUserInfo = async () => {
+      try {
+        setLoading(true); // Start loading
+        if (user?.email) {
+          const res = await axiosPublic.get(`/userInfo/${user.email}`);
+          setUserInfo(res.data);
+        } else {
+          setUserInfo(null);
+        }
+      } catch (err) {
+        console.error("Error fetching user info:", err);
+        setUserInfo(null);
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+
+    fetchUserInfo();
+  }, [axiosPublic, user?.email]);
+
+  // Determine if user has a Pro or Elite subscription
+  const hasSubscription = userInfo?.userInfo?.subscription === "Pro" || userInfo?.userInfo?.subscription === "Elite";
+
+  if (userInfo?.userInfo === null) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+          <p className="text-gray-300">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-900 min-h-screen">
       <Banner />
+      <div className="relative">
+        {/* Personalized Quiz Section with Loading Overlay */}
+        <PersonalizedQuizSection hasSubscription={hasSubscription} />
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm rounded-xl">
+            <div className="flex items-center justify-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+            </div>
+          </div>
+        )}
+      </div>
       <QuizCategories />
     </div>
   );
