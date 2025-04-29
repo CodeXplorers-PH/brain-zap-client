@@ -16,18 +16,39 @@ const Leaderboard = () => {
       .get("/users")
       .then(res => {
         if (res.data.success) {
-          const fetchedUsers = res.data.users
+          let fetchedUsers = res.data.users
             .map(user => ({
               email: user.email,
               displayName: user.name || user.email.split("@")[0],
               photoURL: user.photoURL || "",
               stats: { totalPoints: user.totalPoints || 0 },
               subscription: user.subscription || "Free",
-            }))
-            .sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+            }));
 
-          setTopUsers(fetchedUsers.slice(0, 3));
-          setOtherUsers(fetchedUsers.slice(3));
+          // Separate the logged-in user and others
+          const loggedInUser = fetchedUsers.find(u => u.email === user?.email);
+          let otherUsersList = fetchedUsers.filter(u => u.email !== user?.email);
+
+          // Filter out users with 0 points (except the logged-in user)
+          otherUsersList = otherUsersList.filter(u => u.stats.totalPoints > 0);
+
+          // Sort all users (excluding logged-in user for now) by points
+          otherUsersList.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+
+          // If logged-in user has 0 points, place them at the bottom
+          if (loggedInUser) {
+            if (loggedInUser.stats.totalPoints === 0) {
+              otherUsersList.push(loggedInUser); // Add logged-in user to the end
+            } else {
+              // If logged-in user has points, insert them in the sorted list
+              otherUsersList.push(loggedInUser);
+              otherUsersList.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+            }
+          }
+
+          // Now split into topUsers and otherUsers
+          setTopUsers(otherUsersList.slice(0, 3));
+          setOtherUsers(otherUsersList.slice(3));
         }
         setLoading(false);
       })
@@ -35,7 +56,7 @@ const Leaderboard = () => {
         console.error("Error fetching users:", err);
         setLoading(false);
       });
-  }, [axiosPublic]);
+  }, [axiosPublic, user]);
 
   const getInitials = (name) => {
     if (name && name.trim()) {

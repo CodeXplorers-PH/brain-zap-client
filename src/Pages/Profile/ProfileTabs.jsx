@@ -3,9 +3,9 @@ import React from "react";
 const tabs = [
   { id: "01", title: "Profile", link: "profile" },
   { id: "02", title: "Quiz History", link: "history" },
-  { id: "03", title: "Settings", link: "settings" },
+  { id: "03", title: "Achievements", link: "achievements" },
   { id: "04", title: "Transaction History", link: "transactionHistory" },
-  { id: "05", title: "Achievements", link: "achievements" },
+  { id: "05", title: "Settings", link: "settings" },
 ];
 
 const ProfileTabs = ({ activeTab, setActiveTab }) => {
