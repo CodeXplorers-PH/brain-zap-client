@@ -30,7 +30,7 @@ const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const axiosPublic = useAxiosPublic();
-console.log(users?.users);
+  console.log(users?.users);
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",
     "from-cyan-500 via-blue-500 to-indigo-500",
@@ -209,13 +209,11 @@ console.log(users?.users);
             if (
               response?.data?.message === "User has been promoted to admin."
             ) {
-              // ✅ Update the local state to reflect new admin role
               setUsers((prevUsers) =>
                 prevUsers.map((u) =>
                   u._id === id ? { ...u, role: "admin" } : u
                 )
               );
-
               Swal.fire({
                 title: "Success!",
                 text: "User has been granted admin access.",
@@ -256,11 +254,11 @@ console.log(users?.users);
     });
   };
 
-   const filteredUsers = users?.users?.filter(
-     (u) =>
-       u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       u.email?.toLowerCase().includes(searchQuery.toLowerCase())
-   );
+  const filteredUsers = users?.users?.filter(
+    (u) =>
+      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <section className="min-h-screen bg-gray-900 py-20 px-6">

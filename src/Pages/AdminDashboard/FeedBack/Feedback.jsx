@@ -9,9 +9,31 @@ const Feedback = () => {
   const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
-    axiosSecure
-      .get(`/feedbackMessages`)
-      .then((res) => setFeedbacks(res?.data?.feedbacks));
+    const fetchDashboardData = async () => {
+      try {
+        const res = await axiosSecure.post(`/feedbackMessages`, {
+          query: `
+            query {
+              feedback {
+                _id
+                name
+                email
+                message
+                feedbackType
+                date
+                read
+              }
+            }
+          `,
+        });
+        const data = res?.data?.data?.feedback;
+        setFeedbacks(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchDashboardData();
   }, [axiosSecure]);
 
   const gradients = [
@@ -43,7 +65,34 @@ const Feedback = () => {
       if (result.isConfirmed) {
         axiosSecure
           .patch(`/feedbackRead/${id}`)
-          .then((res) => console.log(res?.data));
+          .then((res) => {
+            if (res?.data?.success) {
+              Swal.fire({
+                title: "Success!",
+                text: "Feedback has been marked as read.",
+                icon: "success",
+                background: "rgba(30, 30, 60, 0.85)",
+                color: "#fff",
+                backdrop: `rgba(0, 0, 0, 0.4)`,
+                customClass: {
+                  popup:
+                    "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
+                  title: "text-blue-400 text-lg font-semibold",
+                  confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
+                  htmlContainer: "text-sm text-gray-300",
+                },
+              });
+              setFeedbacks((prevFeedbacks) =>
+                prevFeedbacks.map((fb) =>
+                  fb._id === id ? { ...fb, read: "Done" } : fb
+                )
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to mark as read:", error);
+          });
       }
     });
   };
@@ -85,7 +134,7 @@ const Feedback = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {feedbacks.map((feedback, idx) => (
+        {feedbacks?.map((feedback, idx) => (
           <motion.div
             key={idx}
             whileHover={{ scale: 1.03 }}
@@ -114,7 +163,7 @@ const Feedback = () => {
                   : "bg-yellow-500"
               }`}
             >
-              {feedback.feedbackType}
+              {feedback?.feedbackType}
             </div>
 
             {/* Card Content */}
@@ -139,7 +188,7 @@ const Feedback = () => {
                 <div className="flex gap-3">
                   <button
                     className={`p-2 rounded-full text-white hover:bg-green-600 transition duration-200 ${
-                      feedback.read === "Done"
+                      feedback?.read === true || feedback?.read === "Done"
                         ? "bg-green-500"
                         : "border border-green-500"
                     }`}
