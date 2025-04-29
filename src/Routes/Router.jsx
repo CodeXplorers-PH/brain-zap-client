@@ -66,7 +66,7 @@ export const router = createBrowserRouter([
         path: "/",
         element: (
           <Suspense fallback={<Loader></Loader>}>
-            <Home /> /* Home Page */,
+            <Home />
           </Suspense>
         ),
       },
@@ -74,7 +74,7 @@ export const router = createBrowserRouter([
         path: "/pricing",
         element: (
           <Suspense fallback={<Loader></Loader>}>
-            <Pricing />,
+            <Pricing />
           </Suspense>
         ),
       },
@@ -109,7 +109,7 @@ export const router = createBrowserRouter([
         path: "/contact",
         element: (
           <Suspense fallback={<Loader></Loader>}>
-            <Contact />,
+            <Contact />
           </Suspense>
         ),
       },
