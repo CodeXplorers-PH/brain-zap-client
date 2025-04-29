@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { User, Trash2, ShieldCheck, Lock } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import Swal from "sweetalert2";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const Card = ({ children, gradient }) => {
   return (
@@ -29,8 +29,7 @@ const AllUsers = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const axiosPublic = useAxiosPublic();
-console.log(users?.users);
+  const axiosSecure = useAxiosSecure();
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",
     "from-cyan-500 via-blue-500 to-indigo-500",
@@ -39,10 +38,10 @@ console.log(users?.users);
   ];
 
   useEffect(() => {
-    axiosPublic
-      .get(`/api/users/${user?.email}`)
-      .then((res) => setUsers(res.data));
-  }, [axiosPublic, user?.email]);
+    axiosSecure
+      .get(`/allUsers/information`)
+      .then((res) => setUsers(res?.data?.users));
+  }, [axiosSecure]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -65,8 +64,8 @@ console.log(users?.users);
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic
-          .delete(`/deleteUser/${id}/${user?.email}`)
+        axiosSecure
+          .delete(`/deleteUser/${id}`)
           .then((res) => {
             if (res.data?.message === "User deleted successfully.") {
               setUsers((prevUsers) => prevUsers.filter((u) => u._id !== id));
@@ -137,9 +136,8 @@ console.log(users?.users);
     }).then((result) => {
       if (result.isConfirmed) {
         const unlockTime = Date.now() + 3600000;
-
-        axiosPublic
-          .post(`/lockoutUser/${id}/${user?.email}`, { unlockTime })
+        axiosSecure
+          .post(`/lockoutUser/${id}`, { unlockTime })
           .then((response) => {
             // Show success message on success
             Swal.fire({
@@ -203,19 +201,17 @@ console.log(users?.users);
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic
+        axiosSecure
           .patch(`/makeAdmin/${id}/${user?.email}`)
           .then((response) => {
             if (
               response?.data?.message === "User has been promoted to admin."
             ) {
-              // ✅ Update the local state to reflect new admin role
               setUsers((prevUsers) =>
                 prevUsers.map((u) =>
                   u._id === id ? { ...u, role: "admin" } : u
                 )
               );
-
               Swal.fire({
                 title: "Success!",
                 text: "User has been granted admin access.",
@@ -256,11 +252,11 @@ console.log(users?.users);
     });
   };
 
-   const filteredUsers = users?.users?.filter(
-     (u) =>
-       u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       u.email?.toLowerCase().includes(searchQuery.toLowerCase())
-   );
+  const filteredUsers = users?.filter(
+    (u) =>
+      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <section className="min-h-screen bg-gray-900 py-20 px-6">
@@ -310,26 +306,26 @@ console.log(users?.users);
 
                 <div className="grid grid-cols-3 gap-2 mt-4">
                   <button
-                    onClick={() => handleDelete(users?.users?._id)}
+                    onClick={() => handleDelete(user?._id)}
                     className="text-xs px-2 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition-all"
                   >
                     <Trash2 size={14} className="inline mr-1" />
                     Delete
                   </button>
                   <button
-                    onClick={() => handleLock(users?.users?._id)}
+                    onClick={() => handleLock(user?._id)}
                     className="text-xs px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-600 hover:text-white transition-all"
                   >
                     <Lock size={14} className="inline mr-1" />
                     Lock
                   </button>
-                  {users?.users?.role === "admin" ? (
+                  {user?.role === "admin" ? (
                     <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
                       Admin Account
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleMakeAdmin(users?.users?._id)}
+                      onClick={() => handleMakeAdmin(user?._id)}
                       className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
                     >
                       <ShieldCheck size={14} className="inline mr-1" />

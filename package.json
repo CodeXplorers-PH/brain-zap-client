@@ -39,6 +39,7 @@
     "graphql": "^16.10.0",
     "hamburger-react": "^2.5.2",
     "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.479.0",
     "motion": "^12.6.3",
