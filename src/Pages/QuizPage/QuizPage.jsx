@@ -40,7 +40,7 @@ const QuizPage = () => {
       setError(null);
       try {
         const { data: generatedQuiz } = await axiosPublic.post(
-          `/generate_quiz`,
+          `/graphql`,
           {
             query: `
             query GetQuizzes($topic: String!, $difficulty: String!, $quizzesNumber: Int!, $type: String!) {
