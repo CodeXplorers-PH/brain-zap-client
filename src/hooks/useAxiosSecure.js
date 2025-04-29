@@ -13,6 +13,8 @@ const useAxiosSecure = () => {
     // Request Interceptor
     const reqInterceptor = axiosInstance.interceptors.request.use(
       config => {
+        const token = localStorage.getItem('access_token');
+        config.headers.Authorization = `Bearer ${token}`;
         config.headers.email = user?.email;
 
         return config;
