@@ -4,6 +4,7 @@ import { MessageCircle, X } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { Link } from "react-router-dom";
+import useUserSubsciptionType from "@/hooks/useUserSubsciptionType";
 
 const ZapChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,23 +12,9 @@ const ZapChatWidget = () => {
   const [messages, setMessages] = useState([]);
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
-  const [userType, setUserType] = useState("");
   const bottomRef = useRef(null);
-
-  useEffect(() => {
-    if (!user?.email) return;
-
-    const fetchUserInfo = async () => {
-      try {
-        const res = await axiosPublic.get(`/userInfo/${user.email}`);
-        setUserType(res?.data?.subscription);
-      } catch (err) {
-        console.error("Error fetching user info:", err);
-      }
-    };
-
-    fetchUserInfo();
-  }, [axiosPublic, user]);
+  const [userType] = useUserSubsciptionType();
+  // console.log(userType);
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,7 +44,7 @@ const ZapChatWidget = () => {
         return updated;
       });
     } catch (error) {
-      console.error("ZapAI error:", error);
+      // console.error("ZapAI error:", error);
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {

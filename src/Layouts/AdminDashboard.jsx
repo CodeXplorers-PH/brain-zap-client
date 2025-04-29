@@ -1,5 +1,12 @@
 import useAuth from "@/hooks/useAuth";
-import { CalendarCheck2, House, LogOut, MailCheck, TicketCheck, Users } from "lucide-react";
+import {
+  CalendarCheck2,
+  House,
+  LogOut,
+  MailCheck,
+  TicketCheck,
+  Users,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { FaHome, FaUser, FaBars } from "react-icons/fa";
 import { MdMessage, MdOutlineQuiz, MdQuiz } from "react-icons/md";
@@ -68,12 +75,7 @@ const AdminDashboard = () => {
         <div className="relative z-10 p-4 md:p-6 flex flex-col h-full">
           {/* Logo (Desktop only) */}
           <div className="hidden md:flex flex-col gap-2 items-center mb-6">
-            <img
-              className="w-20 md:w-24 rounded-full"
-              src="https://i.ibb.co.com/XkMbmbq6/Chat-GPT-Image-Apr-21-2025-04-15-04-PM.png"
-              alt="BrainZap Logo"
-            />
-            <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+            <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
               BrainZap
             </div>
           </div>
@@ -133,7 +135,7 @@ const AdminDashboard = () => {
                   }`
                 }
               >
-                <CalendarCheck2 size={20} /> Envents
+                <CalendarCheck2 size={20} /> Events
               </NavLink>
             </li>
             <li>

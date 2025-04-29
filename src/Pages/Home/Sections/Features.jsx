@@ -84,17 +84,6 @@ const Features = () => {
     },
   ];
 
-  // Animation variants
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -120,13 +109,7 @@ const Features = () => {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="text-center mb-24"
-        >
+        <div className="text-center mb-24">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-800/70 border border-gray-700 backdrop-blur-sm mb-6">
             <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
             <span className="text-sm font-medium text-gray-300">
@@ -146,30 +129,17 @@ const Features = () => {
             BrainZap's adaptive technology personalizes your learning experience
             for maximum knowledge retention and accelerated growth.
           </p>
-        </motion.div>
+        </div>
 
         {/* Features showcase with 3D hover effect */}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-32"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-32">
           {featuresData.map((feature, index) => (
-            <motion.div
+            <div
               key={feature.id}
-              variants={item}
               className="group relative overflow-hidden rounded-xl border border-gray-800 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
               style={{
                 background: "rgba(17, 24, 39, 0.7)",
                 transform: "perspective(1000px)",
-              }}
-              whileHover={{
-                translateY: -8,
-                rotateX: 5,
-                rotateY: 5,
-                transition: { duration: 0.4 },
               }}
             >
               {/* Background gradient */}
@@ -196,20 +166,14 @@ const Features = () => {
                   <ArrowRight className="w-3 h-3 text-purple-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Feature showcase with interactive component */}
         <div className="grid lg:grid-cols-5 gap-12 items-center mb-24">
           {/* Left column - 3 columns wide */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="lg:col-span-3 relative"
-          >
+          <div className="lg:col-span-3 relative">
             <div className="absolute -left-32 -top-32 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl"></div>
             <div className="relative overflow-hidden rounded-2xl border border-gray-700/50 bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-md p-1 shadow-2xl">
               {/* Glass Morphism Header */}
@@ -261,12 +225,8 @@ const Features = () => {
                   </div>
 
                   {/* Current question mock */}
-                  <motion.div
+                  <div
                     key={activeFeature}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
                     className="bg-gray-800/70 border border-gray-700/50 rounded-xl p-6 mb-6"
                   >
                     <p className="text-gray-300 mb-4">
@@ -302,7 +262,7 @@ const Features = () => {
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
 
                   <div className="flex justify-center">
                     <Link
@@ -335,16 +295,10 @@ const Features = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right column - 2 columns wide */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2 space-y-10"
-          >
+          <div className="lg:col-span-2 space-y-10">
             <div>
               <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-medium mb-6">
                 REVOLUTIONARY APPROACH
@@ -365,14 +319,7 @@ const Features = () => {
 
             <div className="space-y-8">
               {featureHighlights.map((highlight, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="flex items-start space-x-5 group"
-                >
+                <div key={index} className="flex items-start space-x-5 group">
                   <div
                     className={`flex-shrink-0 w-12 h-12 rounded-xl bg-${highlight.color}-500/20 flex items-center justify-center group-hover:scale-110 transition-all duration-300`}
                   >
@@ -386,20 +333,14 @@ const Features = () => {
                       {highlight.description}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Testimonial/Stats section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="rounded-2xl border border-gray-800 bg-gray-900/50 backdrop-blur-sm p-1 overflow-hidden"
-        >
+        <div className="rounded-2xl border border-gray-800 bg-gray-900/50 backdrop-blur-sm p-1 overflow-hidden">
           <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl p-8 relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full filter blur-3xl"></div>
@@ -442,7 +383,7 @@ const Features = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

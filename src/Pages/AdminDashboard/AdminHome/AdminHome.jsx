@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { Mail, User, Calendar, CheckCircle } from "lucide-react";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
 import useAuth from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const SummaryCard = ({ icon, title, value, gradient, description }) => (
   <motion.div
@@ -32,47 +32,16 @@ const SummaryCard = ({ icon, title, value, gradient, description }) => (
   </motion.div>
 );
 
-const feedbacks = [
-  {
-    name: "John Doe",
-    email: "john.doe@email.com",
-    message: "Loving the platform!",
-    feedbackType: "Feedback",
-    date: "2025-04-27",
-  },
-  {
-    name: "Jane Smith",
-    email: "jane.smith@email.com",
-    message:
-      "Smooth and intuitiveajsdhbasjbdaashb d sd asdbabsdbahdbhadas dasd ashdasd ad .",
-    feedbackType: "Bug Report",
-    date: "2025-04-26",
-  },
-  {
-    name: "Alice Johnson",
-    email: "alice.j@email.com",
-    message: "Support was quick.",
-    feedbackType: "General Question",
-    date: "2025-04-25",
-  },
-  {
-    name: "Alice Johnson",
-    email: "alice.j@email.com",
-    message: "Support was quick.",
-    feedbackType: "Feature Request",
-    date: "2025-04-25",
-  },
-];
-
 const AdminHome = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
   const [users, setUsers] = useState(0);
   const [messages, setMessages] = useState(0);
   const [totalFreeUsers, setTotalFreeUsers] = useState(0);
   const [totalProUsers, setTotalProUsers] = useState(0);
   const [totalEliteUsers, setTotalEliteUsers] = useState(0);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const axiosSecure = useAxiosSecure();
 
   // Pie Charts Starts Here
   const onPieEnter = (_, index) => {
@@ -159,16 +128,47 @@ const AdminHome = () => {
   };
   // Pie Charts Ends Here
 
+  // Getting Admin Dashboard Data By GraphQL
   useEffect(() => {
-    axiosPublic.get(`/adminDashboard/${user?.email}`).then((res) => {
-      setUsers(res?.data?.totalUsers || 0);
-      setMessages(res?.data?.totalFeedback || 0);
-      setTotalFreeUsers(res?.data?.totalFreeUsers || 0);
-      setTotalProUsers(res?.data?.totalProUsers || 0);
-      setTotalEliteUsers(res?.data?.totalEliteUsers || 0);
-      console.log(res?.data);
-    });
-  }, [axiosPublic, user?.email]);
+    const fetchDashboardData = async () => {
+      try {
+        const res = await axiosSecure.post(`/adminDashboard`, {
+          query: `
+            query {
+              adminDashboard {
+                totalUsers
+                totalFeedback
+                totalFreeUsers
+                totalProUsers
+                totalEliteUsers
+                latestFeedback {
+      _id
+      name
+      email
+      message
+      feedbackType
+      date
+    }
+              }
+            }
+          `,
+        });
+        const data = res?.data?.data?.adminDashboard;
+        setUsers(data?.totalUsers || 0);
+        setMessages(data?.totalFeedback || 0);
+        setTotalFreeUsers(data?.totalFreeUsers || 0);
+        setTotalProUsers(data?.totalProUsers || 0);
+        setTotalEliteUsers(data?.totalEliteUsers || 0);
+        setFeedbacks(data?.latestFeedback);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (user?.email) {
+      fetchDashboardData();
+    }
+  }, [user, axiosSecure]);
 
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",

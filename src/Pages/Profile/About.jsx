@@ -24,7 +24,7 @@ const About = ({ userInfo, stats, streak }) => {
           <Award size={18} className="text-purple-400 mr-3" />
           <div>
             <p className="text-gray-400 text-sm">Subscription</p>
-            <p className="text-white">{userInfo?.subscription || 'Free'}</p>
+            <p className="text-white">{userInfo?.userInfo?.subscription || 'Free'}</p>
           </div>
         </div>
       </div>

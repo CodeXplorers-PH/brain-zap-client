@@ -157,13 +157,13 @@ const ProfileHeader = ({ stats, userInfo }) => {
                 {user?.displayName || 'BrainZapper'}
 
                 {/* Premium Members Tick */}
-                {userInfo?.subscription === 'Pro' && (
+                {userInfo?.userInfo?.subscription === 'Pro' && (
                   <div className="tooltip" data-tip="Pro Member">
                     <CircleCheck className="text-blue-500 w-6 h-6" />
                   </div>
                 )}
 
-                {userInfo?.subscription === 'Elite' && (
+                {userInfo?.userInfo?.subscription === 'Elite' && (
                   <div className="tooltip" data-tip="Elite Member">
                     <Crown className="text-amber-500 w-6 h-6" />
                   </div>

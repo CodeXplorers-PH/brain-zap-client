@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import Quiz from "../Quiz/Quiz";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import Quiz from '../Quiz/Quiz';
+import useAxiosPublic from '@/hooks/useAxiosPublic';
 
 const QuizPage = () => {
   const { category } = useParams();
@@ -14,9 +14,9 @@ const QuizPage = () => {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
 
-  const difficulty = queryParams.get("difficulty");
-  const quizzesNumber = queryParams.get("quizzesNumber");
-  const quizzesType = queryParams.get("type");
+  const difficulty = queryParams.get('difficulty');
+  const quizzesNumber = Number(queryParams.get('quizzesNumber'));
+  const quizzesType = queryParams.get('type');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,19 +39,34 @@ const QuizPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data: generatedQuiz } = await axiosPublic.get(
-          `/generate_quiz?topic=${category}&difficulty=${difficulty}&quizzesNumber=${quizzesNumber}&type=${
-            quizzesType || "mc"
-          }`
-        );
+        const { data: generatedQuiz } = await axiosPublic.post(`/graphql`, {
+          query: `
+            query GetQuizzes($topic: String!, $difficulty: String!, $quizzesNumber: Int!, $type: String!) {
+              getQuizzes(topic: $topic, difficulty: $difficulty, quizzesNumber: $quizzesNumber, type: $type) {
+                question
+                options
+                answer
+              }
+            }
+    `,
+          variables: {
+            topic: category,
+            difficulty: difficulty,
+            quizzesNumber: Number(quizzesNumber),
+            type: quizzesType || 'mc',
+          },
+        });
 
         if (!signal.aborted) {
-          setQuestions(generatedQuiz);
-          localStorage.setItem(localStorageKey, JSON.stringify(generatedQuiz));
+          setQuestions(generatedQuiz?.data?.getQuizzes);
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify(generatedQuiz?.data?.getQuizzes)
+          );
         }
       } catch (err) {
-        console.error("Error fetching questions:", err);
-        setError("Failed to load questions. Please try again later.");
+        console.error('Error fetching questions:', err);
+        setError('Failed to load questions. Please try again later.');
       } finally {
         if (!signal.aborted) {
           setLoading(false);

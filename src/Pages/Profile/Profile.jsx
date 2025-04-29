@@ -13,7 +13,6 @@ import AchievementTab from "./AchievementTab";
 import StreakCalendar from "./StreakCalendar";
 import LeaderboardRank from "./LeaderboardRank";
 
-
 const Profile = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("profile");
@@ -55,6 +54,7 @@ const Profile = () => {
 
     fetchUserInfo();
   }, [user]);
+  console.log(userInfo?.userInfo);
 
   // Streaks Code Starts Here
   useEffect(() => {
@@ -126,8 +126,12 @@ const Profile = () => {
         {/* Profile Header */}
         <ProfileHeader stats={stats} userInfo={userInfo} />
 
-        {/* Tabs Navigation */}
-        <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* Tabs Navigation - Made Responsive */}
+        <div className="overflow-x-auto no-scrollbar mb-2">
+          <div className="flex space-x-2 min-w-max">
+            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          </div>
+        </div>
 
         {/* Profile Content */}
         {activeTab === "profile" && (
@@ -165,7 +169,7 @@ const Profile = () => {
 
         {/* Transaction history */}
         {activeTab === "transactionHistory" && (
-          <TransactionHistory user={user} userInfo={userInfo} />
+          <TransactionHistory user={user} userInfo={userInfo.userInfo} />
         )}
         {/* Achievement Tab */}
         {activeTab === "achievements" && <AchievementTab xpPoints={xpPoints} />}

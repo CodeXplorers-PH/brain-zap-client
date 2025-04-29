@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { User, Trash2, ShieldCheck, Lock } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import Swal from "sweetalert2";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const Card = ({ children, gradient }) => {
   return (
@@ -29,8 +29,7 @@ const AllUsers = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const axiosPublic = useAxiosPublic();
-
+  const axiosSecure = useAxiosSecure();
   const gradients = [
     "from-indigo-500 via-purple-500 to-pink-500",
     "from-cyan-500 via-blue-500 to-indigo-500",
@@ -39,10 +38,10 @@ const AllUsers = () => {
   ];
 
   useEffect(() => {
-    axiosPublic
-      .get(`/api/users/${user?.email}`)
-      .then((res) => setUsers(res.data));
-  }, [axiosPublic, user?.email]);
+    axiosSecure
+      .get(`/allUsers/information`)
+      .then((res) => setUsers(res?.data?.users));
+  }, [axiosSecure]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -65,8 +64,8 @@ const AllUsers = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic
-          .delete(`/deleteUser/${id}/${user?.email}`)
+        axiosSecure
+          .delete(`/deleteUser/${id}`)
           .then((res) => {
             if (res.data?.message === "User deleted successfully.") {
               setUsers((prevUsers) => prevUsers.filter((u) => u._id !== id));
@@ -137,9 +136,8 @@ const AllUsers = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const unlockTime = Date.now() + 3600000;
-
-        axiosPublic
-          .post(`/lockoutUser/${id}/${user?.email}`, { unlockTime })
+        axiosSecure
+          .post(`/lockoutUser/${id}`, { unlockTime })
           .then((response) => {
             // Show success message on success
             Swal.fire({
@@ -203,19 +201,17 @@ const AllUsers = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic
+        axiosSecure
           .patch(`/makeAdmin/${id}/${user?.email}`)
           .then((response) => {
             if (
               response?.data?.message === "User has been promoted to admin."
             ) {
-              // ✅ Update the local state to reflect new admin role
               setUsers((prevUsers) =>
                 prevUsers.map((u) =>
                   u._id === id ? { ...u, role: "admin" } : u
                 )
               );
-
               Swal.fire({
                 title: "Success!",
                 text: "User has been granted admin access.",
@@ -256,89 +252,91 @@ const AllUsers = () => {
     });
   };
 
-  const filteredUsers = users.filter(
+  const filteredUsers = users?.filter(
     (u) =>
       u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <section className="min-h-screen py-20 px-6">
-      <div className="mb-10 text-center">
-        {/* Title */}
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 flex items-center justify-center gap-2">
-          <User size={26} className="border-2 w-14 rounded-full" />
-          All Registerd Users
-        </h2>
-        {/* Search Input */}
-        <div className="mb-8 flex justify-center">
-          <input
-            type="text"
-            placeholder="Search by name or email..."
-            className="px-4 py-2 rounded-md w-full max-w-md bg-[#1f2937]/50 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+    <section className="min-h-screen bg-gray-900 py-20 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-10 text-center">
+          {/* Title */}
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 flex items-center justify-center gap-2">
+            <User className="border-2 w-12 rounded-full" />
+            All Registerd Users
+          </h2>
+          {/* Search Input */}
+          <div className="mb-8 flex justify-center">
+            <input
+              type="text"
+              placeholder="Search by name or email..."
+              className="px-4 py-2 rounded-md w-full max-w-md bg-[#1f2937]/50 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
-        {filteredUsers.map((user, i) => {
-          const gradient =
-            gradients[Math.floor(Math.random() * gradients.length)];
+        <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
+          {filteredUsers?.map((user, i) => {
+            const gradient =
+              gradients[Math.floor(Math.random() * gradients.length)];
 
-          return (
-            <Card key={user._id} gradient={gradient}>
-              <div className="flex items-center gap-4 mb-4">
-                {user?.photoURL && (
-                  <Avatar className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md">
-                    <AvatarImage
-                      src={user?.photoURL}
-                      alt={`Photo of ${user?.displayName}`}
-                    />
-                    <AvatarFallback>
-                      {user?.displayName?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                <div className="text-white text-base">
-                  <p className="font-semibold text-lg">{user.name}</p>
-                  <p className="text-gray-300 text-sm">{user.email}</p>
+            return (
+              <Card key={i} gradient={gradient}>
+                <div className="flex items-center gap-4 mb-4">
+                  {user?.photoURL && (
+                    <Avatar className="w-16 h-16 rounded-full object-cover border border-purple-600 shadow-md">
+                      <AvatarImage
+                        src={user?.photoURL}
+                        alt={`Photo of ${user?.displayName}`}
+                      />
+                      <AvatarFallback>
+                        {user?.displayName?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div className="text-white text-base">
+                    <p className="font-semibold text-lg">{user.name}</p>
+                    <p className="text-gray-300 text-sm">{user.email}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-4">
-                <button
-                  onClick={() => handleDelete(user._id)}
-                  className="text-xs px-2 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition-all"
-                >
-                  <Trash2 size={14} className="inline mr-1" />
-                  Delete
-                </button>
-                <button
-                  onClick={() => handleLock(user._id)}
-                  className="text-xs px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-600 hover:text-white transition-all"
-                >
-                  <Lock size={14} className="inline mr-1" />
-                  Lock
-                </button>
-                {user.role === "admin" ? (
-                  <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
-                    Admin Account
-                  </button>
-                ) : (
+                <div className="grid grid-cols-3 gap-2 mt-4">
                   <button
-                    onClick={() => handleMakeAdmin(user._id)}
-                    className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
+                    onClick={() => handleDelete(user?._id)}
+                    className="text-xs px-2 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition-all"
                   >
-                    <ShieldCheck size={14} className="inline mr-1" />
-                    Admin
+                    <Trash2 size={14} className="inline mr-1" />
+                    Delete
                   </button>
-                )}
-              </div>
-            </Card>
-          );
-        })}
+                  <button
+                    onClick={() => handleLock(user?._id)}
+                    className="text-xs px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-600 hover:text-white transition-all"
+                  >
+                    <Lock size={14} className="inline mr-1" />
+                    Lock
+                  </button>
+                  {user?.role === "admin" ? (
+                    <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
+                      Admin Account
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleMakeAdmin(user?._id)}
+                      className="text-xs px-2 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-600 hover:text-white transition-all"
+                    >
+                      <ShieldCheck size={14} className="inline mr-1" />
+                      Admin
+                    </button>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
