@@ -124,7 +124,7 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
                 </label>
                 <div className="relative">
                   <select
-                    className="w-full appearance-none pl-3 pr-8 py-2.5 bg-gray-800/50 border border-gray-700/30 rounded-lg text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 focus:border-transparent transition-all cursor-pointer text-sm"
+                    className="w-full appearance-none pl-3 pr-8 py-2.5 bg-gray-800 border border-gray-700/30 rounded-lg text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 focus:border-transparent transition-all cursor-pointer text-sm"
                     name="difficulty"
                     id="difficulty"
                     value={difficulty}
