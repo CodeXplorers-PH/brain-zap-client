@@ -46,7 +46,7 @@ const Profile = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await axiosPublic.get(`/userInfo/${user.email}`);
-        setUserInfo(res?.data);
+        setUserInfo(res.data);
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
@@ -55,8 +55,6 @@ const Profile = () => {
     fetchUserInfo();
   }, [user]);
   console.log(userInfo?.userInfo);
-
-  console.log(userInfo);
 
   // Streaks Code Starts Here
   useEffect(() => {
@@ -128,8 +126,12 @@ const Profile = () => {
         {/* Profile Header */}
         <ProfileHeader stats={stats} userInfo={userInfo} />
 
-        {/* Tabs Navigation */}
-        <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* Tabs Navigation - Made Responsive */}
+        <div className="overflow-x-auto no-scrollbar mb-2">
+          <div className="flex space-x-2 min-w-max">
+            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          </div>
+        </div>
 
         {/* Profile Content */}
         {activeTab === "profile" && (

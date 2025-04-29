@@ -103,7 +103,7 @@ const PricingPlan = () => {
   const getButtonContent = (planTitle) => {
     const planName = planTitle.replace("Zap ", "");
     // Default to "Free" for new users with no subscription
-    const currentSubscription = userInfo?.subscription || "Free";
+    const currentSubscription = userInfo?.userInfo?.subscription || "Free";
 
     // If the plan matches the user's current subscription
     if (

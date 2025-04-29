@@ -13,7 +13,7 @@ const useUserSubsciptionType = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await axiosPublic.get(`/userInfo/${user.email}`);
-        setUserType(res?.data?.subscription);
+        setUserType(res?.data?.userInfo?.subscription);
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
