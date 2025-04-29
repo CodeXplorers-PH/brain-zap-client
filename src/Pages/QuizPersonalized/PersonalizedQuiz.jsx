@@ -62,7 +62,7 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
             <div className="mt-3 md:mt-0">
               <span className="bg-gradient-to-r from-violet-600 to-blue-600 px-3 py-1 rounded-full text-xs font-medium text-white inline-flex items-center">
                 <BsStars className="mr-1" />
-                Premium Feature
+                Elite Feature
               </span>
             </div>
           </div>
@@ -235,7 +235,7 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
               Unlock Personalized Quizzes
             </h3>
             <p className="text-gray-300 text-sm mb-4">
-              Upgrade to Pro or Elite to create custom quizzes tailored to your learning needs
+              Upgrade to Elite to create custom quizzes tailored to your learning needs
             </p>
             <button
               onClick={() => navigate("/pricing")}
