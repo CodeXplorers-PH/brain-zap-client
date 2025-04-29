@@ -113,13 +113,13 @@ const AuthProvider = ({ children }) => {
           }
 
           // Set Jwt token
-          axiosPublic
-            .post('/jwt', { email: currentUser.email })
-            .then(res =>
-              res.data?.token
-                ? localStorage.setItem('Token', res.data.token)
-                : localStorage.removeItem('Token')
-            );
+          (async () => {
+            const { data } = await axiosPublic.post('/jwt', { email });
+
+            data?.token
+              ? localStorage.setItem('access_token', data.token)
+              : localStorage.removeItem('access_token');
+          })();
 
           // Save user data in the database
           if (displayName && photoURL && email) {
@@ -129,14 +129,16 @@ const AuthProvider = ({ children }) => {
               email,
             });
           }
+
+          setLoading(false);
         } catch (err) {
           console.error('Auth side effects failed:', err);
+          setLoading(false);
         }
       } else {
-        localStorage.removeItem('Token');
+        localStorage.removeItem('access_token');
+        setLoading(false);
       }
-
-      setLoading(false);
     });
 
     return () => unsubscribe();
