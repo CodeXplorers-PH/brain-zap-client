@@ -1,31 +1,31 @@
-import { useEffect, useState } from "react";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import Banner from "../StartQuiz/Sections/Banner";
-import PersonalizedQuizSection from "../QuizPersonalized/PersonalizedQuiz";
-import QuizCategories from "../StartQuiz/Sections/QuizCategories";
+import { useEffect, useState } from 'react';
+import { useAuthContext } from '@/hooks/useAuthContext';
+import Banner from '../StartQuiz/Sections/Banner';
+import PersonalizedQuizSection from '../QuizPersonalized/PersonalizedQuiz';
+import QuizCategories from '../StartQuiz/Sections/QuizCategories';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const StartQuiz = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
   const { user } = useAuthContext();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    localStorage.removeItem("quiz_questions");
+    localStorage.removeItem('quiz_questions');
 
     const fetchUserInfo = async () => {
       try {
         setLoading(true); // Start loading
-        if (user?.email) {
-          const res = await axiosPublic.get(`/userInfo/${user.email}`);
-          setUserInfo(res.data);
+        if (user) {
+          const { data } = await axiosSecure.get(`/userInfo`);
+          setUserInfo(data);
         } else {
           setUserInfo(null);
         }
       } catch (err) {
-        console.error("Error fetching user info:", err);
+        console.error('Error fetching user info:', err);
         setUserInfo(null);
       } finally {
         setLoading(false); // Stop loading
@@ -33,10 +33,12 @@ const StartQuiz = () => {
     };
 
     fetchUserInfo();
-  }, [axiosPublic, user?.email]);
+  }, [user]);
 
   // Determine if user has a Pro or Elite subscription
-  const hasSubscription = userInfo?.userInfo?.subscription === "Pro" || userInfo?.userInfo?.subscription === "Elite";
+  const hasSubscription =
+    userInfo?.userInfo?.subscription === 'Pro' ||
+    userInfo?.userInfo?.subscription === 'Elite';
 
   if (userInfo?.userInfo === null) {
     return (

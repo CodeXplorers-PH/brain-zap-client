@@ -1,26 +1,22 @@
-import { useEffect, useState } from "react";
-import useAuth from "./useAuth";
-import useAxiosPublic from "./useAxiosPublic";
+import { useEffect, useState } from 'react';
+import useAxiosSecure from './useAxiosSecure';
 
 const useUserSubsciptionType = () => {
-  const { user } = useAuth();
-  const [userType, setUserType] = useState("");
-  const axiosPublic = useAxiosPublic();
+  const [userType, setUserType] = useState('');
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
-    if (!user?.email) return;
-
     const fetchUserInfo = async () => {
       try {
-        const res = await axiosPublic.get(`/userInfo/${user.email}`);
+        const res = await axiosSecure.get(`/userInfo`);
         setUserType(res?.data?.userInfo?.subscription);
       } catch (err) {
-        console.error("Error fetching user info:", err);
+        console.error('Error fetching user info:', err);
       }
     };
 
     fetchUserInfo();
-  }, [axiosPublic, user]);
+  }, []);
 
   return [userType];
 };
