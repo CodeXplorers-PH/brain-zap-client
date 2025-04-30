@@ -241,13 +241,13 @@ const BlogDetail = () => {
             <div className="flex space-x-2">
               <button
                 onClick={() => setShowEditModal(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="px-4 py-2 bg-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-md shadow-blue-900/20 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               >
                 Edit
               </button>
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-medium rounded-lg shadow-md shadow-red-900/20 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500/50"
               >
                 Delete
               </button>
