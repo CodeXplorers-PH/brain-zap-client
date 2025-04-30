@@ -47,6 +47,7 @@ const AdminHome = () => {
   const [totalFreeUsers, setTotalFreeUsers] = useState(0);
   const [totalProUsers, setTotalProUsers] = useState(0);
   const [totalEliteUsers, setTotalEliteUsers] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [feedbacks, setFeedbacks] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -150,6 +151,7 @@ const AdminHome = () => {
                 totalFreeUsers
                 totalProUsers
                 totalEliteUsers
+                totalRevenue
                 latestFeedback {
                   _id
                   name
@@ -168,7 +170,8 @@ const AdminHome = () => {
         setTotalFreeUsers(data?.totalFreeUsers || 0);
         setTotalProUsers(data?.totalProUsers || 0);
         setTotalEliteUsers(data?.totalEliteUsers || 0);
-        setFeedbacks(data?.latestFeedback || []);
+        setFeedbacks(data?.latestFeedback);
+        setTotalRevenue(data?.totalRevenue);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
