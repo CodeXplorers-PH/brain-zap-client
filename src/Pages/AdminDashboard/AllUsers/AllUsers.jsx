@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
+import { Filter, Search, ShieldCheck, SlidersHorizontal, Trash2, Lock, User } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const AllUsers = () => {
   const { user } = useAuth();
