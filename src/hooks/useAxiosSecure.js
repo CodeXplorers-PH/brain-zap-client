@@ -35,8 +35,8 @@ const useAxiosSecure = () => {
       error => {
         console.log('ResIntError --> ', error.message);
         if (error.status === 401 || error.status === 403) {
-          // logOut();
-          // navigate('/login');
+          logOut();
+          navigate('/login');
         }
 
         return Promise.reject(error);
