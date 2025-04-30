@@ -1,246 +1,262 @@
-import React, { useEffect, useState } from "react";
-import { 
-  User, 
-  Trash2, 
-  ShieldCheck, 
-  Lock, 
-  Search, 
-  ArrowRight,
-  Filter,
-  SlidersHorizontal,
-  MoreHorizontal,
-  AlertTriangle,
-  CheckCircle,
-  Download
-} from "lucide-react";
-import useAuth from "@/hooks/useAuth";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
-import Swal from "sweetalert2";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import useAuth from '@/hooks/useAuth';
+import Swal from 'sweetalert2';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const AllUsers = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterRole, setFilterRole] = useState("all");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterRole, setFilterRole] = useState('all');
   const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     setLoading(true);
-    axiosSecure.get(`/allUsers/information`).then((res) => {
+    axiosSecure.get(`/allUsers/information`).then(res => {
       setUsers(res?.data?.users);
       setLoading(false);
     });
   }, [axiosSecure]);
 
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete this user!",
-      background: "rgba(30, 30, 60, 0.85)",
-      color: "#fff",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete this user!',
+      background: 'rgba(30, 30, 60, 0.85)',
+      color: '#fff',
       backdrop: `rgba(0, 0, 0, 0.4)`,
       customClass: {
-        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-        title: "text-blue-400 text-lg font-semibold",
-        confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-        htmlContainer: "text-sm text-gray-300",
+        popup: 'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+        title: 'text-blue-400 text-lg font-semibold',
+        confirmButton:
+          'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+        htmlContainer: 'text-sm text-gray-300',
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/deleteUser/${id}`).then((res) => {
-          if (res.data?.message === "User deleted successfully.") {
-            setUsers((prevUsers) => prevUsers.filter((u) => u._id !== id));
+        axiosSecure
+          .delete(`/deleteUser/${id}`)
+          .then(res => {
+            if (res.data?.message === 'User deleted successfully.') {
+              setUsers(prevUsers => prevUsers.filter(u => u._id !== id));
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'User has been deleted.',
+                icon: 'success',
+                background: 'rgba(30, 30, 60, 0.85)',
+                color: '#fff',
+                backdrop: `rgba(0, 0, 0, 0.4)`,
+                customClass: {
+                  popup:
+                    'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                  title: 'text-blue-400 text-lg font-semibold',
+                  confirmButton:
+                    'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                  htmlContainer: 'text-sm text-gray-300',
+                },
+              });
+            } else {
+              throw new Error('User not found or could not be deleted.');
+            }
+          })
+          .catch(error => {
             Swal.fire({
-              title: "Deleted!",
-              text: "User has been deleted.",
-              icon: "success",
-              background: "rgba(30, 30, 60, 0.85)",
-              color: "#fff",
+              title: 'Error',
+              text:
+                error.response?.data?.message ||
+                error.message ||
+                'Something went wrong.',
+              icon: 'error',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
               backdrop: `rgba(0, 0, 0, 0.4)`,
               customClass: {
-                popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                title: "text-blue-400 text-lg font-semibold",
-                confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-                htmlContainer: "text-sm text-gray-300",
+                popup:
+                  'rounded-xl shadow-lg border border-red-500 backdrop-blur-lg',
+                title: 'text-red-400 text-lg font-semibold',
+                confirmButton:
+                  'bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
               },
             });
-          } else {
-            throw new Error("User not found or could not be deleted.");
-          }
-        }).catch((error) => {
-          Swal.fire({
-            title: "Error",
-            text: error.response?.data?.message || error.message || "Something went wrong.",
-            icon: "error",
-            background: "rgba(30, 30, 60, 0.85)",
-            color: "#fff",
-            backdrop: `rgba(0, 0, 0, 0.4)`,
-            customClass: {
-              popup: "rounded-xl shadow-lg border border-red-500 backdrop-blur-lg",
-              title: "text-red-400 text-lg font-semibold",
-              confirmButton: "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
-              htmlContainer: "text-sm text-gray-300",
-            },
           });
-        });
       }
     });
   };
 
-  const handleLock = (id) => {
+  const handleLock = id => {
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Lock for 1 hr!",
-      background: "rgba(30, 30, 60, 0.85)",
-      color: "#fff",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Lock for 1 hr!',
+      background: 'rgba(30, 30, 60, 0.85)',
+      color: '#fff',
       backdrop: `rgba(0, 0, 0, 0.4)`,
       customClass: {
-        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-        title: "text-blue-400 text-lg font-semibold",
-        confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-        htmlContainer: "text-sm text-gray-300",
+        popup: 'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+        title: 'text-blue-400 text-lg font-semibold',
+        confirmButton:
+          'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+        htmlContainer: 'text-sm text-gray-300',
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         const unlockTime = Date.now() + 3600000;
-        axiosSecure.post(`/lockoutUser/${id}`, { unlockTime }).then((response) => {
-          Swal.fire({
-            title: "Locked!",
-            text: "User has been locked for 1 hr.",
-            icon: "success",
-            background: "rgba(30, 30, 60, 0.85)",
-            color: "#fff",
-            backdrop: `rgba(0, 0, 0, 0.4)`,
-            customClass: {
-              popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-              title: "text-blue-400 text-lg font-semibold",
-              confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-              htmlContainer: "text-sm text-gray-300",
-            },
-          });
-        }).catch((error) => {
-          Swal.fire({
-            title: "Error!",
-            text: "There was an issue locking the user.",
-            icon: "error",
-            background: "rgba(30, 30, 60, 0.85)",
-            color: "#fff",
-            backdrop: `rgba(0, 0, 0, 0.4)`,
-            customClass: {
-              popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-              title: "text-red-400 text-lg font-semibold",
-              confirmButton: "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
-              htmlContainer: "text-sm text-gray-300",
-            },
-          });
-        });
-      }
-    });
-  };
-
-  const handleMakeAdmin = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Make Admin!",
-      background: "rgba(30, 30, 60, 0.85)",
-      color: "#fff",
-      backdrop: `rgba(0, 0, 0, 0.4)`,
-      customClass: {
-        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-        title: "text-blue-400 text-lg font-semibold",
-        confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-        htmlContainer: "text-sm text-gray-300",
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosSecure.patch(`/makeAdmin/${id}/${user?.email}`).then((response) => {
-          if (response?.data?.message === "User has been promoted to admin.") {
-            setUsers((prevUsers) =>
-              prevUsers.map((u) => (u._id === id ? { ...u, role: "admin" } : u))
-            );
+        axiosSecure
+          .post(`/lockoutUser/${id}`, { unlockTime })
+          .then(response => {
             Swal.fire({
-              title: "Success!",
-              text: "User has been granted admin access.",
-              icon: "success",
-              background: "rgba(30, 30, 60, 0.85)",
-              color: "#fff",
+              title: 'Locked!',
+              text: 'User has been locked for 1 hr.',
+              icon: 'success',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
               backdrop: `rgba(0, 0, 0, 0.4)`,
               customClass: {
-                popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                title: "text-blue-400 text-lg font-semibold",
-                confirmButton: "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-                htmlContainer: "text-sm text-gray-300",
+                popup:
+                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                title: 'text-blue-400 text-lg font-semibold',
+                confirmButton:
+                  'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
               },
             });
-          }
-        }).catch((error) => {
-          Swal.fire({
-            title: "Error!",
-            text: "There was an issue making the user an admin.",
-            icon: "error",
-            background: "rgba(30, 30, 60, 0.85)",
-            color: "#fff",
-            backdrop: `rgba(0, 0, 0, 0.4)`,
-            customClass: {
-              popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-              title: "text-red-400 text-lg font-semibold",
-              confirmButton: "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
-              htmlContainer: "text-sm text-gray-300",
-            },
+          })
+          .catch(error => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an issue locking the user.',
+              icon: 'error',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
+              backdrop: `rgba(0, 0, 0, 0.4)`,
+              customClass: {
+                popup:
+                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                title: 'text-red-400 text-lg font-semibold',
+                confirmButton:
+                  'bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
+              },
+            });
           });
-        });
       }
     });
   };
 
-  const filteredUsers = users?.filter(
-    (u) => {
-      const matchesSearch = u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        u.email?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesRole = filterRole === "all" || u.role === filterRole;
-      return matchesSearch && matchesRole;
-    }
-  );
+  const handleMakeAdmin = id => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Make Admin!',
+      background: 'rgba(30, 30, 60, 0.85)',
+      color: '#fff',
+      backdrop: `rgba(0, 0, 0, 0.4)`,
+      customClass: {
+        popup: 'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+        title: 'text-blue-400 text-lg font-semibold',
+        confirmButton:
+          'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+        htmlContainer: 'text-sm text-gray-300',
+      },
+    }).then(result => {
+      if (result.isConfirmed) {
+        axiosSecure
+          .patch(`/makeAdmin/${id}/${user?.email}`)
+          .then(response => {
+            if (
+              response?.data?.message === 'User has been promoted to admin.'
+            ) {
+              setUsers(prevUsers =>
+                prevUsers.map(u => (u._id === id ? { ...u, role: 'admin' } : u))
+              );
+              Swal.fire({
+                title: 'Success!',
+                text: 'User has been granted admin access.',
+                icon: 'success',
+                background: 'rgba(30, 30, 60, 0.85)',
+                color: '#fff',
+                backdrop: `rgba(0, 0, 0, 0.4)`,
+                customClass: {
+                  popup:
+                    'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                  title: 'text-blue-400 text-lg font-semibold',
+                  confirmButton:
+                    'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                  htmlContainer: 'text-sm text-gray-300',
+                },
+              });
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an issue making the user an admin.',
+              icon: 'error',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
+              backdrop: `rgba(0, 0, 0, 0.4)`,
+              customClass: {
+                popup:
+                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                title: 'text-red-400 text-lg font-semibold',
+                confirmButton:
+                  'bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
+              },
+            });
+          });
+      }
+    });
+  };
+
+  const filteredUsers = users?.filter(u => {
+    const matchesSearch =
+      u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = filterRole === 'all' || u.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
 
   // Calculate user counts
   const totalUsers = users.length;
-  const adminUsers = users.filter(u => u.role === "admin").length;
+  const adminUsers = users.filter(u => u.role === 'admin').length;
   const standardUsers = totalUsers - adminUsers;
 
-  const renderUserRow = (user) => {
-    const membershipType = user.membershipType || "Free";
-    const membershipColor = {
-      "Free": "bg-green-900/30 text-green-400",
-      "Pro": "bg-purple-900/30 text-purple-400",
-      "Elite": "bg-blue-900/30 text-blue-400",
-    }[membershipType] || "bg-green-900/30 text-green-400";
+  const renderUserRow = user => {
+    const membershipType = user.membershipType || 'Free';
+    const membershipColor =
+      {
+        Free: 'bg-green-900/30 text-green-400',
+        Pro: 'bg-purple-900/30 text-purple-400',
+        Elite: 'bg-blue-900/30 text-blue-400',
+      }[membershipType] || 'bg-green-900/30 text-green-400';
 
     return (
-      <tr key={user._id} className="border-b border-gray-800 hover:bg-gray-800/50">
+      <tr
+        key={user._id}
+        className="border-b border-gray-800 hover:bg-gray-800/50"
+      >
         <td className="py-3 px-4">
           <div className="flex items-center space-x-3">
             <Avatar className="h-9 w-9 rounded-full border border-gray-700">
               <AvatarImage src={user?.photoURL} />
               <AvatarFallback className="bg-gray-800 text-gray-300">
-                {user?.name?.charAt(0).toUpperCase() || "U"}
+                {user?.name?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
             <div>
@@ -255,7 +271,7 @@ const AllUsers = () => {
           </span>
         </td>
         <td className="py-3 px-4">
-          {user?.role === "admin" ? (
+          {user?.role === 'admin' ? (
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-900/30 text-blue-400">
               <ShieldCheck size={14} className="mr-1" />
               Admin
@@ -268,11 +284,13 @@ const AllUsers = () => {
           )}
         </td>
         <td className="py-3 px-4">
-          <span className="text-sm text-gray-300">{user?.createdAt?.split("T")[0] || "N/A"}</span>
+          <span className="text-sm text-gray-300">
+            {user?.createdAt?.split('T')[0] || 'N/A'}
+          </span>
         </td>
         <td className="py-3 px-4">
           <div className="flex items-center gap-2">
-            {user?.role !== "admin" && (
+            {user?.role !== 'admin' && (
               <button
                 onClick={() => handleMakeAdmin(user?._id)}
                 className="p-1 text-gray-400 hover:text-blue-400 rounded-md"
@@ -301,7 +319,7 @@ const AllUsers = () => {
     );
   };
 
-  const renderSkeletonRow = (index) => (
+  const renderSkeletonRow = index => (
     <tr key={index} className="border-b border-gray-800 animate-pulse">
       <td className="py-3 px-4">
         <div className="flex items-center space-x-3">
@@ -356,31 +374,37 @@ const AllUsers = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm">Total Users</p>
-              <h3 className="text-2xl font-bold text-white mt-1">{totalUsers}</h3>
+              <h3 className="text-2xl font-bold text-white mt-1">
+                {totalUsers}
+              </h3>
             </div>
             <div className="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center">
               <User size={20} className="text-purple-400" />
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm">Admin Users</p>
-              <h3 className="text-2xl font-bold text-white mt-1">{adminUsers}</h3>
+              <h3 className="text-2xl font-bold text-white mt-1">
+                {adminUsers}
+              </h3>
             </div>
             <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center">
               <ShieldCheck size={20} className="text-blue-400" />
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm">Standard Users</p>
-              <h3 className="text-2xl font-bold text-white mt-1">{standardUsers}</h3>
+              <h3 className="text-2xl font-bold text-white mt-1">
+                {standardUsers}
+              </h3>
             </div>
             <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
               <User size={20} className="text-green-400" />
@@ -392,22 +416,28 @@ const AllUsers = () => {
       {/* Search and filter */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
         <div className="relative w-full md:w-64">
-          <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             placeholder="Search users..."
             className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2 w-full md:w-auto">
           <div className="relative w-full md:w-auto">
-            <Filter size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Filter
+              size={18}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            />
             <select
               className="pl-10 pr-8 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white appearance-none focus:ring-2 focus:ring-purple-500 focus:outline-none"
               value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
+              onChange={e => setFilterRole(e.target.value)}
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
@@ -435,14 +465,19 @@ const AllUsers = () => {
             </thead>
             <tbody>
               {loading ? (
-                Array(5).fill(0).map((_, index) => renderSkeletonRow(index))
+                Array(5)
+                  .fill(0)
+                  .map((_, index) => renderSkeletonRow(index))
               ) : filteredUsers.length > 0 ? (
                 filteredUsers.map(renderUserRow)
               ) : (
                 <tr>
                   <td colSpan="5" className="text-center py-8 text-gray-400">
                     <div className="flex flex-col items-center">
-                      <AlertTriangle size={28} className="text-yellow-500 mb-2" />
+                      <AlertTriangle
+                        size={28}
+                        className="text-yellow-500 mb-2"
+                      />
                       <p>No users found matching your search criteria</p>
                     </div>
                   </td>
@@ -451,17 +486,21 @@ const AllUsers = () => {
             </tbody>
           </table>
         </div>
-        
+
         {/* Pagination */}
         <div className="flex items-center justify-between py-4 px-6 border-t border-gray-800">
           <div className="flex items-center text-sm text-gray-400">
-            <span>Showing {filteredUsers.length} of {totalUsers} users</span>
+            <span>
+              Showing {filteredUsers.length} of {totalUsers} users
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <button className="px-3 py-1 rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600">
               Previous
             </button>
-            <button className="px-3 py-1 rounded-md bg-purple-600 text-white">1</button>
+            <button className="px-3 py-1 rounded-md bg-purple-600 text-white">
+              1
+            </button>
             <button className="px-3 py-1 rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600">
               Next
             </button>

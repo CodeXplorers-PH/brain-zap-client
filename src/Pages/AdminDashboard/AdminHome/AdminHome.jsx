@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Mail,
   User,
@@ -8,27 +8,37 @@ import {
   ArrowRight,
   TrendingUp,
   Activity,
-  Bell
-} from "lucide-react";
-import { MdOutlineAttachMoney } from "react-icons/md";
-import { PieChart, Pie, Sector, ResponsiveContainer, Cell, Tooltip } from "recharts";
-import useAuth from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
+  Bell,
+} from 'lucide-react';
+import { MdOutlineAttachMoney } from 'react-icons/md';
+import {
+  PieChart,
+  Pie,
+  Sector,
+  ResponsiveContainer,
+  Cell,
+  Tooltip,
+} from 'recharts';
+import useAuth from '@/hooks/useAuth';
+import { Link } from 'react-router-dom';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const SummaryCard = ({ icon, title, value, color, change }) => (
   <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50">
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <div className={`p-2 rounded-md ${color}`}>
-            {icon}
-          </div>
+          <div className={`p-2 rounded-md ${color}`}>{icon}</div>
           <h3 className="text-sm font-medium text-gray-300">{title}</h3>
         </div>
         {change && (
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${change.startsWith('+') ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400'
-            }`}>
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-full ${
+              change.startsWith('+')
+                ? 'bg-green-900/30 text-green-400'
+                : 'bg-red-900/30 text-red-400'
+            }`}
+          >
             {change}
           </span>
         )}
@@ -58,12 +68,12 @@ const AdminHome = () => {
   };
 
   const data = [
-    { name: "Pro Users", value: totalProUsers, color: "#8b5cf6" },
-    { name: "Elite Users", value: totalEliteUsers, color: "#06b6d4" },
-    { name: "Free Users", value: totalFreeUsers, color: "#34d399" },
+    { name: 'Pro Users', value: totalProUsers, color: '#8b5cf6' },
+    { name: 'Elite Users', value: totalEliteUsers, color: '#06b6d4' },
+    { name: 'Free Users', value: totalFreeUsers, color: '#34d399' },
   ];
 
-  const renderActiveShape = (props) => {
+  const renderActiveShape = props => {
     const RADIAN = Math.PI / 180;
     const {
       cx,
@@ -86,11 +96,18 @@ const AdminHome = () => {
     const my = cy + (outerRadius + 30) * sin;
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
-    const textAnchor = cos >= 0 ? "start" : "end";
+    const textAnchor = cos >= 0 ? 'start' : 'end';
 
     return (
       <g>
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill="#fff" className="text-sm">
+        <text
+          x={cx}
+          y={cy}
+          dy={8}
+          textAnchor="middle"
+          fill="#fff"
+          className="text-sm"
+        >
           {payload.name}
         </text>
         <Sector
@@ -173,7 +190,7 @@ const AdminHome = () => {
         setFeedbacks(data?.latestFeedback);
         setTotalRevenue(data?.totalRevenue);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
@@ -185,10 +202,10 @@ const AdminHome = () => {
   }, [user, axiosSecure]);
 
   const feedbackTypeColors = {
-    "Feedback": "bg-emerald-500",
-    "Feature Request": "bg-blue-500",
-    "Bug Report": "bg-red-500",
-    "Question": "bg-amber-500"
+    Feedback: 'bg-emerald-500',
+    'Feature Request': 'bg-blue-500',
+    'Bug Report': 'bg-red-500',
+    Question: 'bg-amber-500',
   };
 
   const renderSkeletonCard = () => (
@@ -218,9 +235,12 @@ const AdminHome = () => {
       <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">
-            Welcome back, <span className="text-purple-400">{user?.displayName}</span>
+            Welcome back,{' '}
+            <span className="text-purple-400">{user?.displayName}</span>
           </h1>
-          <p className="text-gray-400">Here's what's happening on your platform today</p>
+          <p className="text-gray-400">
+            Here's what's happening on your platform today
+          </p>
         </div>
         <div className="flex space-x-2">
           <button className="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-gray-300 hover:bg-gray-700 border border-gray-700">
@@ -248,9 +268,11 @@ const AdminHome = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {loading ? (
             <>
-              {Array(4).fill(0).map((_, index) => (
-                <div key={index}>{renderSkeletonCard()}</div>
-              ))}
+              {Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <div key={index}>{renderSkeletonCard()}</div>
+                ))}
             </>
           ) : (
             <>
@@ -271,7 +293,7 @@ const AdminHome = () => {
               <SummaryCard
                 icon={<MdOutlineAttachMoney size={18} className="text-white" />}
                 title="Total Revenue"
-                value="$0"
+                value={`$ ${totalRevenue.toFixed(2)}`}
                 color="bg-green-500/20 text-green-400"
                 change="0%"
               />
@@ -293,8 +315,13 @@ const AdminHome = () => {
         <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50 col-span-1 lg:col-span-2">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">User Distribution</h2>
-              <Link to="/dashboard/allUsers" className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1">
+              <h2 className="text-lg font-semibold text-white">
+                User Distribution
+              </h2>
+              <Link
+                to="/dashboard/allUsers"
+                className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1"
+              >
                 View all users <ArrowRight size={14} />
               </Link>
             </div>
@@ -332,12 +359,17 @@ const AdminHome = () => {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#1f2937",
-                          borderColor: "#374151",
-                          borderRadius: "0.375rem",
-                          color: "#f9fafb"
+                          backgroundColor: '#1f2937',
+                          borderColor: '#374151',
+                          borderRadius: '0.375rem',
+                          color: '#f9fafb',
                         }}
-                        formatter={(value, name) => [`${value} Users (${(value / users * 100).toFixed(1)}%)`, name]}
+                        formatter={(value, name) => [
+                          `${value} Users (${((value / users) * 100).toFixed(
+                            1
+                          )}%)`,
+                          name,
+                        ]}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -348,9 +380,14 @@ const AdminHome = () => {
               <div className="w-full lg:w-1/3 flex flex-col gap-3">
                 {loading ? (
                   <>
-                    {Array(3).fill(0).map((_, index) => (
-                      <div key={index} className="h-14 bg-gray-700/50 rounded-md animate-pulse"></div>
-                    ))}
+                    {Array(3)
+                      .fill(0)
+                      .map((_, index) => (
+                        <div
+                          key={index}
+                          className="h-14 bg-gray-700/50 rounded-md animate-pulse"
+                        ></div>
+                      ))}
                   </>
                 ) : (
                   <>
@@ -358,17 +395,28 @@ const AdminHome = () => {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          <span className="text-xs font-medium text-white">Free Users</span>
+                          <span className="text-xs font-medium text-white">
+                            Free Users
+                          </span>
                         </div>
                         <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-900/30 text-green-400 font-semibold">
-                          {users > 0 ? Math.round((totalFreeUsers / users) * 100) : 0}%
+                          {users > 0
+                            ? Math.round((totalFreeUsers / users) * 100)
+                            : 0}
+                          %
                         </span>
                       </div>
-                      <div className="text-xl font-bold text-white mb-1">{totalFreeUsers}</div>
+                      <div className="text-xl font-bold text-white mb-1">
+                        {totalFreeUsers}
+                      </div>
                       <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-green-500 rounded-full transition-all duration-700 ease-in-out"
-                          style={{ width: `${users > 0 ? (totalFreeUsers / users) * 100 : 0}%` }}
+                          style={{
+                            width: `${
+                              users > 0 ? (totalFreeUsers / users) * 100 : 0
+                            }%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -377,17 +425,28 @@ const AdminHome = () => {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                          <span className="text-xs font-medium text-white">Pro Users</span>
+                          <span className="text-xs font-medium text-white">
+                            Pro Users
+                          </span>
                         </div>
                         <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-900/30 text-purple-400 font-semibold">
-                          {users > 0 ? Math.round((totalProUsers / users) * 100) : 0}%
+                          {users > 0
+                            ? Math.round((totalProUsers / users) * 100)
+                            : 0}
+                          %
                         </span>
                       </div>
-                      <div className="text-xl font-bold text-white mb-1">{totalProUsers}</div>
+                      <div className="text-xl font-bold text-white mb-1">
+                        {totalProUsers}
+                      </div>
                       <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-purple-500 rounded-full transition-all duration-700 ease-in-out"
-                          style={{ width: `${users > 0 ? (totalProUsers / users) * 100 : 0}%` }}
+                          style={{
+                            width: `${
+                              users > 0 ? (totalProUsers / users) * 100 : 0
+                            }%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -396,17 +455,28 @@ const AdminHome = () => {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                          <span className="text-xs font-medium text-white">Elite Users</span>
+                          <span className="text-xs font-medium text-white">
+                            Elite Users
+                          </span>
                         </div>
                         <span className="text-xs px-1.5 py-0.5 rounded-full bg-blue-900/30 text-blue-400 font-semibold">
-                          {users > 0 ? Math.round((totalEliteUsers / users) * 100) : 0}%
+                          {users > 0
+                            ? Math.round((totalEliteUsers / users) * 100)
+                            : 0}
+                          %
                         </span>
                       </div>
-                      <div className="text-xl font-bold text-white mb-1">{totalEliteUsers}</div>
+                      <div className="text-xl font-bold text-white mb-1">
+                        {totalEliteUsers}
+                      </div>
                       <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-blue-500 rounded-full transition-all duration-700 ease-in-out"
-                          style={{ width: `${users > 0 ? (totalEliteUsers / users) * 100 : 0}%` }}
+                          style={{
+                            width: `${
+                              users > 0 ? (totalEliteUsers / users) * 100 : 0
+                            }%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -420,8 +490,13 @@ const AdminHome = () => {
         {/* Recent Feedback */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">Recent Feedback</h2>
-            <Link to="/dashboard/feedback" className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1">
+            <h2 className="text-lg font-semibold text-white">
+              Recent Feedback
+            </h2>
+            <Link
+              to="/dashboard/feedback"
+              className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1"
+            >
               View all messages <ArrowRight size={14} />
             </Link>
           </div>
@@ -429,9 +504,11 @@ const AdminHome = () => {
           <div className="grid gap-4">
             {loading ? (
               <>
-                {Array(3).fill(0).map((_, index) => (
-                  <div key={index}>{renderSkeletonFeedback()}</div>
-                ))}
+                {Array(3)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div key={index}>{renderSkeletonFeedback()}</div>
+                  ))}
               </>
             ) : feedbacks && feedbacks.length > 0 ? (
               feedbacks.slice(0, 2).map((feedback, idx) => (
@@ -444,24 +521,40 @@ const AdminHome = () => {
                       <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                         {feedback.name ? (
                           <span className="text-xs font-medium text-white">
-                            {feedback.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            {feedback.name
+                              .split(' ')
+                              .map(n => n[0])
+                              .join('')
+                              .toUpperCase()}
                           </span>
                         ) : (
                           <User size={14} className="text-gray-400" />
                         )}
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-white">{feedback.name}</h3>
-                        <p className="text-xs text-gray-400">{feedback.email}</p>
+                        <h3 className="text-sm font-medium text-white">
+                          {feedback.name}
+                        </h3>
+                        <p className="text-xs text-gray-400">
+                          {feedback.email}
+                        </p>
                       </div>
                     </div>
-                    <span className={`text-xs px-2 py-1 rounded-full ${feedbackTypeColors[feedback.feedbackType] || 'bg-gray-500'
-                      }`}>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        feedbackTypeColors[feedback.feedbackType] ||
+                        'bg-gray-500'
+                      }`}
+                    >
                       {feedback.feedbackType}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-300 line-clamp-2">{feedback.message}</p>
-                  <div className="mt-3 text-xs text-gray-500">{feedback.date}</div>
+                  <p className="text-sm text-gray-300 line-clamp-2">
+                    {feedback.message}
+                  </p>
+                  <div className="mt-3 text-xs text-gray-500">
+                    {feedback.date}
+                  </div>
                 </div>
               ))
             ) : (

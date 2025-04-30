@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const QuizPage = () => {
   const { category } = useParams();
@@ -9,7 +9,7 @@ const QuizPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
 
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -39,8 +39,10 @@ const QuizPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data: generatedQuiz } = await axiosPublic.post(`/graphql`, {
-          query: `
+        const { data: generatedQuiz } = await axiosSecure.post(
+          `/secure_graphql`,
+          {
+            query: `
             query GetQuizzes($topic: String!, $difficulty: String!, $quizzesNumber: Int!, $type: String!) {
               getQuizzes(topic: $topic, difficulty: $difficulty, quizzesNumber: $quizzesNumber, type: $type) {
                 question
@@ -49,13 +51,14 @@ const QuizPage = () => {
               }
             }
     `,
-          variables: {
-            topic: category,
-            difficulty: difficulty,
-            quizzesNumber: Number(quizzesNumber),
-            type: quizzesType || 'mc',
-          },
-        });
+            variables: {
+              topic: category,
+              difficulty: difficulty,
+              quizzesNumber: Number(quizzesNumber),
+              type: quizzesType || 'mc',
+            },
+          }
+        );
 
         if (!signal.aborted) {
           setQuestions(generatedQuiz?.data?.getQuizzes);

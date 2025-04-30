@@ -1,31 +1,33 @@
-import { useEffect, useState, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { MessageCircle, X, Send, Zap } from "lucide-react";
-import useAuth from "@/hooks/useAuth";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import { Link } from "react-router-dom";
-import useUserSubsciptionType from "@/hooks/useUserSubsciptionType";
+import { useEffect, useState, useRef } from 'react';
+import { Card } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+import useUserSubscriptionType from '@/hooks/useUserSubscriptionType';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
+
+import { MessageCircle, X, Send, Zap } from 'lucide-react';
+import useAuth from '@/hooks/useAuth';
 
 const ZapChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
+  const axiosSecure = useAxiosSecure();
+  const bottomRef = useRef(null);
+  const [userType] = useUserSubscriptionType();
+  // console.log(userType);
   const [isTyping, setIsTyping] = useState(false);
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
-  const bottomRef = useRef(null);
   const textareaRef = useRef(null);
   const chatContainerRef = useRef(null);
-  const [userType] = useUserSubsciptionType();
 
   useEffect(() => {
-    bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef?.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = "auto";
+      textarea.style.height = 'auto';
       textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
     }
   }, [input]);
@@ -33,8 +35,8 @@ const ZapChatWidget = () => {
   // Entrance animation for chat window
   useEffect(() => {
     if (isOpen && chatContainerRef.current) {
-      chatContainerRef.current.classList.remove("scale-95", "opacity-0");
-      chatContainerRef.current.classList.add("scale-100", "opacity-100");
+      chatContainerRef.current.classList.remove('scale-95', 'opacity-0');
+      chatContainerRef.current.classList.add('scale-100', 'opacity-100');
     }
   }, [isOpen]);
 
@@ -42,37 +44,34 @@ const ZapChatWidget = () => {
     if (!input.trim()) return;
 
     const userMessage = input.trim();
-    setMessages((prev) => [
-      ...prev,
-      { from: "user", text: userMessage },
-    ]);
+    setMessages(prev => [...prev, { from: 'user', text: userMessage }]);
     setIsTyping(true);
-    setInput("");
+    setInput('');
 
     try {
-      const response = await axiosPublic.post(`/zapAi/${user?.email}`, {
+      const response = await axiosSecure.post(`/zapAi`, {
         message: userMessage,
       });
 
-      const aiReply = response?.data?.response || "Something went wrong.";
+      const aiReply = response?.data?.response || 'Something went wrong.';
       setIsTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        { from: "ai", text: aiReply }
-      ]);
+      setMessages(prev => [...prev, { from: 'ai', text: aiReply }]);
     } catch (error) {
       setIsTyping(false);
-      setMessages((prev) => [
+      setMessages(prev => [
         ...prev,
-        { from: "ai", text: "Failed to get response from ZapAI. Please try again later." }
+        {
+          from: 'ai',
+          text: 'Failed to get response from ZapAI. Please try again later.',
+        },
       ]);
     }
   };
 
   const closeChat = () => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.classList.remove("scale-100", "opacity-100");
-      chatContainerRef.current.classList.add("scale-95", "opacity-0");
+      chatContainerRef.current.classList.remove('scale-100', 'opacity-100');
+      chatContainerRef.current.classList.add('scale-95', 'opacity-0');
       setTimeout(() => setIsOpen(false), 300);
     } else {
       setIsOpen(false);
@@ -83,7 +82,7 @@ const ZapChatWidget = () => {
     <div className="fixed bottom-4 right-4 z-50">
       {/* Chat Window */}
       {isOpen && (
-        <div 
+        <div
           ref={chatContainerRef}
           className="w-96 h-[32rem] transition-all duration-300 scale-95 opacity-0"
         >
@@ -115,7 +114,11 @@ const ZapChatWidget = () => {
               </div>
 
               {/* Messages Area */}
-              <div className={`flex-1 ${messages.length > 0 ? 'overflow-y-auto' : 'overflow-hidden'} p-4 space-y-4 text-sm scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent`}>
+              <div
+                className={`flex-1 ${
+                  messages.length > 0 ? 'overflow-y-auto' : 'overflow-hidden'
+                } p-4 space-y-4 text-sm scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent`}
+              >
                 {messages?.length === 0 && (
                   <div className="flex flex-col items-center justify-center h-full space-y-6 px-4">
                     <div className="w-20 h-20 bg-gradient-to-br from-violet-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg shadow-violet-500/20 animate-pulse-slow">
@@ -126,43 +129,44 @@ const ZapChatWidget = () => {
                         Welcome to ZapAI
                       </h3>
                       <p className="text-gray-400 max-w-xs">
-                        Ask me anything about your documents, data, or just chat with me!
+                        Ask me anything about your documents, data, or just chat
+                        with me!
                       </p>
                     </div>
                   </div>
                 )}
-                
+
                 {messages.map((msg, idx) => (
                   <div
                     key={idx}
-                    className={`flex items-start gap-2 ${msg.from === "user" ? "justify-end" : "justify-start"} ${
-                      idx === messages.length - 1 ? "animate-fade-in" : ""
-                    }`}
+                    className={`flex items-start gap-2 ${
+                      msg.from === 'user' ? 'justify-end' : 'justify-start'
+                    } ${idx === messages.length - 1 ? 'animate-fade-in' : ''}`}
                   >
-                    {msg.from === "ai" && (
+                    {msg.from === 'ai' && (
                       <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-violet-500/20">
                         <Zap className="w-4 h-4 text-white" />
                       </div>
                     )}
                     <div
                       className={`max-w-[80%] p-3 rounded-2xl shadow-md break-words whitespace-pre-wrap ${
-                        msg.from === "user"
-                          ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-tr-none"
-                          : "bg-gray-800/80 text-gray-200 rounded-tl-none backdrop-blur-sm"
+                        msg.from === 'user'
+                          ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-tr-none'
+                          : 'bg-gray-800/80 text-gray-200 rounded-tl-none backdrop-blur-sm'
                       }`}
                     >
                       {msg.text}
                     </div>
-                    {msg.from === "user" && (
+                    {msg.from === 'user' && (
                       <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-indigo-500/20">
                         <span className="text-white text-xs font-bold">
-                          {user?.email?.charAt(0).toUpperCase() || "U"}
+                          {user?.email?.charAt(0).toUpperCase() || 'U'}
                         </span>
                       </div>
                     )}
                   </div>
                 ))}
-                
+
                 {isTyping && (
                   <div className="flex items-start gap-2 justify-start animate-fade-in">
                     <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-violet-500/20">
@@ -171,18 +175,24 @@ const ZapChatWidget = () => {
                     <div className="bg-gray-800/80 text-gray-200 rounded-2xl rounded-tl-none backdrop-blur-sm p-4 shadow-md">
                       <div className="flex items-center gap-1.5">
                         <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></span>
-                        <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></span>
-                        <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></span>
+                        <span
+                          className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
+                          style={{ animationDelay: '0.2s' }}
+                        ></span>
+                        <span
+                          className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
+                          style={{ animationDelay: '0.4s' }}
+                        ></span>
                       </div>
                     </div>
                   </div>
                 )}
-                
+
                 <div ref={bottomRef} />
               </div>
 
               {/* Input or Upgrade Prompt */}
-              {userType === "Elite" ? (
+              {userType === 'Elite' ? (
                 <div className="p-4 bg-gray-900/90 border-t border-gray-800/80 backdrop-blur-md">
                   <div className="relative flex items-end gap-2">
                     <textarea
@@ -190,27 +200,27 @@ const ZapChatWidget = () => {
                       rows={1}
                       placeholder="Ask ZapAI..."
                       value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
+                      onChange={e => setInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
                           e.preventDefault();
                           handleSend();
                         }
                       }}
                       className="w-full pr-12 bg-gray-800/70 border border-gray-700/50 rounded-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all duration-200 placeholder-gray-500 text-sm resize-none py-3 px-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
                       style={{
-                        minHeight: "2.75rem",
-                        maxHeight: "10rem",
-                        overflowY: "auto",
+                        minHeight: '2.75rem',
+                        maxHeight: '10rem',
+                        overflowY: 'auto',
                       }}
                     />
                     <button
                       onClick={handleSend}
                       disabled={!input.trim()}
                       className={`absolute right-3 bottom-2.5 p-1.5 rounded-lg transition-all duration-200 ${
-                        input.trim() 
-                          ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:shadow-md hover:shadow-indigo-500/30 hover:scale-105" 
-                          : "bg-gray-700 text-gray-400"
+                        input.trim()
+                          ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:shadow-md hover:shadow-indigo-500/30 hover:scale-105'
+                          : 'bg-gray-700 text-gray-400'
                       }`}
                       aria-label="Send message"
                     >
@@ -224,10 +234,13 @@ const ZapChatWidget = () => {
                     <div className="bg-gradient-to-r from-indigo-900/50 to-violet-900/50 rounded-xl p-4">
                       <div className="flex items-center justify-center mb-2">
                         <Zap className="w-5 h-5 text-indigo-300 mr-1.5" />
-                        <span className="text-indigo-300 font-semibold">Elite Feature</span>
+                        <span className="text-indigo-300 font-semibold">
+                          Elite Feature
+                        </span>
                       </div>
                       <p className="text-sm text-gray-300">
-                        Unlock ZapAI and other premium features with an Elite subscription.
+                        Unlock ZapAI and other premium features with an Elite
+                        subscription.
                       </p>
                     </div>
                     <Link to="/checkout" className="block">
