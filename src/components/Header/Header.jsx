@@ -192,7 +192,7 @@ const Header = () => {
             ease: 'easeInOut',
             delay: isOpen ? 0.05 : 0,
           }}
-          className="lg:hidden flex flex-col absolute left-1/2 -translate-1/2 text-center space-y-4"
+          className="lg:hidden flex flex-col font-semibold absolute -top-[50px] left-[112px] -translate-1/2 text-left space-y-4"
         >
           {Navs.map((navlink, index) => (
             <NavLinkItem key={index} navlink={navlink} location={location} />

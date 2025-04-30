@@ -295,7 +295,7 @@ const AdminHome = () => {
                 title="Total Revenue"
                 value={`$ ${totalRevenue.toFixed(2)}`}
                 color="bg-green-500/20 text-green-400"
-                change="0%"
+                change="+70%"
               />
               <SummaryCard
                 icon={<Activity size={18} className="text-white" />}
