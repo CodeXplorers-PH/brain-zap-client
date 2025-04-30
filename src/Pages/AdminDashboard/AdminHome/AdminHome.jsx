@@ -39,6 +39,7 @@ const AdminHome = () => {
   const [totalFreeUsers, setTotalFreeUsers] = useState(0);
   const [totalProUsers, setTotalProUsers] = useState(0);
   const [totalEliteUsers, setTotalEliteUsers] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [feedbacks, setFeedbacks] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const axiosSecure = useAxiosSecure();
@@ -141,6 +142,7 @@ const AdminHome = () => {
                 totalFreeUsers
                 totalProUsers
                 totalEliteUsers
+                totalRevenue
                 latestFeedback {
       _id
       name
@@ -160,6 +162,7 @@ const AdminHome = () => {
         setTotalProUsers(data?.totalProUsers || 0);
         setTotalEliteUsers(data?.totalEliteUsers || 0);
         setFeedbacks(data?.latestFeedback);
+        setTotalRevenue(data?.totalRevenue);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -210,8 +213,8 @@ const AdminHome = () => {
         <SummaryCard
           icon={<MdOutlineAttachMoney size={24} />}
           title="Total Revenue"
-          value="Coming Soon"
-          description="Revenue tracking will be available soon"
+          value={`${totalRevenue.toFixed(2)} $`}
+          description={`Total Revenue Generated: $${totalRevenue.toFixed(2)}`}
           gradient={gradients[2]}
         />
       </section>
