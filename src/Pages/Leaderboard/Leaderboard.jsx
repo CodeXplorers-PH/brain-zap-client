@@ -289,7 +289,7 @@ const Leaderboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-40 pb-16 px-4">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-20 sm:pt-32 md:pt-40 pb-16 px-4">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mb-4"></div>
           <p className="text-gray-400">Loading leaderboard...</p>
@@ -299,33 +299,33 @@ const Leaderboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-40 pb-16 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-28 md:pt-32 pb-16 px-4">
       <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col justify-between items-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+        <div className="flex justify-end items-center gap-2 my-2 lg:my-0">
+          <select
+            className="bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            value={exportFormat}
+            onChange={e => setExportFormat(e.target.value)}
+          >
+            <option value="pdf">PDF</option>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+          </select>
+          <button
+            onClick={exportLeaderboard}
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm"
+          >
+            <FileDown size={16} />
+            <span className="hidden sm:inline">Export</span>
+          </button>
+        </div>
+        <div className="mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 text-center">
             BrainZap Leaderboard
           </h1>
-          <div className="flex justify-end items-center gap-2 w-full">
-            <select
-              className="bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              value={exportFormat}
-              onChange={e => setExportFormat(e.target.value)}
-            >
-              <option value="pdf">PDF</option>
-              <option value="csv">CSV</option>
-              <option value="json">JSON</option>
-            </select>
-            <button
-              onClick={exportLeaderboard}
-              className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm"
-            >
-              <FileDown size={16} />
-              Export
-            </button>
-          </div>
         </div>
 
-        <div className="flex justify-center items-end gap-4 md:gap-8 mb-16 relative">
+        <div className="flex justify-center items-end gap-2 xs:gap-3 sm:gap-6 md:gap-8 mb-12 sm:mb-16 relative">
           {podiumStyles.map((style, index) => {
             const userData = topUsers[style.rank - 1];
             return (
@@ -338,28 +338,28 @@ const Leaderboard = () => {
                   <div className="flex flex-col items-center">
                     <div className="relative">
                       <Avatar
-                        className={`${style.avatarSize} mb-3 border-4 border-gray-800 ${style.glow} rounded-full transition-transform duration-300 hover:scale-110`}
+                        className={`${style.avatarSize} mb-2 sm:mb-3 border-2 sm:border-4 border-gray-800 ${style.glow} rounded-full transition-transform duration-300 hover:scale-110`}
                       >
                         <AvatarImage
                           src={userData.photoURL}
                           alt={userData.displayName || 'User'}
                         />
-                        <AvatarFallback className="bg-gray-700 text-white font-semibold">
+                        <AvatarFallback className="bg-gray-700 text-white font-semibold text-xs sm:text-base">
                           {getInitials(userData.displayName)}
                         </AvatarFallback>
                       </Avatar>
                       {style.rank === 1 && (
                         <Crown
-                          className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-amber-400"
-                          size={24}
+                          className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 text-amber-400"
+                          size={20}
                         />
                       )}
                     </div>
                     <div
-                      className={`w-28 md:w-36 ${style.height} bg-gradient-to-b ${style.color} rounded-t-2xl rounded-b-md ${style.glow} flex items-end justify-center relative overflow-hidden`}
+                      className={`w-20 xs:w-24 sm:w-28 md:w-36 ${style.height} bg-gradient-to-b ${style.color} rounded-t-2xl rounded-b-md ${style.glow} flex items-end justify-center relative overflow-hidden`}
                     >
                       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:10px_100%] opacity-50"></div>
-                      <span className="text-4xl md:text-5xl font-extrabold text-white/30 mb-4">
+                      <span className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white/30 mb-4">
                         {style.rank}
                       </span>
                       <div className="absolute inset-0 border-t-4 border-gray-300/20 animate-pulse"></div>
@@ -368,7 +368,7 @@ const Leaderboard = () => {
                       {userData.displayName || 'Anonymous'}
                     </p>
                     <div
-                      className={`${style.pointsBg} text-black font-semibold text-xs md:text-sm px-4 py-1 rounded-full mt-2 shadow-md`}
+                      className={`${style.pointsBg} text-black font-semibold text-xs px-3 sm:px-4 py-1 rounded-full mt-1 sm:mt-2 shadow-md`}
                     >
                       {userData.stats.totalPoints} Points
                     </div>
@@ -376,24 +376,26 @@ const Leaderboard = () => {
                 ) : (
                   <div className="flex flex-col items-center">
                     <div
-                      className={`${style.avatarSize} mb-3 bg-gray-700 rounded-full flex items-center justify-center text-gray-400 text-2xl ${style.glow}`}
+                      className={`${style.avatarSize} mb-2 sm:mb-3 bg-gray-700 rounded-full flex items-center justify-center text-gray-400 text-xl ${style.glow}`}
                     >
                       ?
                     </div>
                     <div
-                      className={`w-28 md:w-36 ${style.height} bg-gradient-to-b ${style.color} rounded-t-2xl rounded-b-md ${style.glow} flex items-end justify-center relative`}
+                      className={`w-20 xs:w-24 sm:w-28 md:w-36 ${style.height} bg-gradient-to-b ${style.color} rounded-t-2xl rounded-b-md ${style.glow} flex items-end justify-center relative`}
                     >
-                      <span className="text-4xl md:text-5xl font-extrabold text-white/30 mb-4">
+                      <span className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white/30 mb-4">
                         {style.rank}
                       </span>
                     </div>
-                    <p className="text-gray-400 text-sm mt-3">No User</p>
+                    <p className="text-gray-400 text-xs sm:text-sm mt-2 sm:mt-3">
+                      No User
+                    </p>
                   </div>
                 )}
               </div>
             );
           })}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[200px] bg-gradient-to-b from-purple-500/20 to-transparent blur-3xl opacity-50 pointer-events-none"></div>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full sm:w-[600px] h-[200px] bg-gradient-to-b from-purple-500/20 to-transparent blur-3xl opacity-50 pointer-events-none"></div>
         </div>
 
         {otherUsers.length > 0 && (
@@ -403,14 +405,13 @@ const Leaderboard = () => {
                 Other Rankings
               </h2>
             </div>
-            <div className="overflow-x-auto">
+            <div className="w-full">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="text-gray-400 text-sm md:text-base">
-                    <th className="p-3">Rank</th>
-                    <th className="p-3">User</th>
-                    <th className="p-3">Points</th>
-                    <th className="p-3">Subscription</th>
+                  <tr className="text-gray-400 text-xs sm:text-sm md:text-base">
+                    <th className="p-2 sm:p-3 w-1/6">Rank</th>
+                    <th className="p-2 sm:p-3 w-3/6">User</th>
+                    <th className="p-2 sm:p-3 w-2/6 text-right">Points</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -421,33 +422,24 @@ const Leaderboard = () => {
                         userData.email === user?.email ? 'bg-purple-900/30' : ''
                       }`}
                     >
-                      <td className="p-3 text-white text-sm md:text-base">
+                      <td className="p-2 sm:p-3 text-white text-xs sm:text-sm md:text-base">
                         {index + 4}
                       </td>
-                      <td className="p-3 flex items-center gap-2">
-                        <Avatar className="w-8 h-8 md:w-10 md:h-10">
-                          <AvatarImage src={userData.photoURL} />
-                          <AvatarFallback>
-                            {getInitials(userData.displayName)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-white text-sm md:text-base truncate max-w-[150px] md:max-w-[200px]">
-                          {userData.displayName || 'Anonymous'}
-                        </span>
+                      <td className="p-2 sm:p-3">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex-shrink-0">
+                            <AvatarImage src={userData.photoURL} />
+                            <AvatarFallback className="text-xs sm:text-sm">
+                              {getInitials(userData.displayName)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-white text-xs sm:text-sm md:text-base truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]">
+                            {userData.displayName || 'Anonymous'}
+                          </span>
+                        </div>
                       </td>
-                      <td className="p-3 text-white text-sm md:text-base">
+                      <td className="p-2 sm:p-3 text-white text-xs sm:text-sm md:text-base text-right font-semibold">
                         {userData.stats.totalPoints}
-                      </td>
-                      <td className="p-3">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            userData.subscription === 'Premium'
-                              ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
-                              : 'bg-gray-700 text-gray-300'
-                          }`}
-                        >
-                          {userData.subscription}
-                        </span>
                       </td>
                     </tr>
                   ))}

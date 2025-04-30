@@ -207,30 +207,30 @@ const Contact = () => {
         </div>
 
         {/* What Makes BrainZap Special Section */}
-<div className="mb-20">
-  <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 text-center">
-    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-      What Makes BrainZap Special
-    </span>
-  </h2>
-  
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-    {uniqueFeatures.map((feature, index) => (
-      <div 
-        key={index} 
-        className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/30 rounded-lg p-5 hover:bg-gray-800/60 transition-all duration-300 hover:border-purple-500/20 group flex flex-col"
-      >
-        <div className="flex items-center space-x-3 mb-3">
-          <div className="text-purple-400 bg-gray-700/30 p-2 rounded-md group-hover:bg-purple-500/10 transition-all duration-300">
-            {feature.icon}
+        <div className="mb-20">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 text-center">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+              What Makes BrainZap Special
+            </span>
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {uniqueFeatures.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-gray-800/40 backdrop-blur-sm border border-gray-700/30 rounded-lg p-5 hover:bg-gray-800/60 transition-all duration-300 hover:border-purple-500/20 group flex flex-col"
+              >
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="text-purple-400 bg-gray-700/30 p-2 rounded-md group-hover:bg-purple-500/10 transition-all duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="font-medium text-white text-lg">{feature.title}</h3>
+                </div>
+                <p className="text-gray-400 text-sm leading-relaxed">{feature.description.split(' ').slice(0, 12).join(' ') + (feature.description.split(' ').length > 12 ? '...' : '')}</p>
+              </div>
+            ))}
           </div>
-          <h3 className="font-medium text-white text-lg">{feature.title}</h3>
         </div>
-        <p className="text-gray-400 text-sm leading-relaxed">{feature.description.split(' ').slice(0, 12).join(' ') + (feature.description.split(' ').length > 12 ? '...' : '')}</p>
-      </div>
-    ))}
-  </div>
-</div>
 
         {/* Contact Form Section */}
         <div>
@@ -312,9 +312,9 @@ const Contact = () => {
                   required
                   rows="6"
                   className="w-full px-4 py-3 bg-gray-800/70 border border-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-white transition-all duration-300"
-                  placeholder={formData.subject === "feature" ? "Describe your feature idea..." : 
-                              formData.subject === "bug" ? "Please describe the issue in detail..." : 
-                              "Your message here..."}
+                  placeholder={formData.subject === "feature" ? "Describe your feature idea..." :
+                    formData.subject === "bug" ? "Please describe the issue in detail..." :
+                      "Your message here..."}
                 ></textarea>
               </div>
 
@@ -331,9 +331,9 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <span>Submit {formData.subject === "feature" ? "Request" : 
-                              formData.subject === "bug" ? "Report" : 
-                              "Feedback"}</span>
+                      <span>Submit {formData.subject === "feature" ? "Request" :
+                        formData.subject === "bug" ? "Report" :
+                          "Feedback"}</span>
                       <FiSend className="w-5 h-5" />
                     </>
                   )}

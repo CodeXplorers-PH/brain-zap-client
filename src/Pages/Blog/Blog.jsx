@@ -137,12 +137,12 @@ const Blog = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900 pt-40 pb-20 px-4 sm:px-6">
+    <div className="min-h-screen bg-gray-900 pt-32 md:pt-40 pb-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-4">
-            Brain Zap Community
+            BrainZap Community
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Share your knowledge and connect with like-minded individuals
@@ -156,34 +156,6 @@ const Blog = () => {
             <p>{error}</p>
           </div>
         )}
-
-        {/* User Profile Area */}
-        {/* {isAuthenticated && (
-          <div className="flex items-center justify-between max-w-3xl mx-auto mb-8 bg-gray-800 p-4 rounded-xl">
-            <div className="flex items-center">
-              <img
-                src={user.photoURL || "/default-avatar.png"}
-                alt={user.displayName || "User"}
-                referrerPolicy="no-referrer"
-                className="w-10 h-10 rounded-full mr-3"
-              />
-              <div>
-                <p className="font-medium text-white">
-                  {user.displayName || "Anonymous User"}
-                </p>
-                <p className="text-sm text-gray-400">{user.email}</p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-medium rounded-lg flex items-center shadow-lg shadow-purple-600/20 transition-all"
-            >
-              <FiPlus className="mr-2" />
-              Create Post
-            </button>
-          </div>
-        )} */}
 
         {isAuthenticated && (
           <div className="relative">

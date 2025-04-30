@@ -3,6 +3,13 @@ import { useAuthContext } from '@/hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Code,
   FlaskConical,
   Globe,
@@ -696,6 +703,8 @@ const QuizCategories = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [userLevel, setUserLevel] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState('');
+  const [open, setOpen] = useState(false);
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
@@ -718,12 +727,17 @@ const QuizCategories = () => {
       });
   }, [user]);
 
-  const handleQuizCardClick = subject => {
+  const handleSelectType = (subject, quizzesType) => {
     navigate(
       `/quiz/${subject.link}?difficulty=${generateDifficulty(
         userLevel
-      )}&quizzesNumber=10&type=mc`
+      )}&quizzesNumber=10&type=${quizzesType}`
     );
+  };
+
+  const handleQuizCardClick = subject => {
+    setSelectedQuiz(subject);
+    setOpen(true);
   };
 
   const activeCategory = categoryTabs.find(cat => cat.id === activeTab);
@@ -781,13 +795,79 @@ const QuizCategories = () => {
         </div>
       </div>
 
+      {/* Quiz Dialog */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="bg-gray-900/90 backdrop-blur-sm text-white rounded-lg border border-gray-700 max-w-sm mx-auto">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-white">
+              Select Quiz Format
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 text-sm">
+              Choose how you want to be challenged
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 gap-3 mt-4">
+            <button
+              onClick={() => {
+                handleSelectType(selectedQuiz, 'tf');
+                setOpen(false);
+              }}
+              className={`w-full py-2.5 bg-gradient-to-r ${
+                activeCategory.gradient
+              } hover:opacity-90 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 shadow-md shadow-gray-800/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-${
+                activeCategory.color.split('-')[1]
+              }-500/50`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              True / False
+            </button>
+            <button
+              onClick={() => {
+                handleSelectType(selectedQuiz, 'mc');
+                setOpen(false);
+              }}
+              className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all duration-300 shadow-md shadow-gray-800/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-purple-500/50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+              Multiple Choice
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Quiz Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {subjects[activeTab]?.map((subject, index) => (
           <div
             key={index}
             onClick={() => handleQuizCardClick(subject)}
-            className="group relative overflow-hidden rounded-xl border border-gray-800 p-6 backdrop-blur-sm hover:border-${activeCategory.gradient}-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/10 cursor-pointer"
+            className="group relative overflow-hidden rounded-xl border border-gray-800 p-6 backdrop-blur-sm hover:border-gray-700 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/10 cursor-pointer"
             style={{ background: 'rgba(17, 24, 39, 0.7)' }}
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}

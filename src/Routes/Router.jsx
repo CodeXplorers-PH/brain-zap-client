@@ -66,7 +66,7 @@ export const router = createBrowserRouter([
         path: '/',
         element: (
           <Suspense fallback={<Loader></Loader>}>
-            <Home /> /* Home Page */
+            <Home />
           </Suspense>
         ),
       },

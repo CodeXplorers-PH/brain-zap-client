@@ -36,9 +36,7 @@ const StartQuiz = () => {
   }, [user]);
 
   // Determine if user has a Pro or Elite subscription
-  const hasSubscription =
-    userInfo?.userInfo?.subscription === 'Pro' ||
-    userInfo?.userInfo?.subscription === 'Elite';
+  const hasSubscription = userInfo?.userInfo?.subscription === 'Elite';
 
   if (userInfo?.userInfo === null) {
     return (
