@@ -124,7 +124,7 @@ const AdminDashboard = () => {
                 <TicketCheck size={20} /> Manage Coupons
               </NavLink>
             </li> */}
-            <li>
+            {/* <li>
               <NavLink
                 to="/dashboard/makeEvents"
                 className={({ isActive }) =>
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
               >
                 <CalendarCheck2 size={20} /> Events
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/dashboard/allUsers"
