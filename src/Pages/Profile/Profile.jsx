@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import useAuth from "@/hooks/useAuth";
-import ProfileTabs from "./ProfileTabs";
-import About from "./About";
-import Achievements from "./Achievements";
-import ShortQuizHistory from "./ShortQuizHistory";
-import FullQuizHistory from "./FullQuizHistory";
-import Settings from "./Settings";
-import TransactionHistory from "./TransactionHistory";
-import ProfileHeader from "./ProfileHeader";
-import AchievementTab from "./AchievementTab";
-import StreakCalendar from "./StreakCalendar";
-import LeaderboardRank from "./LeaderboardRank";
+import React, { useState, useEffect } from 'react';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useAuth from '@/hooks/useAuth';
+import ProfileTabs from './ProfileTabs';
+import About from './About';
+import Achievements from './Achievements';
+import ShortQuizHistory from './ShortQuizHistory';
+import FullQuizHistory from './FullQuizHistory';
+import Settings from './Settings';
+import TransactionHistory from './TransactionHistory';
+import ProfileHeader from './ProfileHeader';
+import AchievementTab from './AchievementTab';
+import StreakCalendar from './StreakCalendar';
+import LeaderboardRank from './LeaderboardRank';
 
 const Profile = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState('profile');
 
   const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
@@ -25,16 +25,16 @@ const Profile = () => {
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
 
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
 
   // Get Quiz History
   useEffect(() => {
-    axiosPublic
-      .get(`/quiz_history/${user?.email}`)
-      .then((res) => {
+    axiosSecure
+      .get(`/quiz_history`)
+      .then(res => {
         setUserQuizHistory(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, [user]);
@@ -45,39 +45,36 @@ const Profile = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const res = await axiosPublic.get(`/userInfo/${user.email}`);
+        const res = await axiosSecure.get(`/userInfo`);
         setUserInfo(res.data);
       } catch (err) {
-        console.error("Error fetching user info:", err);
+        console.error('Error fetching user info:', err);
       }
     };
 
     fetchUserInfo();
   }, [user]);
-  console.log(userInfo?.userInfo);
 
   // Streaks Code Starts Here
   useEffect(() => {
     if (!user) return;
 
-    axiosPublic
-      .get(`/quiz_history/${user?.email}`)
-      .then((res) => {
+    axiosSecure
+      .get(`/quiz_history`)
+      .then(res => {
         const history = res?.data || [];
         setUserQuizHistory(history);
         // Utility to get date in local YYYY-MM-DD format
-        const formatDateLocal = (dateStr) => {
+        const formatDateLocal = dateStr => {
           const date = new Date(dateStr);
-          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
+          return date.toLocaleDateString('en-CA'); // gives 'YYYY-MM-DD' format
         };
 
         // Extract unique quiz dates (formatted locally)
-        const quizDaysSet = new Set(
-          history.map((q) => formatDateLocal(q.date))
-        );
+        const quizDaysSet = new Set(history.map(q => formatDateLocal(q.date)));
 
         const today = new Date();
-        const todayStr = today.toLocaleDateString("en-CA");
+        const todayStr = today.toLocaleDateString('en-CA');
 
         // 🛑 If user didn't give quiz today, streak = 0
         if (!quizDaysSet.has(todayStr)) {
@@ -92,7 +89,7 @@ const Profile = () => {
         for (let i = 1; ; i++) {
           const prevDate = new Date();
           prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString("en-CA");
+          const prevStr = prevDate.toLocaleDateString('en-CA');
 
           if (quizDaysSet.has(prevStr)) {
             streakCount++;
@@ -103,7 +100,7 @@ const Profile = () => {
 
         setStreak(streakCount);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }, [user]);
@@ -117,7 +114,7 @@ const Profile = () => {
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
-    lastActive: "Now",
+    lastActive: 'Now',
   };
 
   return (
@@ -134,7 +131,7 @@ const Profile = () => {
         </div>
 
         {/* Profile Content */}
-        {activeTab === "profile" && (
+        {activeTab === 'profile' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* About Section */}
             <About userInfo={userInfo} stats={stats} streak={streak} />
@@ -161,18 +158,18 @@ const Profile = () => {
         )}
 
         {/* Placeholder for other tabs */}
-        {activeTab === "history" && (
+        {activeTab === 'history' && (
           <FullQuizHistory user={user} userQuizHistory={userQuizHistory} />
         )}
 
-        {activeTab === "settings" && <Settings />}
+        {activeTab === 'settings' && <Settings />}
 
         {/* Transaction history */}
-        {activeTab === "transactionHistory" && (
+        {activeTab === 'transactionHistory' && (
           <TransactionHistory user={user} userInfo={userInfo.userInfo} />
         )}
         {/* Achievement Tab */}
-        {activeTab === "achievements" && <AchievementTab xpPoints={xpPoints} />}
+        {activeTab === 'achievements' && <AchievementTab xpPoints={xpPoints} />}
       </div>
     </div>
   );
