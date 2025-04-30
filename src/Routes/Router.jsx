@@ -229,7 +229,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "messages",
+        path: "feedback",
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <AdminRoute>
