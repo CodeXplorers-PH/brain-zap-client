@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import useAxiosSecure from './useAxiosSecure';
+import useAuth from './useAuth';
 
-const useUserSubsciptionType = () => {
+const useUserSubscriptionType = () => {
+  const { user } = useAuth();
   const [userType, setUserType] = useState('');
   const axiosSecure = useAxiosSecure();
 
@@ -15,10 +17,10 @@ const useUserSubsciptionType = () => {
       }
     };
 
-    fetchUserInfo();
-  }, []);
+    user && fetchUserInfo();
+  }, [user]);
 
-  return [userType];
+  return [userType || null];
 };
 
-export default useUserSubsciptionType;
+export default useUserSubscriptionType;

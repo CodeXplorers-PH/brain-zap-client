@@ -1,19 +1,17 @@
 import { useEffect, useState, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { MessageCircle, X } from 'lucide-react';
-import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
-import useUserSubsciptionType from '@/hooks/useUserSubsciptionType';
+import useUserSubscriptionType from '@/hooks/useUserSubscriptionType';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const ZapChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
-  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const bottomRef = useRef(null);
-  const [userType] = useUserSubsciptionType();
+  const [userType] = useUserSubscriptionType();
   // console.log(userType);
 
   useEffect(() => {
