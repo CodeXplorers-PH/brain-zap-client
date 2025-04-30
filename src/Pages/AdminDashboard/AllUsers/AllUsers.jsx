@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { User, Trash2, ShieldCheck, Lock } from "lucide-react";
-import useAuth from "@/hooks/useAuth";
-import Swal from "sweetalert2";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { User, Trash2, ShieldCheck, Lock } from 'lucide-react';
+import useAuth from '@/hooks/useAuth';
+import Swal from 'sweetalert2';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const Card = ({ children, gradient }) => {
   return (
@@ -13,7 +13,7 @@ const Card = ({ children, gradient }) => {
       transition={{ duration: 0.3 }}
       className={`group relative overflow-hidden rounded-2xl border border-gray-800 p-6 backdrop-blur-md transition-all duration-300`}
       style={{
-        background: "rgba(17, 24, 39, 0.7)",
+        background: 'rgba(17, 24, 39, 0.7)',
       }}
     >
       {/* Gradient Glow Background */}
@@ -28,85 +28,85 @@ const Card = ({ children, gradient }) => {
 const AllUsers = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const axiosSecure = useAxiosSecure();
   const gradients = [
-    "from-indigo-500 via-purple-500 to-pink-500",
-    "from-cyan-500 via-blue-500 to-indigo-500",
-    "from-green-400 via-emerald-500 to-teal-500",
-    "from-sky-400 via-blue-500 to-purple-500",
+    'from-indigo-500 via-purple-500 to-pink-500',
+    'from-cyan-500 via-blue-500 to-indigo-500',
+    'from-green-400 via-emerald-500 to-teal-500',
+    'from-sky-400 via-blue-500 to-purple-500',
   ];
 
   useEffect(() => {
     axiosSecure
       .get(`/allUsers/information`)
-      .then((res) => setUsers(res?.data?.users));
+      .then(res => setUsers(res?.data?.users));
   }, [axiosSecure]);
 
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete this user!",
-      background: "rgba(30, 30, 60, 0.85)",
-      color: "#fff",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete this user!',
+      background: 'rgba(30, 30, 60, 0.85)',
+      color: '#fff',
       backdrop: `rgba(0, 0, 0, 0.4)`,
       customClass: {
-        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-        title: "text-blue-400 text-lg font-semibold",
+        popup: 'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+        title: 'text-blue-400 text-lg font-semibold',
         confirmButton:
-          "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-        htmlContainer: "text-sm text-gray-300",
+          'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+        htmlContainer: 'text-sm text-gray-300',
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         axiosSecure
           .delete(`/deleteUser/${id}`)
-          .then((res) => {
-            if (res.data?.message === "User deleted successfully.") {
-              setUsers((prevUsers) => prevUsers.filter((u) => u._id !== id));
+          .then(res => {
+            if (res.data?.message === 'User deleted successfully.') {
+              setUsers(prevUsers => prevUsers.filter(u => u._id !== id));
               Swal.fire({
-                title: "Deleted!",
-                text: "User has been deleted.",
-                icon: "success",
-                background: "rgba(30, 30, 60, 0.85)",
-                color: "#fff",
+                title: 'Deleted!',
+                text: 'User has been deleted.',
+                icon: 'success',
+                background: 'rgba(30, 30, 60, 0.85)',
+                color: '#fff',
                 backdrop: `rgba(0, 0, 0, 0.4)`,
                 customClass: {
                   popup:
-                    "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                  title: "text-blue-400 text-lg font-semibold",
+                    'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                  title: 'text-blue-400 text-lg font-semibold',
                   confirmButton:
-                    "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-                  htmlContainer: "text-sm text-gray-300",
+                    'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                  htmlContainer: 'text-sm text-gray-300',
                 },
               });
             } else {
-              throw new Error("User not found or could not be deleted.");
+              throw new Error('User not found or could not be deleted.');
             }
           })
-          .catch((error) => {
+          .catch(error => {
             Swal.fire({
-              title: "Error",
+              title: 'Error',
               text:
                 error.response?.data?.message ||
                 error.message ||
-                "Something went wrong.",
-              icon: "error",
-              background: "rgba(30, 30, 60, 0.85)",
-              color: "#fff",
+                'Something went wrong.',
+              icon: 'error',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
               backdrop: `rgba(0, 0, 0, 0.4)`,
               customClass: {
                 popup:
-                  "rounded-xl shadow-lg border border-red-500 backdrop-blur-lg",
-                title: "text-red-400 text-lg font-semibold",
+                  'rounded-xl shadow-lg border border-red-500 backdrop-blur-lg',
+                title: 'text-red-400 text-lg font-semibold',
                 confirmButton:
-                  "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
-                htmlContainer: "text-sm text-gray-300",
+                  'bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
               },
             });
           });
@@ -114,65 +114,65 @@ const AllUsers = () => {
     });
   };
 
-  const handleLock = (id) => {
+  const handleLock = id => {
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Lock for 1 hr!",
-      background: "rgba(30, 30, 60, 0.85)",
-      color: "#fff",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Lock for 1 hr!',
+      background: 'rgba(30, 30, 60, 0.85)',
+      color: '#fff',
       backdrop: `rgba(0, 0, 0, 0.4)`,
       customClass: {
-        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-        title: "text-blue-400 text-lg font-semibold",
+        popup: 'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+        title: 'text-blue-400 text-lg font-semibold',
         confirmButton:
-          "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-        htmlContainer: "text-sm text-gray-300",
+          'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+        htmlContainer: 'text-sm text-gray-300',
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         const unlockTime = Date.now() + 3600000;
         axiosSecure
           .post(`/lockoutUser/${id}`, { unlockTime })
-          .then((response) => {
+          .then(response => {
             // Show success message on success
             Swal.fire({
-              title: "Locked!",
-              text: "User has been locked for 1 hr.",
-              icon: "success",
-              background: "rgba(30, 30, 60, 0.85)",
-              color: "#fff",
+              title: 'Locked!',
+              text: 'User has been locked for 1 hr.',
+              icon: 'success',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
               backdrop: `rgba(0, 0, 0, 0.4)`,
               customClass: {
                 popup:
-                  "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                title: "text-blue-400 text-lg font-semibold",
+                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                title: 'text-blue-400 text-lg font-semibold',
                 confirmButton:
-                  "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-                htmlContainer: "text-sm text-gray-300",
+                  'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
               },
             });
           })
-          .catch((error) => {
+          .catch(error => {
             // Handle any errors here
             Swal.fire({
-              title: "Error!",
-              text: "There was an issue locking the user.",
-              icon: "error",
-              background: "rgba(30, 30, 60, 0.85)",
-              color: "#fff",
+              title: 'Error!',
+              text: 'There was an issue locking the user.',
+              icon: 'error',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
               backdrop: `rgba(0, 0, 0, 0.4)`,
               customClass: {
                 popup:
-                  "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                title: "text-red-400 text-lg font-semibold",
+                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                title: 'text-red-400 text-lg font-semibold',
                 confirmButton:
-                  "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
-                htmlContainer: "text-sm text-gray-300",
+                  'bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
               },
             });
           });
@@ -180,71 +180,69 @@ const AllUsers = () => {
     });
   };
 
-  const handleMakeAdmin = (id) => {
+  const handleMakeAdmin = id => {
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Make Admin!",
-      background: "rgba(30, 30, 60, 0.85)",
-      color: "#fff",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Make Admin!',
+      background: 'rgba(30, 30, 60, 0.85)',
+      color: '#fff',
       backdrop: `rgba(0, 0, 0, 0.4)`,
       customClass: {
-        popup: "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-        title: "text-blue-400 text-lg font-semibold",
+        popup: 'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+        title: 'text-blue-400 text-lg font-semibold',
         confirmButton:
-          "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-        htmlContainer: "text-sm text-gray-300",
+          'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+        htmlContainer: 'text-sm text-gray-300',
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         axiosSecure
-          .patch(`/makeAdmin/${id}/${user?.email}`)
-          .then((response) => {
+          .patch(`/makeAdmin/${id}`)
+          .then(response => {
             if (
-              response?.data?.message === "User has been promoted to admin."
+              response?.data?.message === 'User has been promoted to admin.'
             ) {
-              setUsers((prevUsers) =>
-                prevUsers.map((u) =>
-                  u._id === id ? { ...u, role: "admin" } : u
-                )
+              setUsers(prevUsers =>
+                prevUsers.map(u => (u._id === id ? { ...u, role: 'admin' } : u))
               );
               Swal.fire({
-                title: "Success!",
-                text: "User has been granted admin access.",
-                icon: "success",
-                background: "rgba(30, 30, 60, 0.85)",
-                color: "#fff",
+                title: 'Success!',
+                text: 'User has been granted admin access.',
+                icon: 'success',
+                background: 'rgba(30, 30, 60, 0.85)',
+                color: '#fff',
                 backdrop: `rgba(0, 0, 0, 0.4)`,
                 customClass: {
                   popup:
-                    "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                  title: "text-blue-400 text-lg font-semibold",
+                    'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                  title: 'text-blue-400 text-lg font-semibold',
                   confirmButton:
-                    "bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4",
-                  htmlContainer: "text-sm text-gray-300",
+                    'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                  htmlContainer: 'text-sm text-gray-300',
                 },
               });
             }
           })
-          .catch((error) => {
+          .catch(error => {
             Swal.fire({
-              title: "Error!",
-              text: "There was an issue making the user an admin.",
-              icon: "error",
-              background: "rgba(30, 30, 60, 0.85)",
-              color: "#fff",
+              title: 'Error!',
+              text: 'There was an issue making the user an admin.',
+              icon: 'error',
+              background: 'rgba(30, 30, 60, 0.85)',
+              color: '#fff',
               backdrop: `rgba(0, 0, 0, 0.4)`,
               customClass: {
                 popup:
-                  "rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg",
-                title: "text-red-400 text-lg font-semibold",
+                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                title: 'text-red-400 text-lg font-semibold',
                 confirmButton:
-                  "bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4",
-                htmlContainer: "text-sm text-gray-300",
+                  'bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded mt-4',
+                htmlContainer: 'text-sm text-gray-300',
               },
             });
           });
@@ -253,7 +251,7 @@ const AllUsers = () => {
   };
 
   const filteredUsers = users?.filter(
-    (u) =>
+    u =>
       u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -274,7 +272,7 @@ const AllUsers = () => {
               placeholder="Search by name or email..."
               className="px-4 py-2 rounded-md w-full max-w-md bg-[#1f2937]/50 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
@@ -319,7 +317,7 @@ const AllUsers = () => {
                     <Lock size={14} className="inline mr-1" />
                     Lock
                   </button>
-                  {user?.role === "admin" ? (
+                  {user?.role === 'admin' ? (
                     <button className="text-xs px-2 py-1 border border-green-500  rounded-md bg-green-600 text-white transition-all">
                       Admin Account
                     </button>
