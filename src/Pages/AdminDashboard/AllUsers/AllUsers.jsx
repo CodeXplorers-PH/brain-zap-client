@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
-import { Filter, Search, ShieldCheck, SlidersHorizontal, Trash2, Lock, User } from 'lucide-react';
+import { Filter, Search, ShieldCheck, SlidersHorizontal, Trash2, Lock, User, AlertTriangle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const AllUsers = () => {
@@ -443,7 +443,7 @@ const AllUsers = () => {
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
-              <option value="user">User</option>
+              {/* <option value="">User</option> */}
             </select>
           </div>
           <button className="p-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 hover:text-purple-400">

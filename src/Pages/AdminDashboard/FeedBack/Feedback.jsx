@@ -136,7 +136,7 @@ const Feedback = () => {
   const feedbackTypeColors = {
     Feedback: 'bg-emerald-500',
     'Feature Request': 'bg-blue-500',
-    'Bug Report': 'bg-red-500',
+    'Bug Report': 'bg-red-300',
     Question: 'bg-amber-500',
   };
 
