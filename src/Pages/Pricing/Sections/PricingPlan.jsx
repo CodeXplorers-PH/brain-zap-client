@@ -1,129 +1,126 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const pricingPlans = [
   {
-    title: "Free Zap",
-    description: "Kickstart your brain journey for free",
-    price: "$0.00",
+    title: 'Free Zap',
+    description: 'Kickstart your brain journey for free',
+    price: '$0.00',
     features: [
-      "Category based Quizzes",
-      "View Quiz History",
-      "Access to Recent Blogs",
-      "Earn basic Badges and Achievements",
+      'Access to all AI-powered quizzes',
+      'Level-based questions',
+      '24/7 AI tutor support',
     ],
-    cta: "Get Started",
+    cta: 'Get Started',
     popular: false,
-    bgColor: "bg-gradient-to-b from-gray-800 to-gray-900 border-gray-500/20",
+    bgColor: 'bg-gradient-to-b from-gray-800 to-gray-900 border-gray-500/20',
     buttonColor:
-      "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700",
-    iconColor: "text-gray-400",
-    priceColor: "text-gray-400",
-    textColor: "text-gray-200",
-    descColor: "text-gray-400",
-    highlightColor: "border-gray-500/30",
-    badgeColor: "bg-gray-600",
-    glowColor: "shadow-gray-500/10",
+      'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700',
+    iconColor: 'text-gray-400',
+    priceColor: 'text-gray-400',
+    textColor: 'text-gray-200',
+    descColor: 'text-gray-400',
+    highlightColor: 'border-gray-500/30',
+    badgeColor: 'bg-gray-600',
+    glowColor: 'shadow-gray-500/10',
   },
   {
-    title: "Zap Pro",
-    description: "Step up your game with smart insights",
-    price: "$9.99",
+    title: 'Zap Pro',
+    description: 'Step up your game with smart insights',
+    price: '$9.99',
     features: [
-      "All Features from Free Zap",
-      "Blog posting with Rich Text Formatting",
-      "Participate in Event Quizzes",
-      "AI Feedback on Quiz results",
-      "Print Quiz Results",
+      'Access to all AI-powered quizzes',
+      'Level-based questions',
+      'Personalized Questions',
+      'Progress tracking & analytics',
+      '24/7 AI tutor support',
     ],
-    cta: "Choose This Plan",
+    cta: 'Choose This Plan',
     popular: true,
-    bgColor: "bg-gradient-to-b from-gray-800 to-gray-900 border-blue-500/20",
+    bgColor: 'bg-gradient-to-b from-gray-800 to-gray-900 border-blue-500/20',
     buttonColor:
-      "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
-    iconColor: "text-blue-400",
-    priceColor: "text-blue-400",
-    textColor: "text-gray-200",
-    descColor: "text-gray-400",
-    highlightColor: "border-blue-500/30",
-    badgeColor: "bg-blue-600",
-    glowColor: "shadow-blue-500/20",
+      'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+    iconColor: 'text-blue-400',
+    priceColor: 'text-blue-400',
+    textColor: 'text-gray-200',
+    descColor: 'text-gray-400',
+    highlightColor: 'border-blue-500/30',
+    badgeColor: 'bg-blue-600',
+    glowColor: 'shadow-blue-500/20',
   },
   {
-    title: "Zap Elite",
-    description: "Next-level learning. Learn like never before.",
-    price: "$14.99",
+    title: 'Zap Elite',
+    description: 'Next-level learning. Learn like never before.',
+    price: '$14.99',
     features: [
-      "All Features from Pro Zap",
-      "Access to ZAP AI",
-      "Early access to new features",
-      "Progress tracking & analytics",
-      "Personalized Quiz Generation",
-      "Earn Elite Badges and Achievements",
+      'Access to all AI-powered quizzes',
+      'Level-based questions',
+      'Personalized Questions',
+      'Progress tracking & analytics',
+      'Personalized learning path',
+      '24/7 AI tutor support',
     ],
-    cta: "Choose This Plan",
+    cta: 'Choose This Plan',
     popular: false,
-    bgColor: "bg-gradient-to-b from-gray-800 to-gray-900 border-amber-500/20",
+    bgColor: 'bg-gradient-to-b from-gray-800 to-gray-900 border-amber-500/20',
     buttonColor:
-      "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700",
-    iconColor: "text-amber-400",
-    priceColor: "text-amber-400",
-    textColor: "text-gray-200",
-    descColor: "text-gray-400",
-    highlightColor: "border-amber-500/30",
-    badgeColor: "bg-amber-600",
-    glowColor: "shadow-amber-500/10",
+      'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700',
+    iconColor: 'text-amber-400',
+    priceColor: 'text-amber-400',
+    textColor: 'text-gray-200',
+    descColor: 'text-gray-400',
+    highlightColor: 'border-amber-500/30',
+    badgeColor: 'bg-amber-600',
+    glowColor: 'shadow-amber-500/10',
   },
 ];
 
 const PricingPlan = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
   const [userInfo, setUserInfo] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
   // Fetch user information to get subscription status
   useEffect(() => {
-    if (!user?.email) return;
-
     const fetchUserInfo = async () => {
       try {
-        const res = await axiosPublic.get(`/userInfo/${user.email}`);
+        const res = await axiosSecure.get(`/userInfo`);
         setUserInfo(res.data);
       } catch (err) {
-        console.error("Error fetching user info:", err);
+        console.error('Error fetching user info:', err);
       }
     };
 
-    fetchUserInfo();
-  }, [user, axiosPublic]);
+    user && fetchUserInfo();
+  }, [user]);
 
   // Determine button text and behavior based on current subscription
-  const getButtonContent = (planTitle) => {
-    const planName = planTitle.replace("Zap ", "");
+  const getButtonContent = planTitle => {
+    const planName = planTitle.replace('Zap ', '');
     // Default to "Free" for new users with no subscription
-    const currentSubscription = userInfo?.userInfo?.subscription || "Free";
+    const currentSubscription = userInfo?.userInfo?.subscription || 'Free';
 
     // If the plan matches the user's current subscription
     if (
-      (planName === "Free" && currentSubscription === "Free") ||
+      (planName === 'Free' && currentSubscription === 'Free') ||
       planName === currentSubscription
     ) {
       return {
         text: `You're a ${planName} user!`,
         disabled: true,
-        className: "bg-gray-600 text-gray-300 cursor-not-allowed",
+        className: 'bg-gray-600 text-gray-300 cursor-not-allowed',
       };
     }
 
     // For Free users, show "Choose This Plan" for Pro/Elite
-    if (currentSubscription === "Free" && planName !== "Free") {
+    if (currentSubscription === 'Free' && planName !== 'Free') {
       return {
-        text: "Choose This Plan",
+        text: 'Choose This Plan',
         disabled: false,
-        className: pricingPlans.find((p) => p.title === planTitle).buttonColor,
+        className: pricingPlans.find(p => p.title === planTitle).buttonColor,
       };
     }
 
@@ -131,7 +128,7 @@ const PricingPlan = () => {
     return {
       text: `Switch to ${planName}`,
       disabled: false,
-      className: pricingPlans.find((p) => p.title === planTitle).buttonColor,
+      className: pricingPlans.find(p => p.title === planTitle).buttonColor,
     };
   };
 
@@ -151,7 +148,9 @@ const PricingPlan = () => {
         <div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {pricingPlans.map((plan, index) => {
-              const { text, disabled, className } = getButtonContent(plan.title);
+              const { text, disabled, className } = getButtonContent(
+                plan.title
+              );
               return (
                 <div
                   key={index}
@@ -170,7 +169,9 @@ const PricingPlan = () => {
                     >
                       {plan.title}
                     </h3>
-                    <p className={`mt-2 ${plan.descColor}`}>{plan.description}</p>
+                    <p className={`mt-2 ${plan.descColor}`}>
+                      {plan.description}
+                    </p>
                     <div className="mt-6">
                       <span
                         className={`text-5xl font-semibold ${plan.priceColor}`}
@@ -200,8 +201,8 @@ const PricingPlan = () => {
                     ) : (
                       <button
                         onClick={() =>
-                          navigate("/checkout", {
-                            state: { plan: plan.title.replace("Zap ", "") },
+                          navigate('/checkout', {
+                            state: { plan: plan.title.replace('Zap ', '') },
                           })
                         }
                         className={`mt-8 w-full ${className} text-white py-4 px-6 rounded-xl transition-all duration-300 font-semibold text-lg shadow-md hover:shadow-lg`}

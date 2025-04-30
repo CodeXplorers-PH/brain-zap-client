@@ -7,6 +7,7 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
   const [quizzesNumber, setQuizzesNumber] = useState(10);
   const [selectedTopic, setSelectedTopic] = useState("");
   const [difficulty, setDifficulty] = useState("medium");
+  const [quizType, setQuizType] = useState("mc"); // Default to Multiple Choice
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -15,7 +16,7 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
       return; // Prevent submission if topic is empty
     }
     navigate(
-      `/quiz/${selectedTopic.toLowerCase().replace(/\s+/g, "-")}?difficulty=${difficulty}&quizzesNumber=${quizzesNumber}`
+      `/quiz/${selectedTopic.toLowerCase().replace(/\s+/g, "-")}?difficulty=${difficulty}&quizzesNumber=${quizzesNumber}&type=${quizType}`
     );
   };
 
@@ -25,6 +26,11 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
     { value: "medium", label: "Intermediate" },
     { value: "hard", label: "Advanced" },
     { value: "so_hard", label: "Expert" }
+  ];
+
+  const quizTypeOptions = [
+    { value: "mc", label: "Multiple Choice" },
+    { value: "tf", label: "True/False" }
   ];
 
   return (
@@ -50,7 +56,7 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
         </div>
 
         <div className="relative p-6 md:p-8 border border-gray-800/30 rounded-xl bg-gray-900/30 backdrop-blur-sm shadow-lg">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
             <div>
               <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-400 to-blue-400 mb-1">
                 Create Your Personalized Quiz
@@ -131,6 +137,49 @@ const PersonalizedQuizSection = ({ hasSubscription }) => {
                     onChange={(e) => setDifficulty(e.target.value)}
                   >
                     {difficultyOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quiz Type Select - New Addition */}
+              <div className="space-y-1.5">
+                <label
+                  className="text-gray-300 font-medium text-xs flex items-center"
+                  htmlFor="quizType"
+                >
+                  <svg className="w-3 h-3 mr-1.5 text-indigo-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Quiz Type
+                </label>
+                <div className="relative">
+                  <select
+                    className="w-full appearance-none pl-3 pr-8 py-2.5 bg-gray-800 border border-gray-700/30 rounded-lg text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 focus:border-transparent transition-all cursor-pointer text-sm"
+                    name="quizType"
+                    id="quizType"
+                    value={quizType}
+                    onChange={(e) => setQuizType(e.target.value)}
+                  >
+                    {quizTypeOptions.map(option => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>

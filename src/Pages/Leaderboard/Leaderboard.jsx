@@ -1,42 +1,48 @@
-import { useState, useEffect } from "react";
-import useAuth from "@/hooks/useAuth";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CircleCheck, Crown, Download, FileDown } from "lucide-react";
-import jsPDF from "jspdf";
+import { useState, useEffect } from 'react';
+import useAuth from '@/hooks/useAuth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Crown, FileDown } from 'lucide-react';
+import jsPDF from 'jspdf';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const Leaderboard = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const [topUsers, setTopUsers] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [exportFormat, setExportFormat] = useState("pdf");
+  const [exportFormat, setExportFormat] = useState('pdf');
 
   useEffect(() => {
-    axiosPublic
-      .get("/users")
+    axiosSecure
+      .get('/users')
       .then(res => {
         if (res.data.success) {
           let fetchedUsers = res.data.users.map(user => ({
             email: user.email,
-            displayName: user.name || user.email.split("@")[0],
-            photoURL: user.photoURL || "",
+            displayName: user.name || user.email.split('@')[0],
+            photoURL: user.photoURL || '',
             stats: { totalPoints: user.totalPoints || 0 },
-            subscription: user.subscription || "Free",
+            subscription: user.subscription || 'Free',
           }));
 
           const loggedInUser = fetchedUsers.find(u => u.email === user?.email);
-          let otherUsersList = fetchedUsers.filter(u => u.email !== user?.email);
+          let otherUsersList = fetchedUsers.filter(
+            u => u.email !== user?.email
+          );
           otherUsersList = otherUsersList.filter(u => u.stats.totalPoints > 0);
-          otherUsersList.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+          otherUsersList.sort(
+            (a, b) => b.stats.totalPoints - a.stats.totalPoints
+          );
 
           if (loggedInUser) {
             if (loggedInUser.stats.totalPoints === 0) {
               otherUsersList.push(loggedInUser);
             } else {
               otherUsersList.push(loggedInUser);
-              otherUsersList.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+              otherUsersList.sort(
+                (a, b) => b.stats.totalPoints - a.stats.totalPoints
+              );
             }
           }
 
@@ -46,50 +52,50 @@ const Leaderboard = () => {
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error fetching users:", err);
+        console.error('Error fetching users:', err);
         setLoading(false);
       });
-  }, [axiosPublic, user]);
+  }, [user]);
 
-  const getInitials = (name) => {
+  const getInitials = name => {
     if (name && name.trim()) {
       return name.trim().charAt(0).toUpperCase();
     }
-    return "U";
+    return 'U';
   };
 
   const podiumStyles = [
     {
       rank: 2,
-      color: "from-silver-700 to-gray-900",
-      height: "h-24 sm:h-28 md:h-32",
-      zIndex: "z-10",
-      avatarSize: "w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20",
-      pointsBg: "bg-gradient-to-r from-cyan-400 to-cyan-600",
-      glow: "shadow-[0_0_15px_rgba(34,211,238,0.5)]",
+      color: 'from-silver-700 to-gray-900',
+      height: 'h-32',
+      zIndex: 'z-10',
+      avatarSize: 'w-16 h-16 md:w-20 md:h-20',
+      pointsBg: 'bg-gradient-to-r from-cyan-400 to-cyan-600',
+      glow: 'shadow-[0_0_15px_rgba(34,211,238,0.5)]',
     },
     {
       rank: 1,
-      color: "from-amber-500 to-yellow-700",
-      height: "h-32 sm:h-40 md:h-48",
-      zIndex: "z-20",
-      avatarSize: "w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28",
-      pointsBg: "bg-gradient-to-r from-yellow-400 to-amber-500",
-      glow: "shadow-[0_0_25px_rgba(255,193,7,0.7)]",
+      color: 'from-amber-500 to-yellow-700',
+      height: 'h-48',
+      zIndex: 'z-20',
+      avatarSize: 'w-24 h-24 md:w-28 md:h-28',
+      pointsBg: 'bg-gradient-to-r from-yellow-400 to-amber-500',
+      glow: 'shadow-[0_0_25px_rgba(255,193,7,0.7)]',
     },
     {
       rank: 3,
-      color: "from-bronze-600 to-gray-900",
-      height: "h-20 sm:h-22 md:h-24",
-      zIndex: "z-10",
-      avatarSize: "w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20",
-      pointsBg: "bg-gradient-to-r from-pink-400 to-pink-600",
-      glow: "shadow-[0_0_15px_rgba(244,114,182,0.5)]",
+      color: 'from-bronze-600 to-gray-900',
+      height: 'h-24',
+      zIndex: 'z-10',
+      avatarSize: 'w-16 h-16 md:w-20 md:h-20',
+      pointsBg: 'bg-gradient-to-r from-pink-400 to-pink-600',
+      glow: 'shadow-[0_0_15px_rgba(244,114,182,0.5)]',
     },
   ];
 
   const exportToPDF = () => {
-    const doc = new jsPDF("p", "mm", "a4");
+    const doc = new jsPDF('p', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;
@@ -97,19 +103,29 @@ const Leaderboard = () => {
 
     // Header
     doc.setFillColor(255, 255, 255);
-    doc.rect(0, 0, pageWidth, pageHeight, "F");
-    doc.setFont("Helvetica", "bold");
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+    doc.setFont('Helvetica', 'bold');
     doc.setFontSize(20);
     doc.setTextColor(17, 24, 39);
-    doc.text("BrainZap Leaderboard", pageWidth / 2, 20, { align: "center" });
+    doc.text('BrainZap Leaderboard', pageWidth / 2, 20, { align: 'center' });
 
     // Top 3 Section
     let yPosition = 40;
     const podiumWidth = maxWidth / 3;
     const podiumStylesPDF = [
       { rank: 2, color: [200, 200, 200], x: margin, avatarSize: 25 },
-      { rank: 1, color: [255, 204, 0], x: margin + podiumWidth, avatarSize: 35 },
-      { rank: 3, color: [205, 127, 50], x: margin + 2 * podiumWidth, avatarSize: 25 },
+      {
+        rank: 1,
+        color: [255, 204, 0],
+        x: margin + podiumWidth,
+        avatarSize: 35,
+      },
+      {
+        rank: 3,
+        color: [205, 127, 50],
+        x: margin + 2 * podiumWidth,
+        avatarSize: 25,
+      },
     ];
 
     for (let i = 0; i < podiumStylesPDF.length; i++) {
@@ -118,24 +134,29 @@ const Leaderboard = () => {
       if (userData) {
         // Circle for Initials
         doc.setFillColor(240, 240, 240);
-        doc.circle(style.x + podiumWidth / 2, yPosition, style.avatarSize / 2, "F");
+        doc.circle(
+          style.x + podiumWidth / 2,
+          yPosition,
+          style.avatarSize / 2,
+          'F'
+        );
         doc.setFontSize(14);
         doc.setTextColor(17, 24, 39);
         doc.text(
           getInitials(userData.displayName),
           style.x + podiumWidth / 2,
           yPosition,
-          { align: "center", baseline: "middle" }
+          { align: 'center', baseline: 'middle' }
         );
 
         // Name
         doc.setFontSize(12);
-        doc.setFont("Helvetica", "normal");
+        doc.setFont('Helvetica', 'normal');
         doc.text(
-          userData.displayName || "Anonymous",
+          userData.displayName || 'Anonymous',
           style.x + podiumWidth / 2,
           yPosition + style.avatarSize / 2 + 10,
-          { align: "center", maxWidth: podiumWidth - 10 }
+          { align: 'center', maxWidth: podiumWidth - 10 }
         );
 
         // Points Badge
@@ -147,7 +168,7 @@ const Leaderboard = () => {
           10,
           2, // rx (horizontal radius)
           2, // ry (vertical radius)
-          "F"
+          'F'
         );
         doc.setFontSize(10);
         doc.setTextColor(255, 255, 255);
@@ -155,7 +176,7 @@ const Leaderboard = () => {
           `${userData.stats.totalPoints} Points`,
           style.x + podiumWidth / 2,
           yPosition + style.avatarSize / 2 + 27,
-          { align: "center" }
+          { align: 'center' }
         );
       }
     }
@@ -165,10 +186,10 @@ const Leaderboard = () => {
     if (otherUsers.length > 0) {
       doc.setFontSize(16);
       doc.setTextColor(17, 24, 39);
-      doc.text("Other Rankings", margin, yPosition);
+      doc.text('Other Rankings', margin, yPosition);
       yPosition += 10;
 
-      const headers = ["Rank", "User", "Points", "Subscription"];
+      const headers = ['Rank', 'User', 'Points', 'Subscription'];
       const colWidths = [20, 80, 30, 40];
       doc.setDrawColor(200, 200, 200);
       doc.setLineWidth(0.5);
@@ -190,7 +211,7 @@ const Leaderboard = () => {
         doc.setTextColor(17, 24, 39);
         const rowData = [
           `${index + 4}`,
-          userData.displayName || "Anonymous",
+          userData.displayName || 'Anonymous',
           `${userData.stats.totalPoints}`,
           userData.subscription,
         ];
@@ -215,49 +236,51 @@ const Leaderboard = () => {
       `Generated on ${new Date().toLocaleDateString()}`,
       pageWidth / 2,
       pageHeight - 10,
-      { align: "center" }
+      { align: 'center' }
     );
 
-    doc.save("brainzap-leaderboard.pdf");
+    doc.save('brainzap-leaderboard.pdf');
   };
 
   const exportLeaderboard = () => {
     const allUsers = [...topUsers, ...otherUsers];
 
-    if (exportFormat === "pdf") {
+    if (exportFormat === 'pdf') {
       exportToPDF();
-    } else if (exportFormat === "csv") {
-      let csvContent = "Rank,User,Points,Subscription\n";
+    } else if (exportFormat === 'csv') {
+      let csvContent = 'Rank,User,Points,Subscription\n';
       allUsers.forEach((user, index) => {
         const rank = index + 1;
-        const name = user.displayName || "Anonymous";
+        const name = user.displayName || 'Anonymous';
         const points = user.stats.totalPoints;
-        const subscription = user.subscription || "Free";
-        const escapedName = name.includes(",") ? `"${name}"` : name;
+        const subscription = user.subscription || 'Free';
+        const escapedName = name.includes(',') ? `"${name}"` : name;
         csvContent += `${rank},${escapedName},${points},${subscription}\n`;
       });
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "brainzap-leaderboard.csv");
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'brainzap-leaderboard.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } else if (exportFormat === "json") {
+    } else if (exportFormat === 'json') {
       const jsonData = allUsers.map((user, index) => ({
         rank: index + 1,
-        user: user.displayName || "Anonymous",
+        user: user.displayName || 'Anonymous',
         email: user.email,
         points: user.stats.totalPoints,
-        subscription: user.subscription || "Free",
+        subscription: user.subscription || 'Free',
       }));
       const jsonContent = JSON.stringify(jsonData, null, 2);
-      const blob = new Blob([jsonContent], { type: "application/json;charset=utf-8;" });
+      const blob = new Blob([jsonContent], {
+        type: 'application/json;charset=utf-8;',
+      });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "brainzap-leaderboard.json");
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'brainzap-leaderboard.json');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -282,7 +305,7 @@ const Leaderboard = () => {
           <select
             className="bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
             value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value)}
+            onChange={e => setExportFormat(e.target.value)}
           >
             <option value="pdf">PDF</option>
             <option value="csv">CSV</option>
@@ -317,7 +340,10 @@ const Leaderboard = () => {
                       <Avatar
                         className={`${style.avatarSize} mb-2 sm:mb-3 border-2 sm:border-4 border-gray-800 ${style.glow} rounded-full transition-transform duration-300 hover:scale-110`}
                       >
-                        <AvatarImage src={userData.photoURL} alt={userData.displayName || "User"} />
+                        <AvatarImage
+                          src={userData.photoURL}
+                          alt={userData.displayName || 'User'}
+                        />
                         <AvatarFallback className="bg-gray-700 text-white font-semibold text-xs sm:text-base">
                           {getInitials(userData.displayName)}
                         </AvatarFallback>
@@ -338,8 +364,8 @@ const Leaderboard = () => {
                       </span>
                       <div className="absolute inset-0 border-t-4 border-gray-300/20 animate-pulse"></div>
                     </div>
-                    <p className="text-white font-semibold text-xs sm:text-sm md:text-base text-center mt-2 sm:mt-3 truncate w-full px-1 sm:px-2">
-                      {userData.displayName || "Anonymous"}
+                    <p className="text-white font-semibold text-sm md:text-base text-center mt-3 truncate w-full px-2">
+                      {userData.displayName || 'Anonymous'}
                     </p>
                     <div
                       className={`${style.pointsBg} text-black font-semibold text-xs px-3 sm:px-4 py-1 rounded-full mt-1 sm:mt-2 shadow-md`}
@@ -361,7 +387,9 @@ const Leaderboard = () => {
                         {style.rank}
                       </span>
                     </div>
-                    <p className="text-gray-400 text-xs sm:text-sm mt-2 sm:mt-3">No User</p>
+                    <p className="text-gray-400 text-xs sm:text-sm mt-2 sm:mt-3">
+                      No User
+                    </p>
                   </div>
                 )}
               </div>
@@ -371,9 +399,11 @@ const Leaderboard = () => {
         </div>
 
         {otherUsers.length > 0 && (
-          <div className="bg-gray-800/80 rounded-xl border border-gray-700 p-3 sm:p-4 md:p-6 shadow-lg">
-            <div className="flex justify-between items-center mb-3 sm:mb-4">
-              <h2 className="text-xl sm:text-2xl font-semibold text-white">Other Rankings</h2>
+          <div className="bg-gray-800/80 rounded-xl border border-gray-700 p-4 md:p-6 shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-semibold text-white">
+                Other Rankings
+              </h2>
             </div>
             <div className="w-full">
               <table className="w-full text-left">
@@ -388,18 +418,23 @@ const Leaderboard = () => {
                   {otherUsers.map((userData, index) => (
                     <tr
                       key={userData.email}
-                      className={`border-t border-gray-700 transition-all duration-200 hover:bg-gray-700/50 ${userData.email === user?.email ? "bg-purple-900/30" : ""
-                        }`}
+                      className={`border-t border-gray-700 transition-all duration-200 hover:bg-gray-700/50 ${
+                        userData.email === user?.email ? 'bg-purple-900/30' : ''
+                      }`}
                     >
-                      <td className="p-2 sm:p-3 text-white text-xs sm:text-sm md:text-base">{index + 4}</td>
+                      <td className="p-2 sm:p-3 text-white text-xs sm:text-sm md:text-base">
+                        {index + 4}
+                      </td>
                       <td className="p-2 sm:p-3">
                         <div className="flex items-center gap-2">
                           <Avatar className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex-shrink-0">
                             <AvatarImage src={userData.photoURL} />
-                            <AvatarFallback className="text-xs sm:text-sm">{getInitials(userData.displayName)}</AvatarFallback>
+                            <AvatarFallback className="text-xs sm:text-sm">
+                              {getInitials(userData.displayName)}
+                            </AvatarFallback>
                           </Avatar>
                           <span className="text-white text-xs sm:text-sm md:text-base truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]">
-                            {userData.displayName || "Anonymous"}
+                            {userData.displayName || 'Anonymous'}
                           </span>
                         </div>
                       </td>

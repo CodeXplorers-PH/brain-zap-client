@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import useAuth from "@/hooks/useAuth";
-import EditPostModal from "../../components/Blog/EditPostModal";
-import { useQuery } from "@apollo/client";
-import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
-import { CustomToast } from "@/components/ui/CustomToast";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
+import EditPostModal from '../../components/Blog/EditPostModal';
+import { useQuery } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { CustomToast } from '@/components/ui/CustomToast';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
@@ -31,8 +31,6 @@ const GET_SINGLE_BLOG = gql`
 `;
 
 const BlogDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,11 +39,15 @@ const BlogDetail = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
+
   const { loading, data, refetch } = useQuery(GET_SINGLE_BLOG, {
     variables: { id },
     client: apolloClient,
-    fetchPolicy: "network-only",
-    onError: (error) => {
+    fetchPolicy: 'network-only',
+    onError: error => {
       setError(error.message);
       setIsLoading(false);
     },
@@ -66,7 +68,7 @@ const BlogDetail = () => {
   const handleDeleteBlog = async () => {
     try {
       setDeleteLoading(true);
-      await axios.delete(`${import.meta.env.VITE_ServerUrl}/blogs/${id}`, {
+      await axiosSecure.delete(`/blogs/${id}`, {
         withCredentials: true,
         data: { userId: user.uid },
       });
@@ -75,29 +77,29 @@ const BlogDetail = () => {
       CustomToast({
         photoURL: user?.photoURL,
         displayName: user?.displayName,
-        title: "Blog Deleted Successfully!",
-        description: "Your blog post has been successfully deleted.",
+        title: 'Blog Deleted Successfully!',
+        description: 'Your blog post has been successfully deleted.',
       });
 
-      navigate("/blogs");
+      navigate('/blogs');
     } catch (error) {
-      console.error("Error deleting blog:", error);
-      setError("Failed to delete blog");
+      console.error('Error deleting blog:', error);
+      setError('Failed to delete blog');
       setDeleteLoading(false);
       setShowDeleteModal(false);
       CustomToast({
         photoURL: user?.photoURL,
         displayName: user?.displayName,
-        title: error.response.data.error || "Error",
+        title: error.response.data.error || 'Error',
         description:
           error.response.data.message ||
-          "Failed to deleted post. Please try again.",
-        type: "error",
+          'Failed to deleted post. Please try again.',
+        type: 'error',
       });
     }
   };
 
-  const handleBlogUpdate = (updatedBlog) => {
+  const handleBlogUpdate = updatedBlog => {
     setBlog({
       ...blog,
       ...updatedBlog,
@@ -126,15 +128,15 @@ const BlogDetail = () => {
               <div className="flex space-x-1">
                 <div
                   className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: "0ms" }}
+                  style={{ animationDelay: '0ms' }}
                 ></div>
                 <div
                   className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: "150ms" }}
+                  style={{ animationDelay: '150ms' }}
                 ></div>
                 <div
                   className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: "300ms" }}
+                  style={{ animationDelay: '300ms' }}
                 ></div>
               </div>
             </div>
@@ -179,17 +181,17 @@ const BlogDetail = () => {
     );
   }
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString("en-US", options);
+  const formatDate = dateString => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   // Helper function to check if the content is HTML
-  const isHTML = (str) => {
+  const isHTML = str => {
     if (!str) return false;
     const parser = new DOMParser();
-    const doc = parser.parseFromString(str, "text/html");
-    return Array.from(doc.body.childNodes).some((node) => node.nodeType === 1);
+    const doc = parser.parseFromString(str, 'text/html');
+    return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
   };
 
   return (
@@ -221,14 +223,14 @@ const BlogDetail = () => {
         <div className="flex items-center justify-between mb-8 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
           <div className="flex items-center">
             <img
-              src={blog.author_avatar || "/default-avatar.png"}
-              alt={blog.author_name || "Author"}
+              src={blog.author_avatar || '/default-avatar.png'}
+              alt={blog.author_name || 'Author'}
               className="w-12 h-12 rounded-full mr-4 object-cover"
               referrerPolicy="no-referrer"
             />
             <div>
               <p className="text-gray-200 font-medium">
-                {blog.author_name || "Anonymous"}
+                {blog.author_name || 'Anonymous'}
               </p>
               <p className="text-sm text-gray-400">
                 {formatDate(blog.publish_date)}
@@ -241,13 +243,13 @@ const BlogDetail = () => {
             <div className="flex space-x-2">
               <button
                 onClick={() => setShowEditModal(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="px-4 py-2 bg-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-md shadow-blue-900/20 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               >
                 Edit
               </button>
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-medium rounded-lg shadow-md shadow-red-900/20 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500/50"
               >
                 Delete
               </button>
@@ -264,7 +266,7 @@ const BlogDetail = () => {
             />
           ) : (
             <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-              {blog.blog || "No content available."}
+              {blog.blog || 'No content available.'}
             </div>
           )}
         </div>
@@ -326,7 +328,7 @@ const BlogDetail = () => {
                     Deleting...
                   </>
                 ) : (
-                  "Delete"
+                  'Delete'
                 )}
               </button>
             </div>

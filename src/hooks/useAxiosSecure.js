@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useAuthContext } from './useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_ServerUrl,
@@ -8,6 +9,7 @@ const axiosInstance = axios.create({
 
 const useAxiosSecure = () => {
   const { user, logOut } = useAuthContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Request Interceptor
@@ -34,6 +36,7 @@ const useAxiosSecure = () => {
         console.log('ResIntError --> ', error.message);
         if (error.status === 401 || error.status === 403) {
           logOut();
+          navigate('/login');
         }
 
         return Promise.reject(error);

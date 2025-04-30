@@ -1,8 +1,8 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // Full application routes
-import Error from "@/Pages/404/Error";
-import Layout from "@/Layouts/Layout";
+import Error from '@/Pages/404/Error';
+import Layout from '@/Layouts/Layout';
 // import Blog from "@/Pages/Blog/Blog";
 // import Home from "@/Pages/Home/Home";
 // import Login from "@/Pages/Auth/Login";
@@ -15,55 +15,55 @@ import Layout from "@/Layouts/Layout";
 // import Profile from "@/Pages/Profile/Profile";
 // import CheckoutPage from "@/Pages/Checkout/Checkout";
 // import BlogDetail from "@/Pages/Blog/BlogDetail";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from './PrivateRoute';
 // import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
-import AdminRoute from "./AdminRoute";
+import AdminRoute from './AdminRoute';
 // import AdminDashboard from "@/Layouts/AdminDashboard";
 // import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
 // import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
 // import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
 // import Feedback from "@/Pages/AdminDashboard/FeedBack/Feedback";
 // import MakeEvents from "@/Pages/AdminDashboard/MakeEvents/MakeEvents";
-import React, { lazy, Suspense } from "react";
-import Loader from "@/components/Loader/Loader";
-const Blog = React.lazy(() => import("@/Pages/Blog/Blog"));
-const StartQuiz = React.lazy(() => import("@/Pages/StartQuiz/StartQuiz"));
-const Home = React.lazy(() => import("@/Pages/Home/Home"));
-const Pricing = React.lazy(() => import("@/Pages/Pricing/Pricing"));
-const BlogDetail = React.lazy(() => import("@/Pages/Blog/BlogDetail"));
-const Contact = React.lazy(() => import("@/Pages/Contact/Contact"));
-const CheckoutPage = React.lazy(() => import("@/Pages/Checkout/Checkout"));
-const Login = React.lazy(() => import("@/Pages/Auth/Login"));
-const Signup = React.lazy(() => import("@/Pages/Auth/Signup"));
-const Profile = React.lazy(() => import("@/Pages/Profile/Profile"));
-const Leaderboard = React.lazy(() => import("@/Pages/Leaderboard/Leaderboard"));
-const QuizPage = React.lazy(() => import("@/Pages/QuizPage/QuizPage"));
+import React, { lazy, Suspense } from 'react';
+import Loader from '@/components/Loader/Loader';
+const Blog = React.lazy(() => import('@/Pages/Blog/Blog'));
+const StartQuiz = React.lazy(() => import('@/Pages/StartQuiz/StartQuiz'));
+const Home = React.lazy(() => import('@/Pages/Home/Home'));
+const Pricing = React.lazy(() => import('@/Pages/Pricing/Pricing'));
+const BlogDetail = React.lazy(() => import('@/Pages/Blog/BlogDetail'));
+const Contact = React.lazy(() => import('@/Pages/Contact/Contact'));
+const CheckoutPage = React.lazy(() => import('@/Pages/Checkout/Checkout'));
+const Login = React.lazy(() => import('@/Pages/Auth/Login'));
+const Signup = React.lazy(() => import('@/Pages/Auth/Signup'));
+const Profile = React.lazy(() => import('@/Pages/Profile/Profile'));
+const Leaderboard = React.lazy(() => import('@/Pages/Leaderboard/Leaderboard'));
+const QuizPage = React.lazy(() => import('@/Pages/QuizPage/QuizPage'));
 const PersonalizedQuiz = React.lazy(() =>
-  import("@/Pages/QuizPersonalized/PersonalizedQuiz")
+  import('@/Pages/QuizPersonalized/PersonalizedQuiz')
 );
-const QuizAnswer = React.lazy(() => import("@/Pages/QuizAnswer/QuizAnswer"));
-const AdminDashboard = React.lazy(() => import("@/Layouts/AdminDashboard"));
+const QuizAnswer = React.lazy(() => import('@/Pages/QuizAnswer/QuizAnswer'));
+const AdminDashboard = React.lazy(() => import('@/Layouts/AdminDashboard'));
 const AdminHome = React.lazy(() =>
-  import("@/Pages/AdminDashboard/AdminHome/AdminHome")
+  import('@/Pages/AdminDashboard/AdminHome/AdminHome')
 );
 const AllUsers = React.lazy(() =>
-  import("@/Pages/AdminDashboard/AllUsers/AllUsers")
+  import('@/Pages/AdminDashboard/AllUsers/AllUsers')
 );
 const Feedback = React.lazy(() =>
-  import("@/Pages/AdminDashboard/FeedBack/Feedback")
+  import('@/Pages/AdminDashboard/FeedBack/Feedback')
 );
 const MakeEvents = React.lazy(() =>
-  import("@/Pages/AdminDashboard/MakeEvents/MakeEvents")
+  import('@/Pages/AdminDashboard/MakeEvents/MakeEvents')
 );
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Layout />, // Default Outlet
     errorElement: <Error />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <Home />
@@ -71,7 +71,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/pricing",
+        path: '/pricing',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <Pricing />
@@ -79,7 +79,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/blogs",
+        path: '/blogs',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <Blog />
@@ -87,7 +87,7 @@ export const router = createBrowserRouter([
         ) /* Blog Page */,
       },
       {
-        path: "/blogs/:id",
+        path: '/blogs/:id',
         /* Blog Details Page */
         element: (
           <Suspense fallback={<Loader></Loader>}>
@@ -96,7 +96,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/start-quiz",
+        path: '/start-quiz',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -106,7 +106,7 @@ export const router = createBrowserRouter([
         ) /* Start Quiz Page */,
       },
       {
-        path: "/contact",
+        path: '/contact',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <Contact />
@@ -114,7 +114,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/checkout",
+        path: '/checkout',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -124,7 +124,7 @@ export const router = createBrowserRouter([
         ) /* CheckoutPage Page */,
       },
       {
-        path: "/login",
+        path: '/login',
         /* Login Page */
         element: (
           <Suspense fallback={<Loader></Loader>}>
@@ -133,7 +133,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/signup",
+        path: '/signup',
         /* Signup Page */
         element: (
           <Suspense fallback={<Loader></Loader>}>
@@ -142,7 +142,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/profile",
+        path: '/profile',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -152,7 +152,7 @@ export const router = createBrowserRouter([
         ) /* Profile Page */,
       },
       {
-        path: "/leaderBoard",
+        path: '/leaderBoard',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -162,7 +162,7 @@ export const router = createBrowserRouter([
         ), // Leaderboard Page
       },
       {
-        path: "/quiz/:category",
+        path: '/quiz/:category',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -172,7 +172,7 @@ export const router = createBrowserRouter([
         ) /* Quiz Page */,
       },
       {
-        path: "/create_quiz",
+        path: '/create_quiz',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -182,7 +182,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/quiz/:category/answer",
+        path: '/quiz/:category/answer',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PrivateRoute>
@@ -195,7 +195,7 @@ export const router = createBrowserRouter([
   },
   // Admin Dashboard
   {
-    path: "dashboard",
+    path: 'dashboard',
     element: (
       <Suspense fallback={<Loader></Loader>}>
         <AdminRoute>
@@ -205,11 +205,11 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "",
+        path: '',
         element: <Navigate to="adminHome" replace />,
       },
       {
-        path: "adminHome",
+        path: 'adminHome',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <AdminRoute>
@@ -219,7 +219,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "allUsers",
+        path: 'allUsers',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <AdminRoute>
@@ -229,7 +229,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "messages",
+        path: 'feedback',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <AdminRoute>
@@ -239,7 +239,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "makeEvents",
+        path: 'makeEvents',
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <AdminRoute>
