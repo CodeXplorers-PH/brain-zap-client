@@ -25,7 +25,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
       </div>
       <div className="space-y-4">
         <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-          {(xpPoints >= 4500 && (
+          {(xpPoints >= 8000 && (
             <>
               <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                 <img className="w-6" src={badge8} alt="" />
@@ -33,25 +33,25 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
               <div>
                 <p className="text-white font-medium">Elite Legend</p>
                 <p className="text-gray-400 text-sm">
-                  Code runs like magic (4500 XP)
+                  Code runs like magic (8000 XP)
                 </p>
               </div>
             </>
           )) ||
-            (xpPoints >= 4000 && (
+            (xpPoints >= 7000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge7} alt="" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">Habit Hero</p>
+                  <p className="text-white font-medium">Quiz Cracker</p>
                   <p className="text-gray-400 text-sm">
                     Took a quiz 3 days in a row — learning is your superpower!
                   </p>
                 </div>
               </>
             )) ||
-            (xpPoints >= 3500 && (
+            (xpPoints >= 6000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge6} alt="" />
@@ -64,7 +64,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 3000 && (
+            (xpPoints >= 5000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge5} alt="" />
@@ -78,7 +78,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 2500 && (
+            (xpPoints >= 4000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge4} alt="" />
@@ -91,7 +91,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 2000 && (
+            (xpPoints >= 3000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge3} alt="" />
@@ -105,21 +105,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 1500 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge3} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Hot Streak Hero</p>
-                  <p className="text-gray-400 text-sm">
-                    Answered 5 questions correctly in a row — unstoppable
-                    momentum!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 1000 && (
+            (xpPoints >= 2000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge2} alt="" />
@@ -132,7 +118,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints >= 500 && (
+            (xpPoints >= 1000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge1} alt="" />
@@ -145,7 +131,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </div>
               </>
             )) ||
-            (xpPoints < 499 && (
+            (xpPoints < 999 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <Award size={24} className="text-purple-400" />
@@ -165,7 +151,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
             <FileText size={24} className="text-gray-400" />
           </div>
           <div>
-            {(xpPoints >= 4500 && (
+            {(xpPoints >= 8000 && (
               <>
                 <p className="text-white font-medium">Ultimate Achiever</p>
                 <p className="text-gray-400 text-sm">
@@ -173,15 +159,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 </p>
               </>
             )) ||
-              (xpPoints >= 4000 && (
-                <>
-                  <p className="text-white font-medium">Comeback Caster</p>
-                  <p className="text-gray-400 text-sm">
-                    Reached 4000 XP - keep growing
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 3500 && (
+              (xpPoints >= 7000 && (
                 <>
                   <p className="text-white font-medium">Ritual Mode</p>
                   <p className="text-gray-400 text-sm">
@@ -189,7 +167,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints >= 3000 && (
+              (xpPoints >= 6000 && (
                 <>
                   <p className="text-white font-medium">Pathfinder</p>
                   <p className="text-gray-400 text-sm">
@@ -197,7 +175,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints >= 2500 && (
+              (xpPoints >= 5000 && (
                 <>
                   <p className="text-white font-medium">Flash Finish</p>
                   <p className="text-gray-400 text-sm">
@@ -205,7 +183,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints >= 2000 && (
+              (xpPoints >= 4000 && (
                 <>
                   <p className="text-white font-medium">Mind Wanderer</p>
                   <p className="text-gray-400 text-sm">
@@ -213,7 +191,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints >= 1500 && (
+              (xpPoints >= 3000 && (
                 <>
                   <p className="text-white font-medium">Fire Flow</p>
                   <p className="text-gray-400 text-sm">
@@ -221,7 +199,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints >= 1000 && (
+              (xpPoints >= 2000 && (
                 <>
                   <p className="text-white font-medium">Zero Miss Legend</p>
                   <p className="text-gray-400 text-sm">
@@ -229,7 +207,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints >= 500 && (
+              (xpPoints >= 1000 && (
                 <>
                   <p className="text-white font-medium">Brain Spark</p>
                   <p className="text-gray-400 text-sm">
@@ -237,7 +215,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   </p>
                 </>
               )) ||
-              (xpPoints < 499 && (
+              (xpPoints < 999 && (
                 <>
                   <p className="text-white font-medium">Keep Learning</p>
                   <p className="text-gray-400 text-sm">

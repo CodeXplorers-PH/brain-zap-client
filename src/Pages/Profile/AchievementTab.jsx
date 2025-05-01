@@ -3,33 +3,61 @@ import badge1 from "@/assets/img/badge1.png";
 import badge2 from "@/assets/img/badge2.png";
 import badge3 from "@/assets/img/badge3.png";
 import badge4 from "@/assets/img/badge4.png";
+import badge5 from "@/assets/img/badge5.png";
+import badge6 from "@/assets/img/badge6.png";
+import badge7 from "@/assets/img/badge7.png";
+import badge8 from "@/assets/img/badge8.png";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 const AchievementTab = ({ xpPoints }) => {
   const badges = [
     {
       id: 1,
-      name: "Beginner Milestone",
-      pointsRequired:500,
+      name: "Quiz Whiz",
+      pointsRequired: 1000,
       image: badge1,
     },
     {
       id: 2,
-      name: "Knowledge Seeker",
-      pointsRequired: 1000,
+      name: "Flawless Genius",
+      pointsRequired: 2000,
       image: badge2,
     },
     {
       id: 3,
-      name: "Master Core",
-      pointsRequired: 1500,
+      name: "Knowledge Voyager",
+      pointsRequired: 3000,
       image: badge3,
     },
     {
       id: 4,
-      name: "Advanced Master",
-      pointsRequired: 2000,
+      name: "Blitz Brain",
+      pointsRequired: 4000,
       image: badge4,
+    },
+    {
+      id: 5,
+      name: "Master of Levels",
+      pointsRequired: 5000,
+      image: badge5,
+    },
+    {
+      id: 6,
+      name: "Habit Hero",
+      pointsRequired: 6000,
+      image: badge6,
+    },
+    {
+      id: 7,
+      name: "Quiz Cracker",
+      pointsRequired: 7000,
+      image: badge7,
+    },
+    {
+      id: 8,
+      name: "Elite Legend",
+      pointsRequired: 8000,
+      image: badge8,
     },
   ];
   const [unlockedBadges, setUnlockedBadges] = useState([]);
@@ -78,7 +106,7 @@ const AchievementTab = ({ xpPoints }) => {
           {unlockedBadges.map((badge) => (
             <div
               key={badge.id}
-              className={`flex flex-col justify-between items-center p-4 rounded-xl transition-all duration-300 w-[150px] h-[200px] mx-auto relative ${
+              className={`flex flex-col justify-between items-center p-4 rounded-xl transition-all duration-300 w-[150px] h-[150px] mx-auto relative ${
                 badge.unlocked
                   ? "bg-[#1D2838] border border-indigo-400/30 text-white shadow-lg hover:scale-105"
                   : " bg-gradient-to-br from-gray-700 to-gray-900 border-2 border-dashed border-gray-600 opacity-80  text-white cursor-not-allowed"
@@ -96,7 +124,7 @@ const AchievementTab = ({ xpPoints }) => {
                   badge.unlocked ? "grayscale-0" : "grayscale opacity-50"
                 }`}
               />
-              <p className="text-center font-semibold">{badge.name}</p>
+              {/* <p className="text-center font-semibold">{badge.name}</p> */}
               {!badge.unlocked && (
                 <p className="text-sm text-gray-500 mt-1">🔒 Locked</p>
               )}
@@ -105,7 +133,6 @@ const AchievementTab = ({ xpPoints }) => {
         </div>
       </div>
     </>
-    
   );
 };
 
