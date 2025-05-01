@@ -106,7 +106,7 @@ const AchievementTab = ({ xpPoints }) => {
           {unlockedBadges.map((badge) => (
             <div
               key={badge.id}
-              className={`flex flex-col justify-between items-center p-4 rounded-xl transition-all duration-300 w-[150px] h-[150px] mx-auto relative ${
+              className={`flex flex-col justify-between w-[150px] h-[160px] m-auto items-center p-6 rounded-xl transition-all duration-300 mx-auto relative ${
                 badge.unlocked
                   ? "bg-[#1D2838] border border-indigo-400/30 text-white shadow-lg hover:scale-105"
                   : " bg-gradient-to-br from-gray-700 to-gray-900 border-2 border-dashed border-gray-600 opacity-80  text-white cursor-not-allowed"
