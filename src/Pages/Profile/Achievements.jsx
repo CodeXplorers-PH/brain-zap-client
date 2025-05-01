@@ -4,6 +4,10 @@ import badge1 from "@/assets/img/badge1.png";
 import badge2 from "@/assets/img/badge2.png";
 import badge3 from "@/assets/img/badge3.png";
 import badge4 from "@/assets/img/badge4.png";
+import badge5 from "@/assets/img/badge5.png";
+import badge6 from "@/assets/img/badge6.png";
+import badge7 from "@/assets/img/badge7.png";
+import badge8 from "@/assets/img/badge8.png";
 const Achievements = ({ xpPoints, setActiveTab }) => {
   // console.log(xpPoints);
   return (
