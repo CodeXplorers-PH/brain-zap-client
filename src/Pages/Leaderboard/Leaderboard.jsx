@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
+import { Helmet } from 'react-helmet';
 
 const Leaderboard = () => {
   const { user } = useAuth();
