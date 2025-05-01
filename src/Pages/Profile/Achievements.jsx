@@ -46,7 +46,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 <div>
                   <p className="text-white font-medium">Habit Hero</p>
                   <p className="text-gray-400 text-sm">
-                  Took a quiz 3 days in a row — learning is your superpower!
+                    Took a quiz 3 days in a row — learning is your superpower!
                   </p>
                 </div>
               </>
@@ -59,7 +59,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 <div>
                   <p className="text-white font-medium">Habit Hero</p>
                   <p className="text-gray-400 text-sm">
-                  Took a quiz 3 days in a row — learning is your superpower!
+                    Took a quiz 3 days in a row — learning is your superpower!
                   </p>
                 </div>
               </>
@@ -72,7 +72,8 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 <div>
                   <p className="text-white font-medium">Master of Levels</p>
                   <p className="text-gray-400 text-sm">
-                  Conquered all difficulty levels — from easy to expert like a boss!
+                    Conquered all difficulty levels — from easy to expert like a
+                    boss!
                   </p>
                 </div>
               </>
@@ -85,7 +86,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 <div>
                   <p className="text-white font-medium">Blitz Brain</p>
                   <p className="text-gray-400 text-sm">
-                  Completed a quiz in lightning-fast time — sharp and swift!
+                    Completed a quiz in lightning-fast time — sharp and swift!
                   </p>
                 </div>
               </>
@@ -98,7 +99,8 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 <div>
                   <p className="text-white font-medium">Knowledge Voyager</p>
                   <p className="text-gray-400 text-sm">
-                  Explored 3 different quiz categories — your curiosity knows no bounds!
+                    Explored 3 different quiz categories — your curiosity knows
+                    no bounds!
                   </p>
                 </div>
               </>
@@ -163,17 +165,57 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
             <FileText size={24} className="text-gray-400" />
           </div>
           <div>
-            {(xpPoints >= 2000 && (
+            {(xpPoints >= 4500 && (
               <>
                 <p className="text-white font-medium">Ultimate Achiever</p>
                 <p className="text-gray-400 text-sm">
-                  Reached 2000 XP - keep growing
+                  Reached 4500+ XP - keep growing
                 </p>
               </>
             )) ||
+              (xpPoints >= 4000 && (
+                <>
+                  <p className="text-white font-medium">Comeback Caster</p>
+                  <p className="text-gray-400 text-sm">
+                    Reached 4000 XP - keep growing
+                  </p>
+                </>
+              )) ||
+              (xpPoints >= 3500 && (
+                <>
+                  <p className="text-white font-medium">Ritual Mode</p>
+                  <p className="text-gray-400 text-sm">
+                    Reached 3500 XP - keep growing
+                  </p>
+                </>
+              )) ||
+              (xpPoints >= 3000 && (
+                <>
+                  <p className="text-white font-medium">Pathfinder</p>
+                  <p className="text-gray-400 text-sm">
+                    Reached 3000 XP - keep growing
+                  </p>
+                </>
+              )) ||
+              (xpPoints >= 2500 && (
+                <>
+                  <p className="text-white font-medium">Flash Finish</p>
+                  <p className="text-gray-400 text-sm">
+                    Reached 2500 XP - keep growing
+                  </p>
+                </>
+              )) ||
+              (xpPoints >= 2000 && (
+                <>
+                  <p className="text-white font-medium">Mind Wanderer</p>
+                  <p className="text-gray-400 text-sm">
+                    Reached 2000 XP - keep growing
+                  </p>
+                </>
+              )) ||
               (xpPoints >= 1500 && (
                 <>
-                  <p className="text-white font-medium">Persistence Award</p>
+                  <p className="text-white font-medium">Fire Flow</p>
                   <p className="text-gray-400 text-sm">
                     Stayed active for 30 days straight!
                   </p>
@@ -181,7 +223,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
               )) ||
               (xpPoints >= 1000 && (
                 <>
-                  <p className="text-white font-medium">Challenge Champion</p>
+                  <p className="text-white font-medium">Zero Miss Legend</p>
                   <p className="text-gray-400 text-sm">
                     Completed 5 coding challenges!
                   </p>
@@ -189,7 +231,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
               )) ||
               (xpPoints >= 500 && (
                 <>
-                  <p className="text-white font-medium">Quick Learner</p>
+                  <p className="text-white font-medium">Brain Spark</p>
                   <p className="text-gray-400 text-sm">
                     Completed first lesson in a record time
                   </p>
