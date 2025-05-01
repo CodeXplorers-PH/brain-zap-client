@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
-import useAuth from '@/hooks/useAuth';
-import ProfileTabs from './ProfileTabs';
-import About from './About';
-import Achievements from './Achievements';
-import ShortQuizHistory from './ShortQuizHistory';
-import FullQuizHistory from './FullQuizHistory';
-import Settings from './Settings';
-import TransactionHistory from './TransactionHistory';
-import ProfileHeader from './ProfileHeader';
-import AchievementTab from './AchievementTab';
-import StreakCalendar from './StreakCalendar';
-import LeaderboardRank from './LeaderboardRank';
+import React, { useState, useEffect } from "react";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useAuth from "@/hooks/useAuth";
+import ProfileTabs from "./ProfileTabs";
+import About from "./About";
+import Achievements from "./Achievements";
+import ShortQuizHistory from "./ShortQuizHistory";
+import FullQuizHistory from "./FullQuizHistory";
+import Settings from "./Settings";
+import TransactionHistory from "./TransactionHistory";
+import ProfileHeader from "./ProfileHeader";
+import AchievementTab from "./AchievementTab";
+import StreakCalendar from "./StreakCalendar";
+import LeaderboardRank from "./LeaderboardRank";
+import { Helmet } from "react-helmet";
 
 const Profile = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
 
   const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
@@ -31,10 +32,10 @@ const Profile = () => {
   useEffect(() => {
     axiosSecure
       .get(`/quiz_history`)
-      .then(res => {
+      .then((res) => {
         setUserQuizHistory(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, [user]);
@@ -48,7 +49,7 @@ const Profile = () => {
         const res = await axiosSecure.get(`/userInfo`);
         setUserInfo(res.data);
       } catch (err) {
-        console.error('Error fetching user info:', err);
+        console.error("Error fetching user info:", err);
       }
     };
 
@@ -61,20 +62,22 @@ const Profile = () => {
 
     axiosSecure
       .get(`/quiz_history`)
-      .then(res => {
+      .then((res) => {
         const history = res?.data || [];
         setUserQuizHistory(history);
         // Utility to get date in local YYYY-MM-DD format
-        const formatDateLocal = dateStr => {
+        const formatDateLocal = (dateStr) => {
           const date = new Date(dateStr);
-          return date.toLocaleDateString('en-CA'); // gives 'YYYY-MM-DD' format
+          return date.toLocaleDateString("en-CA"); // gives 'YYYY-MM-DD' format
         };
 
         // Extract unique quiz dates (formatted locally)
-        const quizDaysSet = new Set(history.map(q => formatDateLocal(q.date)));
+        const quizDaysSet = new Set(
+          history.map((q) => formatDateLocal(q.date))
+        );
 
         const today = new Date();
-        const todayStr = today.toLocaleDateString('en-CA');
+        const todayStr = today.toLocaleDateString("en-CA");
 
         // 🛑 If user didn't give quiz today, streak = 0
         if (!quizDaysSet.has(todayStr)) {
@@ -89,7 +92,7 @@ const Profile = () => {
         for (let i = 1; ; i++) {
           const prevDate = new Date();
           prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString('en-CA');
+          const prevStr = prevDate.toLocaleDateString("en-CA");
 
           if (quizDaysSet.has(prevStr)) {
             streakCount++;
@@ -100,7 +103,7 @@ const Profile = () => {
 
         setStreak(streakCount);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, [user]);
@@ -114,64 +117,71 @@ const Profile = () => {
     memberSince: user?.metadata?.creationTime
       ? new Date(user.metadata.creationTime).toLocaleDateString()
       : new Date().toLocaleDateString(),
-    lastActive: 'Now',
+    lastActive: "Now",
   };
 
   return (
-    <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
-      <div className="max-w-4xl mx-auto">
-        {/* Profile Header */}
-        <ProfileHeader stats={stats} userInfo={userInfo} />
+    <>
+      <Helmet>
+        <title>Brain Zap AI | Profile</title>
+      </Helmet>
+      <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
+        <div className="max-w-4xl mx-auto">
+          {/* Profile Header */}
+          <ProfileHeader stats={stats} userInfo={userInfo} />
 
-        {/* Tabs Navigation - Made Responsive */}
-        <div className="overflow-x-auto no-scrollbar mb-2">
-          <div className="flex space-x-2 min-w-max">
-            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          {/* Tabs Navigation - Made Responsive */}
+          <div className="overflow-x-auto no-scrollbar mb-2">
+            <div className="flex space-x-2 min-w-max">
+              <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            </div>
           </div>
+
+          {/* Profile Content */}
+          {activeTab === "profile" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* About Section */}
+              <About userInfo={userInfo} stats={stats} streak={streak} />
+
+              {/* Achievement Section */}
+              <Achievements
+                xpPoints={xpPoints}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+
+              {/* Streak Calendar */}
+              <StreakCalendar userQuizHistory={userQuizHistory} />
+
+              {/* Leaderboard Rank */}
+              <LeaderboardRank userQuizHistory={userQuizHistory} />
+
+              {/* Recent Performance */}
+              <ShortQuizHistory
+                userQuizHistory={userQuizHistory}
+                setActiveTab={setActiveTab}
+              />
+            </div>
+          )}
+
+          {/* Placeholder for other tabs */}
+          {activeTab === "history" && (
+            <FullQuizHistory user={user} userQuizHistory={userQuizHistory} />
+          )}
+
+          {activeTab === "settings" && <Settings />}
+
+          {/* Transaction history */}
+          {activeTab === "transactionHistory" && (
+            <TransactionHistory user={user} userInfo={userInfo.userInfo} />
+          )}
+          {/* Achievement Tab */}
+          {activeTab === "achievements" && (
+            <AchievementTab xpPoints={xpPoints} />
+          )}
         </div>
-
-        {/* Profile Content */}
-        {activeTab === 'profile' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* About Section */}
-            <About userInfo={userInfo} stats={stats} streak={streak} />
-
-            {/* Achievement Section */}
-            <Achievements
-              xpPoints={xpPoints}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-
-            {/* Streak Calendar */}
-            <StreakCalendar userQuizHistory={userQuizHistory} />
-
-            {/* Leaderboard Rank */}
-            <LeaderboardRank userQuizHistory={userQuizHistory} />
-
-            {/* Recent Performance */}
-            <ShortQuizHistory
-              userQuizHistory={userQuizHistory}
-              setActiveTab={setActiveTab}
-            />
-          </div>
-        )}
-
-        {/* Placeholder for other tabs */}
-        {activeTab === 'history' && (
-          <FullQuizHistory user={user} userQuizHistory={userQuizHistory} />
-        )}
-
-        {activeTab === 'settings' && <Settings />}
-
-        {/* Transaction history */}
-        {activeTab === 'transactionHistory' && (
-          <TransactionHistory user={user} userInfo={userInfo.userInfo} />
-        )}
-        {/* Achievement Tab */}
-        {activeTab === 'achievements' && <AchievementTab xpPoints={xpPoints} />}
       </div>
-    </div>
+    </>
   );
 };
 

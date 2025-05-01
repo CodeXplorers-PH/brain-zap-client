@@ -8,6 +8,7 @@ import CTA from "./Sections/CTA";
 import EidModal from "@/components/EidModal/EidModal";
 import EidDecoration from "@/components/EidDecoration/EidDecoration";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   useEffect(() => {
@@ -15,6 +16,9 @@ const Home = () => {
   }, []);
   return (
     <>
+      <Helmet>
+        <title>Brain Zap AI | Home</title>
+      </Helmet>
       <EidDecoration />
       <EidModal />
       <Hero />
