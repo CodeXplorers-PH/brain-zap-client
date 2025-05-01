@@ -99,7 +99,7 @@ const Header = () => {
       <Toaster />
       <LockedErr />
       <motion.div
-        animate={{ paddingBottom: isOpen ? "200px" : "8px" }}
+        animate={{ paddingBottom: isOpen ? "300px" : "8px" }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="relative flex items-center justify-between py-2 px-4 w-full max-w-6xl bg-gray-900/80 backdrop-blur-md rounded-2xl lg:rounded-full shadow-2xl border border-gray-800/50"
       >
@@ -194,10 +194,15 @@ const Header = () => {
             ease: "easeInOut",
             delay: isOpen ? 0.05 : 0,
           }}
-          className="lg:hidden flex flex-col font-semibold absolute -top-[50px] left-[112px] -translate-1/2 text-left space-y-4"
+          className="lg:hidden flex flex-col absolute -top-[10px] left-[112px] -translate-1/2 space-y-4"
         >
           {Navs.map((navlink, index) => (
-            <NavLinkItem key={index} navlink={navlink} location={location} />
+            <NavLinkItem
+              key={index}
+              navlink={navlink}
+              location={location}
+              classNames="text-xl! font-medium! text-left!"
+            />
           ))}
         </motion.div>
       </motion.div>
@@ -214,11 +219,11 @@ const UserStreakDisplay = ({ streak }) => (
   </div>
 );
 
-const NavLinkItem = ({ navlink, location }) => (
+const NavLinkItem = ({ navlink, location, classNames }) => (
   <li className="list-none">
     <Link
       to={navlink.path}
-      className={`font-bold mx-1 relative text-lg lg:text-base overflow-hidden group ${
+      className={`font-bold mx-1 relative text-lg lg:text-base overflow-hidden group ${classNames} ${
         location.pathname === navlink.path
           ? "text-purple-400 font-semibold"
           : "text-gray-300"
