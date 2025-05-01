@@ -72,14 +72,14 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Sidebar */}
+      {/* Sidebar - Fixed position with proper height */}
       <div
-        className={`fixed md:static top-0 left-0 min-h-full z-40 transition-all duration-300 ease-out
+        className={`fixed md:fixed top-0 left-0 h-full z-40 transition-all duration-300 ease-out flex flex-col
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
           ${isCollapsed ? "w-20" : "w-72"}
         `}
       >
-        <div className="min-h-full bg-gray-800 border-r border-gray-700/50 flex flex-col relative">
+        <div className="h-full flex flex-col bg-gray-800 border-r border-gray-700/50 relative">
           {/* Toggle collapse button (desktop only) */}
           <button 
             onClick={handleToggleCollapse} 
@@ -121,8 +121,8 @@ const AdminDashboard = () => {
             )}
           </div>
 
-          {/* Main navigation */}
-          <div className="flex-1 overflow-y-auto py-4 px-3">
+          {/* Navigation Section - Add overflow control */}
+          <div className="flex-1 overflow-y-auto py-4 px-3 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
             <div className={`mb-2 px-4 ${isCollapsed ? "text-center" : ""}`}>
               <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
                 {isCollapsed ? "Menu" : "Main Menu"}
@@ -170,8 +170,8 @@ const AdminDashboard = () => {
             </ul>
           </div>
 
-          {/* Logout button */}
-          <div className="p-4 border-t border-gray-700/50">
+          {/* Logout button - Always at bottom */}
+          <div className="p-4 border-t border-gray-700/50 mt-auto">
             <button
               onClick={logOut}
               className={`w-full flex items-center ${isCollapsed ? "justify-center" : ""} px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 transition-colors duration-200`}
@@ -192,8 +192,11 @@ const AdminDashboard = () => {
         />
       )}
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Main Content - Adjust margin/padding based on sidebar state */}
+      <div 
+        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-out
+          ${isCollapsed ? "md:ml-20" : "md:ml-72"}`}
+      >
         {/* Desktop Header */}
         <div className="hidden md:flex items-center justify-between bg-gray-800 border-b border-gray-700/50 px-6 py-4">
           <h1 className="text-xl font-semibold text-white">

@@ -443,7 +443,7 @@ const AllUsers = () => {
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
-              <option value="user">User</option>
+              {/* <option value="">User</option> */}
             </select>
           </div>
           <button className="p-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 hover:text-purple-400">
