@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
-import useAuth from "@/hooks/useAuth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Crown, FileDown } from "lucide-react";
-import jsPDF from "jspdf";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { Helmet } from "react-helmet";
+import { useState, useEffect } from 'react';
+import useAuth from '@/hooks/useAuth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Crown, FileDown } from 'lucide-react';
+import jsPDF from 'jspdf';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const Leaderboard = () => {
   const { user } = useAuth();
@@ -100,7 +99,7 @@ const Leaderboard = () => {
   ];
 
   const exportToPDF = () => {
-    const doc = new jsPDF("p", "mm", "a4");
+    const doc = new jsPDF('p', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;
