@@ -25,7 +25,8 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
       </div>
       <div className="space-y-4">
         <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-          {(xpPoints >= 2500 && (
+          {
+          (xpPoints >= 2500 && (
             <>
               <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                 <img className="w-6" src={badge4} alt="" />
