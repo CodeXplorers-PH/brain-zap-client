@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useAuth from '@/hooks/useAuth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, FileDown } from 'lucide-react';
-import jsPDF from 'jspdf';
+import jsPDf from 'jspdf';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const Leaderboard = () => {
@@ -95,7 +95,7 @@ const Leaderboard = () => {
   ];
 
   const exportToPDF = () => {
-    const doc = new jsPDF('p', 'mm', 'a4');
+    const doc = new jsPDf('p', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;

@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '@/hooks/useAuth';
-import useAxiosPublic from '@/hooks/useAxiosPublic';
-import { CustomToast } from '@/components/ui/CustomToast';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import { useEffect, useState } from "react";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { CustomToast } from "@/components/ui/CustomToast";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const CheckOutForm = () => {
-  const [selectedPlan, setSelectedPlan] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState("");
   const [duration, setDuration] = useState(1);
-  const [couponCode, setCouponCode] = useState('');
+  const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0); // in percentage
-  const [error, setError] = useState('');
-  const [clientSecret, setClientSecret] = useState('');
-  const [transectionId, setTransectionId] = useState('');
+  const [error, setError] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
+  const [transectionId, setTransectionId] = useState("");
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -29,12 +29,12 @@ const CheckOutForm = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const { couponCode: navCouponCode, plan } = location.state || {};
-    if (navCouponCode && navCouponCode.toLowerCase() === 'brainzap10') {
+    if (navCouponCode && navCouponCode.toLowerCase() === "brainzap10") {
       setCouponCode(navCouponCode);
       setDiscount(10);
       setCouponApplied(true);
     }
-    if (plan && ['Pro', 'Elite'].includes(plan)) {
+    if (plan && ["Pro", "Elite"].includes(plan)) {
       setSelectedPlan(plan);
     }
   }, [location.state]);
@@ -43,21 +43,21 @@ const CheckOutForm = () => {
   useEffect(() => {
     if (totalPrice > 0) {
       axiosPublic
-        .post('/create-payment-intent', { price: totalPrice })
-        .then(res => {
+        .post("/create-payment-intent", { price: totalPrice })
+        .then((res) => {
           setClientSecret(res.data.clientSecret);
         });
     }
   }, [totalPrice]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // If plan and duration not selected
     if (!selectedPlan || !duration) {
       CustomToast({
-        title: 'Select Plan & Duration',
-        description: 'Please select a plan and duration before proceeding.',
-        type: 'error',
+        title: "Select Plan & Duration",
+        description: "Please select a plan and duration before proceeding.",
+        type: "error",
         photoURL: user?.photoURL,
         displayName: user?.displayName,
       });
@@ -79,7 +79,7 @@ const CheckOutForm = () => {
 
     // Stripe payment method set
     const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
+      type: "card",
       card,
     });
 
@@ -87,15 +87,15 @@ const CheckOutForm = () => {
     if (error) {
       setError(error.message);
       CustomToast({
-        title: 'Payment Error',
+        title: "Payment Error",
         description: error.message,
-        type: 'error',
+        type: "error",
         photoURL: user?.photoURL,
         displayName: user?.displayName,
       });
       setLoading(false);
     } else {
-      setError('');
+      setError("");
     }
 
     // Payment confirm
@@ -104,16 +104,16 @@ const CheckOutForm = () => {
         payment_method: {
           card: card,
           billing_details: {
-            email: user?.email || 'Anonymous',
-            name: user?.displayName || 'Anonymous',
+            email: user?.email || "Anonymous",
+            name: user?.displayName || "Anonymous",
           },
         },
       });
 
     if (confirmError) {
-      console.log('confirm error:', confirmError);
+      console.log("confirm error:", confirmError);
     } else {
-      if (paymentIntent.status === 'succeeded') {
+      if (paymentIntent.status === "succeeded") {
         setTransectionId(paymentIntent.id);
         // Save the paymentInfo in the database
         const paymentInfo = {
@@ -126,16 +126,16 @@ const CheckOutForm = () => {
           transectionId: paymentIntent.id,
           usedCoupon: couponCode,
         };
-        const res = await axiosSecure.patch('/payment', paymentInfo);
+        const res = await axiosSecure.patch("/payment", paymentInfo);
         if (res.data?.message) {
           CustomToast({
-            title: 'Payment Successful',
-            description: 'Thank you for your payment.',
+            title: "Payment Successful",
+            description: "Thank you for your payment.",
             photoURL: user?.photoURL,
             displayName: user?.displayName,
           });
           setLoading(false);
-          navigate('/profile');
+          navigate("/profile");
         }
       }
     }
@@ -145,10 +145,10 @@ const CheckOutForm = () => {
   const getPrice = () => {
     let basePrice = 0;
     switch (selectedPlan) {
-      case 'Pro':
+      case "Pro":
         basePrice = 9.99 * duration;
         break;
-      case 'Elite':
+      case "Elite":
         basePrice = 14.99 * duration;
         break;
       default:
@@ -169,9 +169,9 @@ const CheckOutForm = () => {
 
     if (!code) {
       return CustomToast({
-        title: 'No Coupon Entered',
-        description: 'Please enter a coupon code before applying.',
-        type: 'error',
+        title: "No Coupon Entered",
+        description: "Please enter a coupon code before applying.",
+        type: "error",
         photoURL: user?.photoURL,
         displayName: user?.displayName,
       });
@@ -179,20 +179,20 @@ const CheckOutForm = () => {
 
     if (couponApplied) {
       return CustomToast({
-        title: 'Coupon Already Applied',
+        title: "Coupon Already Applied",
         description: `You've already applied a ${discount}% discount.`,
-        type: 'info',
+        type: "info",
         photoURL: user?.photoURL,
         displayName: user?.displayName,
       });
     }
     // Coupon Codes
-    if (code === 'brainzap10') {
+    if (code === "brainzap10") {
       setDiscount(10);
       setCouponApplied(true);
       CustomToast({
-        title: 'Coupon Applied',
-        description: '10% discount has been applied.',
+        title: "Coupon Applied",
+        description: "10% discount has been applied.",
         photoURL: user?.photoURL,
         displayName: user?.displayName,
       });
@@ -200,9 +200,9 @@ const CheckOutForm = () => {
       setDiscount(0);
       setCouponApplied(false);
       CustomToast({
-        title: 'Invalid Coupon',
-        description: 'The coupon code you entered is not valid.',
-        type: 'error',
+        title: "Invalid Coupon",
+        description: "The coupon code you entered is not valid.",
+        type: "error",
         photoURL: user?.photoURL,
         displayName: user?.displayName,
       });
@@ -229,7 +229,7 @@ const CheckOutForm = () => {
               <select
                 className="w-full p-2 sm:p-3 text-sm sm:text-base rounded-lg bg-[#2d2d4d] text-white border border-[#3c3c5f] focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                 value={selectedPlan}
-                onChange={e => setSelectedPlan(e.target.value)}
+                onChange={(e) => setSelectedPlan(e.target.value)}
               >
                 <option value="">-- Select Plan --</option>
                 <option value="Pro">Zap Pro ($9.99/month)</option>
@@ -245,7 +245,7 @@ const CheckOutForm = () => {
               <select
                 className="w-full p-2 sm:p-3 text-sm sm:text-base rounded-lg bg-[#2d2d4d] text-white border border-[#3c3c5f] focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                 value={duration}
-                onChange={e => setDuration(Number(e.target.value))}
+                onChange={(e) => setDuration(Number(e.target.value))}
               >
                 <option>1</option>
                 <option>3</option>
@@ -265,7 +265,7 @@ const CheckOutForm = () => {
                   placeholder="Enter coupon code"
                   className="w-full p-2 sm:p-3 text-sm sm:text-base rounded-lg bg-[#2d2d4d] text-white border border-[#3c3c5f] focus:outline-none focus:ring-2 focus:ring-purple-500"
                   value={couponCode}
-                  onChange={e => setCouponCode(e.target.value)}
+                  onChange={(e) => setCouponCode(e.target.value)}
                 />
                 <button
                   type="button"
@@ -286,11 +286,11 @@ const CheckOutForm = () => {
           {/* 💡 Info */}
           <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-[#252542] border border-[#3f3f70] rounded-lg text-xs sm:text-sm text-gray-300">
             <p className="mb-1">
-              <span className="text-yellow-400 font-semibold">💳 Tip:</span>{' '}
+              <span className="text-yellow-400 font-semibold">💳 Tip:</span>{" "}
               Your subscription is billed once, securely.
             </p>
             <p>
-              <span className="text-yellow-400 font-semibold">🔐 Note:</span>{' '}
+              <span className="text-yellow-400 font-semibold">🔐 Note:</span>{" "}
               You can cancel or upgrade anytime.
             </p>
           </div>
@@ -309,17 +309,17 @@ const CheckOutForm = () => {
             </h3>
             <div>
               <p className="font-semibold text-sm sm:text-base">
-                Selected Plan:{' '}
-                {selectedPlan ? selectedPlan.toUpperCase() : 'No Plan Selected'}
+                Selected Plan:{" "}
+                {selectedPlan ? selectedPlan.toUpperCase() : "No Plan Selected"}
               </p>
               <p className="text-indigo-400 capitalize mb-3 sm:mb-4 text-sm sm:text-base">
-                For {duration} month{duration > 1 ? 's' : ''}
+                For {duration} month{duration > 1 ? "s" : ""}
               </p>
             </div>
             {error && (
               <p className="text-red-500 text-sm sm:text-base mb-3">
-                {' '}
-                {error}{' '}
+                {" "}
+                {error}{" "}
               </p>
             )}
             <div className="bg-[#2c2c4d] p-3 sm:p-4 rounded-lg border border-[#3f3f70] mb-4 sm:mb-6">
@@ -327,15 +327,15 @@ const CheckOutForm = () => {
                 options={{
                   style: {
                     base: {
-                      fontSize: '14px',
-                      color: '#f3f4f6',
-                      iconColor: '#a78bfa',
-                      '::placeholder': {
-                        color: '#6b7280',
+                      fontSize: "14px",
+                      color: "#f3f4f6",
+                      iconColor: "#a78bfa",
+                      "::placeholder": {
+                        color: "#6b7280",
                       },
                     },
                     invalid: {
-                      color: '#ef4444',
+                      color: "#ef4444",
                     },
                   },
                 }}
@@ -364,17 +364,17 @@ const CheckOutForm = () => {
                   </div>
                 </div>
               ) : (
-                'Subscribe'
+                "Subscribe"
               )}
             </button>
 
             <p className="mt-3 sm:mt-4">
               <span className="text-xs sm:text-sm text-gray-400">
-                By continuing, you agree to our{' '}
+                By continuing, you agree to our{" "}
                 <span className="underline text-indigo-400 cursor-pointer">
                   Terms
-                </span>{' '}
-                and{' '}
+                </span>{" "}
+                and{" "}
                 <span className="underline text-indigo-400 cursor-pointer">
                   Privacy Policy
                 </span>
