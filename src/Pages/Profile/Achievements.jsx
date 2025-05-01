@@ -25,29 +25,80 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
       </div>
       <div className="space-y-4">
         <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-          {
-          (xpPoints >= 2500 && (
+          {(xpPoints >= 4500 && (
             <>
               <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                <img className="w-6" src={badge4} alt="" />
+                <img className="w-6" src={badge8} alt="" />
               </div>
               <div>
                 <p className="text-white font-medium">Elite Legend</p>
                 <p className="text-gray-400 text-sm">
-                  Code runs like magic (500/500 XP)
+                  Code runs like magic (4500 XP)
                 </p>
               </div>
             </>
           )) ||
+            (xpPoints >= 4000 && (
+              <>
+                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
+                  <img className="w-6" src={badge7} alt="" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">Habit Hero</p>
+                  <p className="text-gray-400 text-sm">
+                  Took a quiz 3 days in a row — learning is your superpower!
+                  </p>
+                </div>
+              </>
+            )) ||
+            (xpPoints >= 3500 && (
+              <>
+                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
+                  <img className="w-6" src={badge6} alt="" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">Habit Hero</p>
+                  <p className="text-gray-400 text-sm">
+                  Took a quiz 3 days in a row — learning is your superpower!
+                  </p>
+                </div>
+              </>
+            )) ||
+            (xpPoints >= 3000 && (
+              <>
+                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
+                  <img className="w-6" src={badge5} alt="" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">Master of Levels</p>
+                  <p className="text-gray-400 text-sm">
+                  Conquered all difficulty levels — from easy to expert like a boss!
+                  </p>
+                </div>
+              </>
+            )) ||
+            (xpPoints >= 2500 && (
+              <>
+                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
+                  <img className="w-6" src={badge4} alt="" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">Blitz Brain</p>
+                  <p className="text-gray-400 text-sm">
+                  Completed a quiz in lightning-fast time — sharp and swift!
+                  </p>
+                </div>
+              </>
+            )) ||
             (xpPoints >= 2000 && (
               <>
                 <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
                   <img className="w-6" src={badge3} alt="" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">Advanced Master</p>
+                  <p className="text-white font-medium">Knowledge Voyager</p>
                   <p className="text-gray-400 text-sm">
-                    Built complex algorithms (400/400 XP)
+                  Explored 3 different quiz categories — your curiosity knows no bounds!
                   </p>
                 </div>
               </>
@@ -58,10 +109,11 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   <img className="w-6" src={badge3} alt="" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">
-                    Mastered core syntax (300/300 XP)
+                  <p className="text-white font-medium">Hot Streak Hero</p>
+                  <p className="text-gray-400 text-sm">
+                    Answered 5 questions correctly in a row — unstoppable
+                    momentum!
                   </p>
-                  <p className="text-gray-400 text-sm"></p>
                 </div>
               </>
             )) ||
@@ -71,9 +123,9 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   <img className="w-6" src={badge2} alt="" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">Knowledge Seeker</p>
+                  <p className="text-white font-medium">Flawless Genius</p>
                   <p className="text-gray-400 text-sm">
-                    Debugging skills unlocked (200/200 XP)
+                    Scored 100% on a quiz — not a single mistake in sight!
                   </p>
                 </div>
               </>
@@ -84,9 +136,9 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   <img className="w-6" src={badge1} alt="" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">Beginner Milestones</p>
+                  <p className="text-white font-medium">Quiz Whiz</p>
                   <p className="text-gray-400 text-sm">
-                    First lines of code written (100/100 XP)
+                    Completed your first quiz — the journey to mastery begins!
                   </p>
                 </div>
               </>
@@ -97,10 +149,10 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                   <Award size={24} className="text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">No Achievements Unlocked</p>
-                  <p className="text-gray-400 text-sm">
-                    Keep it up!
+                  <p className="text-white font-medium">
+                    No Achievements Unlocked
                   </p>
+                  <p className="text-gray-400 text-sm">Keep it up!</p>
                 </div>
               </>
             ))}
@@ -147,7 +199,7 @@ const Achievements = ({ xpPoints, setActiveTab }) => {
                 <>
                   <p className="text-white font-medium">Keep Learning</p>
                   <p className="text-gray-400 text-sm">
-                   Play Daily Quizzes to achieve badges!
+                    Play Daily Quizzes to achieve badges!
                   </p>
                 </>
               ))}
