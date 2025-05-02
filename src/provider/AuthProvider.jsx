@@ -15,6 +15,7 @@ import {
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -24,6 +25,8 @@ const githubProvider = new GithubAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userType, setType] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
@@ -60,6 +63,8 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     user,
     setUser,
+    userType,
+    isAdmin,
     createNewUser,
     logOut,
     userLogin,
@@ -112,13 +117,27 @@ const AuthProvider = ({ children }) => {
             });
           }
 
-          // Set Jwt token
+          // Set Jwt token and user Info
           (async () => {
-            const { data } = await axiosPublic.post('/jwt', { email });
+            const { data: token } = await axiosPublic.post('/jwt', { email });
 
-            data?.token
-              ? localStorage.setItem('access_token', data?.token)
+            token?.token
+              ? localStorage.setItem('access_token', token.token)
               : localStorage.removeItem('access_token');
+
+            // Set User type and isAdmin
+            const { data: userInfo } = await axios.get(
+              `${import.meta.env.VITE_ServerUrl}/userInfo`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token.token}`,
+                  email: currentUser?.email,
+                },
+              }
+            );
+
+            setType(userInfo?.userInfo?.subscription);
+            setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
           })();
 
           // Save user data in the database
