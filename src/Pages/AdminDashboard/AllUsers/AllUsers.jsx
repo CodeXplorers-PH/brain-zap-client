@@ -3,6 +3,18 @@ import useAuth from '@/hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
+import {
+  Filter,
+  Lock,
+  Search,
+  ShieldCheck,
+  SlidersHorizontal,
+  Trash2,
+  User,
+} from 'lucide-react';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 const AllUsers = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);

@@ -5,7 +5,6 @@ import { ApolloClient, gql, InMemoryCache, useQuery } from '@apollo/client';
 
 import CreatePostModal from '@/components/Blog/CreatePostModal';
 import BlogCard from '@/components/Blog/BlogCard';
-import useUserSubscriptionType from '@/hooks/useUserSubscriptionType';
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
@@ -35,6 +34,7 @@ const GET_BLOG = gql`
 `;
 
 const Blog = () => {
+  const { user, userType } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [blogs, setBlogs] = useState([]);
@@ -44,13 +44,8 @@ const Blog = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState('all');
   const [error, setError] = useState(null);
-  const { user } = useAuth();
   const isAuthenticated = !!user;
   const limit = 6;
-
-  const [userType] = useUserSubscriptionType();
-
-  // useUserSubscriptionType
 
   const { data, refetch } = useQuery(GET_BLOG, {
     variables: {
