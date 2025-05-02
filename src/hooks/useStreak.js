@@ -10,26 +10,22 @@ const useStreak = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!user?.email) {
-      setStreak(0);
-      return;
-    }
-
-    setStreak(getStreak());
+    user?.email && localStorage.getItem('access_token')
+      ? setStreak(getStreak())
+      : setStreak(0);
   }, [user]);
 
   useEffect(() => {
-    if (!user?.email) {
-      setStreak(0);
-      return;
-    }
-
-    if (pathname.includes('quiz') && pathname.includes('answer')) {
+    if (pathname.includes('quiz') && pathname.includes('answer') && user) {
       setStreak(getStreak());
     }
   }, [pathname]);
 
   const getStreak = async () => {
+    if (!user?.email) {
+      return 0;
+    }
+
     const { data: userQuizzesDate } = await axiosSecure.get(
       '/quizzes_streak_date'
     );

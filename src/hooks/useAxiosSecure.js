@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useAuthContext } from './useAuthContext';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_ServerUrl,
@@ -35,8 +35,8 @@ const useAxiosSecure = () => {
       error => {
         console.log('ResIntError --> ', error.message);
         if (error.status === 401 || error.status === 403) {
-          logOut();
-          navigate('/login');
+          // logOut();
+          // navigate('/login', replace);
         }
 
         return Promise.reject(error);
