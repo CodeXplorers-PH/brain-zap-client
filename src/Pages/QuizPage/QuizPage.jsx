@@ -39,10 +39,8 @@ const QuizPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data: generatedQuiz } = await axiosSecure.post(
-          `/secure_graphql`,
-          {
-            query: `
+        const { data: generatedQuiz } = await axiosSecure.post(`/graphql_s`, {
+          query: `
             query GetQuizzes($topic: String!, $difficulty: String!, $quizzesNumber: Int!, $type: String!) {
               getQuizzes(topic: $topic, difficulty: $difficulty, quizzesNumber: $quizzesNumber, type: $type) {
                 question
@@ -51,14 +49,13 @@ const QuizPage = () => {
               }
             }
     `,
-            variables: {
-              topic: category,
-              difficulty: difficulty,
-              quizzesNumber: Number(quizzesNumber),
-              type: quizzesType || 'mc',
-            },
-          }
-        );
+          variables: {
+            topic: category,
+            difficulty: difficulty,
+            quizzesNumber: Number(quizzesNumber),
+            type: quizzesType || 'mc',
+          },
+        });
 
         if (!signal.aborted) {
           setQuestions(generatedQuiz?.data?.getQuizzes);

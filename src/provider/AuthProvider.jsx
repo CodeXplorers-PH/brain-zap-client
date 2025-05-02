@@ -80,8 +80,6 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
 
     const unsubscribe = onAuthStateChanged(auth, async currentUser => {
-      setUser(currentUser || null);
-
       if (currentUser) {
         localStorage.removeItem('loginAttempt');
 
@@ -117,37 +115,37 @@ const AuthProvider = ({ children }) => {
             });
           }
 
-          // Set Jwt token and user Info
-          (async () => {
-            const { data: token } = await axiosPublic.post('/jwt', { email });
-
-            token?.token
-              ? localStorage.setItem('access_token', token.token)
-              : localStorage.removeItem('access_token');
-
-            // Set User type and isAdmin
-            const { data: userInfo } = await axios.get(
-              `${import.meta.env.VITE_ServerUrl}/userInfo`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token.token}`,
-                  email: currentUser?.email,
-                },
-              }
-            );
-
-            setType(userInfo?.userInfo?.subscription);
-            setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
-          })();
-
           // Save user data in the database
-          if (displayName && photoURL && email) {
-            await axiosPublic.post('/post_user', {
+          displayName &&
+            photoURL &&
+            email &&
+            (await axiosPublic.post('/post_user', {
               name: displayName,
               photoURL,
               email,
-            });
-          }
+            }));
+
+          // Set Jwt token and user Info
+          const { data: token } = await axiosPublic.post('/jwt', { email });
+
+          token?.token
+            ? (localStorage.setItem('access_token', token.token),
+              setUser(currentUser))
+            : localStorage.removeItem('access_token');
+
+          // Set User type and isAdmin
+          const { data: userInfo } = await axios.get(
+            `${import.meta.env.VITE_ServerUrl}/userInfo`,
+            {
+              headers: {
+                Authorization: `Bearer ${token.token}`,
+                email: currentUser?.email,
+              },
+            }
+          );
+
+          setType(userInfo?.userInfo?.subscription);
+          setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
 
           setLoading(false);
         } catch (err) {
@@ -155,6 +153,7 @@ const AuthProvider = ({ children }) => {
           setLoading(false);
         }
       } else {
+        setUser(null);
         localStorage.removeItem('access_token');
         setLoading(false);
       }
