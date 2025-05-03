@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
-const TransactionHistory = ({ user, userInfo }) => {
+const TransactionHistory = ({ user }) => {
+  const [userInfo, setUserInfo] = useState(null);
+
+  const axiosSecure = useAxiosSecure();
+
+  // Get User Information
+  useEffect(() => {
+    if (!user?.email) return; // Prevent running if email is not loaded yet
+
+    (async () => {
+      try {
+        const { data } = await axiosSecure.get(`/userInfo`);
+        setUserInfo(data.userInfo);
+      } catch (err) {
+        console.error('Error fetching user info:', err);
+      }
+    })();
+  }, [user]);
+
   return (
     <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
       <h2 className="text-xl font-semibold text-white text-left mb-4">
