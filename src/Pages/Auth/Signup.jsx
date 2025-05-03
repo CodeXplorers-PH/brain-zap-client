@@ -18,7 +18,7 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
 
-  const { createNewUser, setUser, updateUserProfile } = useAuthContext();
+  const { createNewUser, updateUserProfile } = useAuthContext();
   const formData = useFormData();
   const axiosPublic = useAxiosPublic();
 
@@ -74,9 +74,7 @@ const Signup = () => {
     const { name, photo, email, password } = formData(e.target);
 
     createNewUser(email, password)
-      .then(result => {
-        const user = result.user;
-        setUser(user);
+      .then(() => {
         updateUserProfile({ displayName: name, photoURL: photo })
           .then(() => {
             // Add user to database
@@ -86,7 +84,7 @@ const Signup = () => {
               email,
             });
             // Navigate to Home page
-            navigate("/start-quiz");
+            navigate('/');
           })
           .catch(err => {
             console.log('Error updating user profile', err.message);
