@@ -25,6 +25,7 @@ const githubProvider = new GithubAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userLevel, setUserLevel] = useState(null);
   const [userType, setType] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
@@ -63,6 +64,7 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     user,
     setUser,
+    userLevel,
     userType,
     isAdmin,
     createNewUser,
@@ -115,6 +117,9 @@ const AuthProvider = ({ children }) => {
             });
           }
 
+          // Get token and user Info
+          const { data: token } = await axiosPublic.post('/jwt', { email });
+
           // Save user data in the database
           displayName &&
             photoURL &&
@@ -124,9 +129,6 @@ const AuthProvider = ({ children }) => {
               photoURL,
               email,
             }));
-
-          // Set Jwt token and user Info
-          const { data: token } = await axiosPublic.post('/jwt', { email });
 
           token?.token
             ? (localStorage.setItem('access_token', token.token),
@@ -144,7 +146,8 @@ const AuthProvider = ({ children }) => {
             }
           );
 
-          setType(userInfo?.userInfo?.subscription);
+          setUserLevel(userInfo?.userInfo?.level?.level || 0);
+          setType(userInfo?.userInfo?.subscription || null);
           setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
 
           setLoading(false);
