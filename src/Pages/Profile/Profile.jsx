@@ -14,10 +14,9 @@ import StreakCalendar from './StreakCalendar';
 import LeaderboardRank from './LeaderboardRank';
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, userType } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
 
-  const [userInfo, setUserInfo] = useState(null);
   const [userQuizHistory, setUserQuizHistory] = useState([]);
   const [streak, setStreak] = useState(0);
 
@@ -37,22 +36,6 @@ const Profile = () => {
       .catch(err => {
         console.log(err);
       });
-  }, [user]);
-
-  // Get User Information
-  useEffect(() => {
-    if (!user?.email) return; // Prevent running if email is not loaded yet
-
-    const fetchUserInfo = async () => {
-      try {
-        const res = await axiosSecure.get(`/userInfo`);
-        setUserInfo(res.data);
-      } catch (err) {
-        console.error('Error fetching user info:', err);
-      }
-    };
-
-    fetchUserInfo();
   }, [user]);
 
   // Streaks Code Starts Here
@@ -121,7 +104,7 @@ const Profile = () => {
     <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
-        <ProfileHeader stats={stats} userInfo={userInfo} />
+        <ProfileHeader stats={stats} userType={userType} />
 
         {/* Tabs Navigation - Made Responsive */}
         <div className="overflow-x-auto no-scrollbar mb-2">
@@ -134,7 +117,7 @@ const Profile = () => {
         {activeTab === 'profile' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* About Section */}
-            <About userInfo={userInfo} stats={stats} streak={streak} />
+            <About userType={userType} stats={stats} streak={streak} />
 
             {/* Achievement Section */}
             <Achievements
@@ -166,7 +149,7 @@ const Profile = () => {
 
         {/* Transaction history */}
         {activeTab === 'transactionHistory' && (
-          <TransactionHistory user={user} userInfo={userInfo.userInfo} />
+          <TransactionHistory user={user} />
         )}
         {/* Achievement Tab */}
         {activeTab === 'achievements' && <AchievementTab xpPoints={xpPoints} />}
