@@ -89,9 +89,7 @@ const AuthProvider = ({ children }) => {
 
         try {
           // Check if the account is locked
-          const res = await axiosPublic.patch('/account_lockout', {
-            email: email,
-          });
+          const res = await axiosPublic.patch('/account_lockout', { email });
 
           setIsLocked(res?.data?.isLocked);
           if (res?.data?.isLocked) {
@@ -117,8 +115,9 @@ const AuthProvider = ({ children }) => {
             });
           }
 
-          // Get token and user Info
+          // Store token
           const { data: token } = await axiosPublic.post('/jwt', { email });
+          token?.token && localStorage.setItem('access_token', token.token);
 
           // Save user data in the database
           displayName &&
@@ -130,11 +129,6 @@ const AuthProvider = ({ children }) => {
               email,
             }));
 
-          token?.token
-            ? (localStorage.setItem('access_token', token.token),
-              setUser(currentUser))
-            : localStorage.removeItem('access_token');
-
           // Set User type and isAdmin
           const { data: userInfo } = await axios.get(
             `${import.meta.env.VITE_ServerUrl}/userInfo`,
@@ -145,19 +139,20 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
-
           setUserLevel(userInfo?.userInfo?.level?.level || 0);
           setType(userInfo?.userInfo?.subscription || null);
           setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
 
+          // Set Users
+          setUser(currentUser);
           setLoading(false);
         } catch (err) {
           console.error('Auth side effects failed:', err);
           setLoading(false);
         }
       } else {
-        setUser(null);
         localStorage.removeItem('access_token');
+        setUser(null);
         setLoading(false);
       }
     });
