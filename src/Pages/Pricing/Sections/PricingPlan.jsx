@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const pricingPlans = [
   {
@@ -78,30 +77,15 @@ const pricingPlans = [
 ];
 
 const PricingPlan = () => {
+  const { userType } = useAuth();
+
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [userInfo, setUserInfo] = useState(null);
-  const axiosSecure = useAxiosSecure();
-
-  // Fetch user information to get subscription status
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await axiosSecure.get(`/userInfo`);
-        setUserInfo(res.data);
-      } catch (err) {
-        console.error('Error fetching user info:', err);
-      }
-    };
-
-    user && fetchUserInfo();
-  }, [user]);
 
   // Determine button text and behavior based on current subscription
   const getButtonContent = planTitle => {
     const planName = planTitle.replace('Zap ', '');
     // Default to "Free" for new users with no subscription
-    const currentSubscription = userInfo?.userInfo?.subscription || 'Free';
+    const currentSubscription = userType || 'Free';
 
     // If the plan matches the user's current subscription
     if (
