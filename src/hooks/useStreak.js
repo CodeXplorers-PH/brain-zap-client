@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
 import useAxiosSecure from './useAxiosSecure';
 import useAuth from './useAuth';
+import { useQuery } from '@tanstack/react-query';
 
-const useStreak = refetch => {
+const useStreak = () => {
   const { user } = useAuth();
-  const [streak, setStreak] = useState(0);
   const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    user?.email && localStorage.getItem('access_token')
-      ? getStreak().then(str => setStreak(str))
-      : setStreak(0);
-  }, [user]);
+  const { data: streak = 0, refetch } = useQuery({
+    queryKey: ['streak', user],
+    queryFn: async () => {
+      const str = await getStreak();
+      return str;
+    },
+  });
 
   const getStreak = async () => {
     if (!user?.email) {
@@ -55,7 +56,7 @@ const useStreak = refetch => {
     return streakCount;
   };
 
-  return streak;
+  return { streak, refetch };
 };
 
 export default useStreak;
