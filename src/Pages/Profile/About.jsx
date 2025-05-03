@@ -3,7 +3,7 @@ import { Calendar, Award, Flame } from 'lucide-react';
 import useStreak from '@/hooks/useStreak';
 
 const About = ({ userType, stats }) => {
-  const streak = useStreak();
+  const { streak } = useStreak();
 
   return (
     <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">

@@ -13,7 +13,7 @@ import useStreak from '@/hooks/useStreak';
 const Header = () => {
   const { user, isAdmin, loading, logOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const streak = useStreak();
+  const { streak } = useStreak();
   const location = useLocation();
   const { width } = useWindowSize();
 
