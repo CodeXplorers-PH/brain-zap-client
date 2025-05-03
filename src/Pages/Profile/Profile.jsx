@@ -18,7 +18,6 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState('profile');
 
   const [userQuizHistory, setUserQuizHistory] = useState([]);
-  const [streak, setStreak] = useState(0);
 
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
@@ -26,68 +25,15 @@ const Profile = () => {
 
   const axiosSecure = useAxiosSecure();
 
-  // Get Quiz History
-  useEffect(() => {
-    axiosSecure
-      .get(`/quiz_history`)
-      .then(res => {
-        setUserQuizHistory(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, [user]);
-
-  // Streaks Code Starts Here
+  // Get History
   useEffect(() => {
     if (!user) return;
 
-    axiosSecure
-      .get(`/quiz_history`)
-      .then(res => {
-        const history = res?.data || [];
-        setUserQuizHistory(history);
-        // Utility to get date in local YYYY-MM-DD format
-        const formatDateLocal = dateStr => {
-          const date = new Date(dateStr);
-          return date.toLocaleDateString('en-CA'); // gives 'YYYY-MM-DD' format
-        };
-
-        // Extract unique quiz dates (formatted locally)
-        const quizDaysSet = new Set(history.map(q => formatDateLocal(q.date)));
-
-        const today = new Date();
-        const todayStr = today.toLocaleDateString('en-CA');
-
-        // 🛑 If user didn't give quiz today, streak = 0
-        if (!quizDaysSet.has(todayStr)) {
-          setStreak(0);
-          return;
-        }
-
-        // ✅ Start with today counted
-        let streakCount = 1;
-
-        // 🔁 Check previous consecutive days
-        for (let i = 1; ; i++) {
-          const prevDate = new Date();
-          prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString('en-CA');
-
-          if (quizDaysSet.has(prevStr)) {
-            streakCount++;
-          } else {
-            break;
-          }
-        }
-
-        setStreak(streakCount);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    axiosSecure.get(`/quiz_history`).then(res => {
+      const history = res?.data || [];
+      setUserQuizHistory(history);
+    });
   }, [user]);
-  // Streaks Code Ends Here
 
   // Sample stats - replace with actual data from your application
   const stats = {
@@ -117,7 +63,7 @@ const Profile = () => {
         {activeTab === 'profile' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* About Section */}
-            <About userType={userType} stats={stats} streak={streak} />
+            <About userType={userType} stats={stats} />
 
             {/* Achievement Section */}
             <Achievements

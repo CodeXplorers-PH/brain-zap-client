@@ -1,7 +1,10 @@
 import React from 'react';
 import { Calendar, Award, Flame } from 'lucide-react';
+import useStreak from '@/hooks/useStreak';
 
-const About = ({ userType, stats, streak }) => {
+const About = ({ userType, stats }) => {
+  const streak = useStreak();
+
   return (
     <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
       <h2 className="text-xl font-semibold text-white mb-4">About</h2>

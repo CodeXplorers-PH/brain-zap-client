@@ -1,25 +1,17 @@
 import { useEffect, useState } from 'react';
 import useAxiosSecure from './useAxiosSecure';
 import useAuth from './useAuth';
-import { useLocation } from 'react-router-dom';
 
-const useStreak = () => {
+const useStreak = refetch => {
   const { user } = useAuth();
   const [streak, setStreak] = useState(0);
   const axiosSecure = useAxiosSecure();
-  const { pathname } = useLocation();
 
   useEffect(() => {
     user?.email && localStorage.getItem('access_token')
-      ? setStreak(getStreak())
+      ? getStreak().then(str => setStreak(str))
       : setStreak(0);
   }, [user]);
-
-  useEffect(() => {
-    if (pathname.includes('quiz') && pathname.includes('answer') && user) {
-      setStreak(getStreak());
-    }
-  }, [pathname]);
 
   const getStreak = async () => {
     if (!user?.email) {
