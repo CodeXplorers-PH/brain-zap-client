@@ -167,7 +167,6 @@ const Contact = () => {
       <Helmet>
         <title>Brain Zap AI | Contact</title>
       </Helmet>
-      s
       <div className="relative overflow-hidden bg-gray-900 min-h-screen">
         {/* Content Section */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-20">

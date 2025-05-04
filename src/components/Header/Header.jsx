@@ -167,7 +167,7 @@ const NavLinkItem = ({ navlink, location }) => (
   <li className="list-none">
     <Link
       to={navlink.path}
-      className={`font-bold mx-1 relative text-lg lg:text-base overflow-hidden group ${
+      className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${
         location.pathname === navlink.path
           ? 'text-purple-400 font-semibold'
           : 'text-gray-300'

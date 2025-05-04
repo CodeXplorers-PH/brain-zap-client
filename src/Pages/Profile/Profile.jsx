@@ -37,7 +37,7 @@ const Profile = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Profile</title>
+        <title>Profile | BrainZap</title>
       </Helmet>
       <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
         <div className="max-w-4xl mx-auto">
@@ -50,7 +50,6 @@ const Profile = () => {
               <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
           </div>
-        </div>
 
         {/* Profile Content */}
         {activeTab === 'profile' && (
@@ -92,6 +91,7 @@ const Profile = () => {
         )}
         {/* Achievement Tab */}
         {activeTab === 'achievements' && <AchievementTab xpPoints={xpPoints} />}
+      </div>
       </div>
     </>
   );
