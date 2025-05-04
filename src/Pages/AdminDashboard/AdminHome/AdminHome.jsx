@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Mail,
   User,
-  BarChart3,
   Users,
   Calendar,
   ArrowRight,
-  TrendingUp,
   Activity,
   Bell,
 } from 'lucide-react';
@@ -21,7 +19,7 @@ import {
 } from 'recharts';
 import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useAdminHome from '@/hooks/useAdminHome';
 
 const SummaryCard = ({ icon, title, value, color, change }) => (
   <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50">
@@ -52,16 +50,17 @@ const SummaryCard = ({ icon, title, value, color, change }) => (
 
 const AdminHome = () => {
   const { user } = useAuth();
-  const [users, setUsers] = useState(0);
-  const [messages, setMessages] = useState(0);
-  const [totalFreeUsers, setTotalFreeUsers] = useState(0);
-  const [totalProUsers, setTotalProUsers] = useState(0);
-  const [totalEliteUsers, setTotalEliteUsers] = useState(0);
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const [feedbacks, setFeedbacks] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const axiosSecure = useAxiosSecure();
+  const { dashboardData, loading } = useAdminHome();
+  const {
+    totalUsers: users = 0,
+    totalFeedback: messages = 0,
+    totalFreeUsers = 0,
+    totalProUsers = 0,
+    totalEliteUsers = 0,
+    latestFeedback: feedbacks = [],
+    totalRevenue = 0,
+  } = dashboardData;
 
   const onPieEnter = (_, index) => {
     setActiveIndex(index);
@@ -154,52 +153,6 @@ const AdminHome = () => {
       </g>
     );
   };
-
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosSecure.post(`/adminDashboard`, {
-          query: `
-            query {
-              adminDashboard {
-                totalUsers
-                totalFeedback
-                totalFreeUsers
-                totalProUsers
-                totalEliteUsers
-                totalRevenue
-                latestFeedback {
-                  _id
-                  name
-                  email
-                  message
-                  feedbackType
-                  date
-                }
-              }
-            }
-          `,
-        });
-        const data = res?.data?.data?.adminDashboard;
-        setUsers(data?.totalUsers || 0);
-        setMessages(data?.totalFeedback || 0);
-        setTotalFreeUsers(data?.totalFreeUsers || 0);
-        setTotalProUsers(data?.totalProUsers || 0);
-        setTotalEliteUsers(data?.totalEliteUsers || 0);
-        setFeedbacks(data?.latestFeedback);
-        setTotalRevenue(data?.totalRevenue);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user?.email) {
-      fetchDashboardData();
-    }
-  }, [user, axiosSecure]);
 
   const feedbackTypeColors = {
     Feedback: 'bg-emerald-500',
