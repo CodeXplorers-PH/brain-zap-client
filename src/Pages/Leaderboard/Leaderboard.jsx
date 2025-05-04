@@ -3,59 +3,47 @@ import useAuth from '@/hooks/useAuth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useUsers from '@/hooks/useUsers';
 
 const Leaderboard = () => {
   const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const users = useUsers();
   const [topUsers, setTopUsers] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [exportFormat, setExportFormat] = useState('pdf');
 
   useEffect(() => {
-    axiosSecure
-      .get('/users')
-      .then(res => {
-        if (res.data.success) {
-          let fetchedUsers = res.data.users.map(user => ({
-            email: user.email,
-            displayName: user.name || user.email.split('@')[0],
-            photoURL: user.photoURL || '',
-            stats: { totalPoints: user.totalPoints || 0 },
-            subscription: user.subscription || 'Free',
-          }));
+    if (users?.success) {
+      let fetchedUsers = users?.users?.map(user => ({
+        email: user.email,
+        displayName: user.name || user.email.split('@')[0],
+        photoURL: user.photoURL || '',
+        stats: { totalPoints: user.totalPoints || 0 },
+        subscription: user.subscription || 'Free',
+      }));
 
-          const loggedInUser = fetchedUsers.find(u => u.email === user?.email);
-          let otherUsersList = fetchedUsers.filter(
-            u => u.email !== user?.email
-          );
-          otherUsersList = otherUsersList.filter(u => u.stats.totalPoints > 0);
+      const loggedInUser = fetchedUsers.find(u => u.email === user?.email);
+      let otherUsersList = fetchedUsers.filter(u => u.email !== user?.email);
+      otherUsersList = otherUsersList.filter(u => u.stats.totalPoints > 0);
+      otherUsersList.sort((a, b) => b.stats.totalPoints - a.stats.totalPoints);
+
+      if (loggedInUser) {
+        if (loggedInUser.stats.totalPoints === 0) {
+          otherUsersList.push(loggedInUser);
+        } else {
+          otherUsersList.push(loggedInUser);
           otherUsersList.sort(
             (a, b) => b.stats.totalPoints - a.stats.totalPoints
           );
-
-          if (loggedInUser) {
-            if (loggedInUser.stats.totalPoints === 0) {
-              otherUsersList.push(loggedInUser);
-            } else {
-              otherUsersList.push(loggedInUser);
-              otherUsersList.sort(
-                (a, b) => b.stats.totalPoints - a.stats.totalPoints
-              );
-            }
-          }
-
-          setTopUsers(otherUsersList.slice(0, 3));
-          setOtherUsers(otherUsersList.slice(3));
         }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching users:', err);
-        setLoading(false);
-      });
-  }, [user]);
+      }
+
+      setTopUsers(otherUsersList.slice(0, 3));
+      setOtherUsers(otherUsersList.slice(3));
+    }
+    setLoading(false);
+  }, [user, users]);
 
   const getInitials = name => {
     if (name && name.trim()) {
