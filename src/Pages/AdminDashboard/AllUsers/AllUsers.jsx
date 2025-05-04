@@ -243,8 +243,10 @@ const AllUsers = () => {
   const adminUsers = users.filter(u => u.role === 'admin').length;
   const standardUsers = totalUsers - adminUsers;
 
+  console.log(users);
+
   const renderUserRow = user => {
-    const membershipType = user.membershipType || 'Free';
+    const membershipType = user.subscription || 'Free';
     const membershipColor =
       {
         Free: 'bg-green-900/30 text-green-400',
@@ -291,7 +293,7 @@ const AllUsers = () => {
         </td>
         <td className="py-3 px-4">
           <span className="text-sm text-gray-300">
-            {user?.createdAt?.split('T')[0] || 'N/A'}
+            {user?.subscriptionLastTime?.split('T')[0] || 'N/A'}
           </span>
         </td>
         <td className="py-3 px-4">
@@ -468,7 +470,7 @@ const AllUsers = () => {
                   <th className="py-3 px-4 text-left">User</th>
                   <th className="py-3 px-4 text-left">Membership</th>
                   <th className="py-3 px-4 text-left">Role</th>
-                  <th className="py-3 px-4 text-left">Joined</th>
+                  <th className="py-3 px-4 text-left">Subscription Expires</th>
                   <th className="py-3 px-4 text-left">Actions</th>
                 </tr>
               </thead>
