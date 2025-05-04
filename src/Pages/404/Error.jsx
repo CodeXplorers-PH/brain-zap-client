@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
-import { Helmet } from "react-helmet";
+import { Link } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Helmet } from 'react-helmet';
 
 const Error = () => {
   return (

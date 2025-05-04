@@ -1,9 +1,9 @@
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { Helmet } from "react-helmet";
+import { useAuthContext } from '@/hooks/useAuthContext';
+import { Helmet } from 'react-helmet';
 
 const Banner = () => {
   const { user } = useAuthContext();
-  const displayName = user?.displayName || "Scholar";
+  const displayName = user?.displayName || 'Scholar';
 
   return (
     <>

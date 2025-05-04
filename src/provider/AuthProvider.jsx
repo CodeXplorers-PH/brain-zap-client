@@ -15,6 +15,7 @@ import {
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -24,6 +25,9 @@ const githubProvider = new GithubAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userLevel, setUserLevel] = useState(null);
+  const [userType, setType] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
@@ -59,7 +63,9 @@ const AuthProvider = ({ children }) => {
 
   const authInfo = {
     user,
-    setUser,
+    userLevel,
+    userType,
+    isAdmin,
     createNewUser,
     logOut,
     userLogin,
@@ -75,8 +81,6 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
 
     const unsubscribe = onAuthStateChanged(auth, async currentUser => {
-      setUser(currentUser || null);
-
       if (currentUser) {
         localStorage.removeItem('loginAttempt');
 
@@ -84,9 +88,7 @@ const AuthProvider = ({ children }) => {
 
         try {
           // Check if the account is locked
-          const res = await axiosPublic.patch('/account_lockout', {
-            email: email,
-          });
+          const res = await axiosPublic.patch('/account_lockout', { email });
 
           setIsLocked(res?.data?.isLocked);
           if (res?.data?.isLocked) {
@@ -112,24 +114,36 @@ const AuthProvider = ({ children }) => {
             });
           }
 
-          // Set Jwt token
-          (async () => {
-            const { data } = await axiosPublic.post('/jwt', { email });
-
-            data?.token
-              ? localStorage.setItem('access_token', data?.token)
-              : localStorage.removeItem('access_token');
-          })();
+          // Store token
+          const { data: token } = await axiosPublic.post('/jwt', { email });
+          token?.token && localStorage.setItem('access_token', token.token);
 
           // Save user data in the database
-          if (displayName && photoURL && email) {
-            await axiosPublic.post('/post_user', {
+          displayName &&
+            photoURL &&
+            email &&
+            (await axiosPublic.post('/post_user', {
               name: displayName,
               photoURL,
               email,
-            });
-          }
+            }));
 
+          // Set User type and isAdmin
+          const { data: userInfo } = await axios.get(
+            `${import.meta.env.VITE_ServerUrl}/userInfo`,
+            {
+              headers: {
+                Authorization: `Bearer ${token.token}`,
+                email: currentUser?.email,
+              },
+            }
+          );
+          setUserLevel(userInfo?.userInfo?.level?.level || 0);
+          setType(userInfo?.userInfo?.subscription || null);
+          setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
+
+          // Set Users
+          setUser(currentUser);
           setLoading(false);
         } catch (err) {
           console.error('Auth side effects failed:', err);
@@ -137,6 +151,7 @@ const AuthProvider = ({ children }) => {
         }
       } else {
         localStorage.removeItem('access_token');
+        setUser(null);
         setLoading(false);
       }
     });

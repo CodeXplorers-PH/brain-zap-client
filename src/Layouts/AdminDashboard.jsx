@@ -1,4 +1,4 @@
-import useAuth from "@/hooks/useAuth";
+import useAuth from '@/hooks/useAuth';
 import {
   CalendarCheck2,
   House,
@@ -11,11 +11,11 @@ import {
   ChevronRight,
   Settings,
   User,
-} from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { MdOutlineQuiz } from "react-icons/md";
-import { Helmet } from "react-helmet";
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { MdOutlineQuiz } from 'react-icons/md';
+import { Helmet } from 'react-helmet';
 
 const AdminDashboard = () => {
   const { user, logOut } = useAuth();
@@ -24,11 +24,11 @@ const AdminDashboard = () => {
   const location = useLocation();
 
   const handleToggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
+    setIsSidebarOpen(prev => !prev);
   };
 
   const handleToggleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
+    setIsCollapsed(prev => !prev);
   };
 
   useEffect(() => {
@@ -39,30 +39,30 @@ const AdminDashboard = () => {
 
   const navItems = [
     {
-      to: "/dashboard/adminHome",
+      to: '/dashboard/adminHome',
       icon: <House size={20} />,
-      label: "Admin Home",
+      label: 'Admin Home',
     },
     {
-      to: "/dashboard/feedback",
+      to: '/dashboard/feedback',
       icon: <MailCheck size={20} />,
-      label: "Feedback",
+      label: 'Feedback',
     },
     {
-      to: "/dashboard/allUsers",
+      to: '/dashboard/allUsers',
       icon: <Users size={20} />,
-      label: "All Users",
+      label: 'All Users',
     },
   ];
 
   const secondaryNavItems = [
-    { to: "/", icon: <House size={20} />, label: "Home" },
+    { to: '/', icon: <House size={20} />, label: 'Home' },
     {
-      to: "/start-quiz",
+      to: '/start-quiz',
       icon: <MdOutlineQuiz className="text-lg" />,
-      label: "Start Quiz",
+      label: 'Start Quiz',
     },
-    { to: "/profile", icon: <User size={20} />, label: "Profile" },
+    { to: '/profile', icon: <User size={20} />, label: 'Profile' },
   ];
 
   return (
@@ -98,10 +98,10 @@ const AdminDashboard = () => {
           className={`fixed md:fixed top-0 left-0 h-full z-40 transition-all duration-300 ease-out flex flex-col
           ${
             isSidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full md:translate-x-0"
+              ? 'translate-x-0'
+              : '-translate-x-full md:translate-x-0'
           }
-          ${isCollapsed ? "w-20" : "w-72"}
+          ${isCollapsed ? 'w-20' : 'w-72'}
         `}
         >
           <div className="h-full flex flex-col bg-gray-800 border-r border-gray-700/50 relative">
@@ -113,7 +113,7 @@ const AdminDashboard = () => {
               <ChevronRight
                 size={16}
                 className={`transform transition-transform duration-300 ${
-                  isCollapsed ? "" : "rotate-180"
+                  isCollapsed ? '' : 'rotate-180'
                 }`}
               />
             </button>
@@ -131,7 +131,7 @@ const AdminDashboard = () => {
             {/* Logo */}
             <div
               className={`flex items-center justify-center py-6 ${
-                isCollapsed ? "px-2" : "px-6"
+                isCollapsed ? 'px-2' : 'px-6'
               }`}
             >
               {!isCollapsed && (
@@ -143,8 +143,8 @@ const AdminDashboard = () => {
 
             {/* User info */}
             <div
-              className={`px-4 py-4 ${isCollapsed ? "items-center" : ""} flex ${
-                isCollapsed ? "justify-center" : "items-center"
+              className={`px-4 py-4 ${isCollapsed ? 'items-center' : ''} flex ${
+                isCollapsed ? 'justify-center' : 'items-center'
               } border-b border-gray-700/50`}
             >
               <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-purple-500 flex-shrink-0">
@@ -166,9 +166,9 @@ const AdminDashboard = () => {
 
             {/* Navigation Section - Add overflow control */}
             <div className="flex-1 overflow-y-auto py-4 px-3 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-              <div className={`mb-2 px-4 ${isCollapsed ? "text-center" : ""}`}>
+              <div className={`mb-2 px-4 ${isCollapsed ? 'text-center' : ''}`}>
                 <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-                  {isCollapsed ? "Menu" : "Main Menu"}
+                  {isCollapsed ? 'Menu' : 'Main Menu'}
                 </p>
               </div>
               <ul className="space-y-1">
@@ -178,14 +178,14 @@ const AdminDashboard = () => {
                       to={item.to}
                       className={({ isActive }) =>
                         `flex items-center ${
-                          isCollapsed ? "justify-center" : ""
+                          isCollapsed ? 'justify-center' : ''
                         } px-4 py-3 rounded-lg transition-colors duration-200 ${
                           isActive
-                            ? "bg-gradient-to-r from-purple-900/80 to-indigo-900/80 text-white"
-                            : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+                            ? 'bg-gradient-to-r from-purple-900/80 to-indigo-900/80 text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                         }`
                       }
-                      title={isCollapsed ? item.label : ""}
+                      title={isCollapsed ? item.label : ''}
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
                       {!isCollapsed && (
@@ -197,10 +197,10 @@ const AdminDashboard = () => {
               </ul>
 
               <div
-                className={`mt-8 mb-2 px-4 ${isCollapsed ? "text-center" : ""}`}
+                className={`mt-8 mb-2 px-4 ${isCollapsed ? 'text-center' : ''}`}
               >
                 <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-                  {isCollapsed ? "Links" : "Quick Links"}
+                  {isCollapsed ? 'Links' : 'Quick Links'}
                 </p>
               </div>
               <ul className="space-y-1">
@@ -209,9 +209,9 @@ const AdminDashboard = () => {
                     <NavLink
                       to={item.to}
                       className={`flex items-center ${
-                        isCollapsed ? "justify-center" : ""
+                        isCollapsed ? 'justify-center' : ''
                       } px-4 py-3 rounded-lg transition-colors duration-200 text-gray-400 hover:text-white hover:bg-gray-700/50`}
-                      title={isCollapsed ? item.label : ""}
+                      title={isCollapsed ? item.label : ''}
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
                       {!isCollapsed && (
@@ -228,9 +228,9 @@ const AdminDashboard = () => {
               <button
                 onClick={logOut}
                 className={`w-full flex items-center ${
-                  isCollapsed ? "justify-center" : ""
+                  isCollapsed ? 'justify-center' : ''
                 } px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 transition-colors duration-200`}
-                title={isCollapsed ? "Logout" : ""}
+                title={isCollapsed ? 'Logout' : ''}
               >
                 <LogOut size={20} />
                 {!isCollapsed && <span className="ml-3">Logout</span>}
@@ -250,14 +250,14 @@ const AdminDashboard = () => {
         {/* Main Content - Adjust margin/padding based on sidebar state */}
         <div
           className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-out
-          ${isCollapsed ? "md:ml-20" : "md:ml-72"}`}
+          ${isCollapsed ? 'md:ml-20' : 'md:ml-72'}`}
         >
           {/* Desktop Header */}
           <div className="hidden md:flex items-center justify-between bg-gray-800 border-b border-gray-700/50 px-6 py-4">
             <h1 className="text-xl font-semibold text-white">
-              {location.pathname.includes("adminHome") && "Admin Dashboard"}
-              {location.pathname.includes("feedback") && "Feedback"}
-              {location.pathname.includes("allUsers") && "User Management"}
+              {location.pathname.includes('adminHome') && 'Admin Dashboard'}
+              {location.pathname.includes('feedback') && 'Feedback'}
+              {location.pathname.includes('allUsers') && 'User Management'}
             </h1>
 
             <div className="flex items-center space-x-4">

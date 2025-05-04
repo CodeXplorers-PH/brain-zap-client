@@ -1,8 +1,11 @@
-import React from "react";
-import { format } from "date-fns";
-import { Helmet } from "react-helmet";
+import React from 'react';
+import { format } from 'date-fns';
+import useUserInfo from '@/hooks/useUserInfo';
+import { Helmet } from 'react-helmet';
 
-const TransactionHistory = ({ user, userInfo }) => {
+const TransactionHistory = ({ user }) => {
+  const userInfo = useUserInfo();
+
   return (
     <>
       <Helmet>
@@ -39,7 +42,7 @@ const TransactionHistory = ({ user, userInfo }) => {
                   <td className="py-3 text-right text-white">
                     {format(
                       new Date(userInfo?.subscriptionLastTime),
-                      "MMMM dd, yyyy"
+                      'MMMM dd, yyyy'
                     )}
                   </td>
                 </tr>

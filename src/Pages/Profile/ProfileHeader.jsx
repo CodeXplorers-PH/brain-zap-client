@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Edit2, Mail, Save, X, CircleCheck, Crown } from 'lucide-react';
 import { useAuthContext } from '@/hooks/useAuthContext';
 
-const ProfileHeader = ({ stats, userInfo }) => {
+const ProfileHeader = ({ stats, userType }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   // Form state
@@ -157,13 +157,13 @@ const ProfileHeader = ({ stats, userInfo }) => {
                 {user?.displayName || 'BrainZapper'}
 
                 {/* Premium Members Tick */}
-                {userInfo?.userInfo?.subscription === 'Pro' && (
+                {userType === 'Pro' && (
                   <div className="tooltip" data-tip="Pro Member">
                     <CircleCheck className="text-blue-500 w-6 h-6" />
                   </div>
                 )}
 
-                {userInfo?.userInfo?.subscription === 'Elite' && (
+                {userType === 'Elite' && (
                   <div className="tooltip" data-tip="Elite Member">
                     <Crown className="text-amber-500 w-6 h-6" />
                   </div>

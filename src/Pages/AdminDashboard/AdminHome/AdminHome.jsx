@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import {
   Mail,
   User,
-  BarChart3,
   Users,
   Calendar,
   ArrowRight,
-  TrendingUp,
   Activity,
   Bell,
-} from "lucide-react";
-import { MdOutlineAttachMoney } from "react-icons/md";
+} from 'lucide-react';
+import { MdOutlineAttachMoney } from 'react-icons/md';
 import {
   PieChart,
   Pie,
@@ -18,11 +16,11 @@ import {
   ResponsiveContainer,
   Cell,
   Tooltip,
-} from "recharts";
-import useAuth from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { Helmet } from "react-helmet";
+} from 'recharts';
+import useAuth from '@/hooks/useAuth';
+import { Link } from 'react-router-dom';
+import useAdminHome from '@/hooks/useAdminHome';
+import { Helmet } from 'react-helmet';
 
 const SummaryCard = ({ icon, title, value, color, change }) => (
   <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50">
@@ -35,9 +33,9 @@ const SummaryCard = ({ icon, title, value, color, change }) => (
         {change && (
           <span
             className={`text-xs font-medium px-2 py-1 rounded-full ${
-              change.startsWith("+")
-                ? "bg-green-900/30 text-green-400"
-                : "bg-red-900/30 text-red-400"
+              change.startsWith('+')
+                ? 'bg-green-900/30 text-green-400'
+                : 'bg-red-900/30 text-red-400'
             }`}
           >
             {change}
@@ -53,28 +51,29 @@ const SummaryCard = ({ icon, title, value, color, change }) => (
 
 const AdminHome = () => {
   const { user } = useAuth();
-  const [users, setUsers] = useState(0);
-  const [messages, setMessages] = useState(0);
-  const [totalFreeUsers, setTotalFreeUsers] = useState(0);
-  const [totalProUsers, setTotalProUsers] = useState(0);
-  const [totalEliteUsers, setTotalEliteUsers] = useState(0);
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const [feedbacks, setFeedbacks] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const axiosSecure = useAxiosSecure();
+  const { dashboardData, loading } = useAdminHome();
+  const {
+    totalUsers: users = 0,
+    totalFeedback: messages = 0,
+    totalFreeUsers = 0,
+    totalProUsers = 0,
+    totalEliteUsers = 0,
+    latestFeedback: feedbacks = [],
+    totalRevenue = 0,
+  } = dashboardData;
 
   const onPieEnter = (_, index) => {
     setActiveIndex(index);
   };
 
   const data = [
-    { name: "Pro Users", value: totalProUsers, color: "#8b5cf6" },
-    { name: "Elite Users", value: totalEliteUsers, color: "#06b6d4" },
-    { name: "Free Users", value: totalFreeUsers, color: "#34d399" },
+    { name: 'Pro Users', value: totalProUsers, color: '#8b5cf6' },
+    { name: 'Elite Users', value: totalEliteUsers, color: '#06b6d4' },
+    { name: 'Free Users', value: totalFreeUsers, color: '#34d399' },
   ];
 
-  const renderActiveShape = (props) => {
+  const renderActiveShape = props => {
     const RADIAN = Math.PI / 180;
     const {
       cx,
@@ -97,7 +96,7 @@ const AdminHome = () => {
     const my = cy + (outerRadius + 30) * sin;
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
-    const textAnchor = cos >= 0 ? "start" : "end";
+    const textAnchor = cos >= 0 ? 'start' : 'end';
 
     return (
       <g>
@@ -156,57 +155,11 @@ const AdminHome = () => {
     );
   };
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosSecure.post(`/adminDashboard`, {
-          query: `
-            query {
-              adminDashboard {
-                totalUsers
-                totalFeedback
-                totalFreeUsers
-                totalProUsers
-                totalEliteUsers
-                totalRevenue
-                latestFeedback {
-                  _id
-                  name
-                  email
-                  message
-                  feedbackType
-                  date
-                }
-              }
-            }
-          `,
-        });
-        const data = res?.data?.data?.adminDashboard;
-        setUsers(data?.totalUsers || 0);
-        setMessages(data?.totalFeedback || 0);
-        setTotalFreeUsers(data?.totalFreeUsers || 0);
-        setTotalProUsers(data?.totalProUsers || 0);
-        setTotalEliteUsers(data?.totalEliteUsers || 0);
-        setFeedbacks(data?.latestFeedback);
-        setTotalRevenue(data?.totalRevenue);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user?.email) {
-      fetchDashboardData();
-    }
-  }, [user, axiosSecure]);
-
   const feedbackTypeColors = {
-    Feedback: "bg-emerald-500",
-    "Feature Request": "bg-blue-500",
-    "Bug Report": "bg-red-500",
-    Question: "bg-amber-500",
+    Feedback: 'bg-emerald-500',
+    'Feature Request': 'bg-blue-500',
+    'Bug Report': 'bg-red-500',
+    Question: 'bg-amber-500',
   };
 
   const renderSkeletonCard = () => (
@@ -241,7 +194,7 @@ const AdminHome = () => {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white">
-              Welcome back,{" "}
+              Welcome back,{' '}
               <span className="text-purple-400">{user?.displayName}</span>
             </h1>
             <p className="text-gray-400">
@@ -367,10 +320,10 @@ const AdminHome = () => {
                         </Pie>
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: "#1f2937",
-                            borderColor: "#374151",
-                            borderRadius: "0.375rem",
-                            color: "#f9fafb",
+                            backgroundColor: '#1f2937',
+                            borderColor: '#374151',
+                            borderRadius: '0.375rem',
+                            color: '#f9fafb',
                           }}
                           formatter={(value, name) => [
                             `${value} Users (${((value / users) * 100).toFixed(
@@ -530,9 +483,9 @@ const AdminHome = () => {
                           {feedback.name ? (
                             <span className="text-xs font-medium text-white">
                               {feedback.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
+                                .split(' ')
+                                .map(n => n[0])
+                                .join('')
                                 .toUpperCase()}
                             </span>
                           ) : (
@@ -551,7 +504,7 @@ const AdminHome = () => {
                       <span
                         className={`text-xs px-2 py-1 rounded-full ${
                           feedbackTypeColors[feedback.feedbackType] ||
-                          "bg-gray-500"
+                          'bg-gray-500'
                         }`}
                       >
                         {feedback.feedbackType}

@@ -1,47 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useUsers from '@/hooks/useUsers';
 
 const LeaderboardRank = () => {
   const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const users = useUsers();
   const [rank, setRank] = useState(null);
   const [totalPoints, setTotalPoints] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.email) return;
+    if (users?.success) {
+      // Sort users by totalPoints in descending order
+      const sortedUsers = users?.users
+        .map(user => ({
+          email: user.email,
+          totalPoints: user.totalPoints || 0,
+        }))
+        .sort((a, b) => b.totalPoints - a.totalPoints);
 
-    axiosSecure
-      .get('/users')
-      .then(res => {
-        if (res.data.success) {
-          // Sort users by totalPoints in descending order
-          const sortedUsers = res.data.users
-            .map(user => ({
-              email: user.email,
-              totalPoints: user.totalPoints || 0,
-            }))
-            .sort((a, b) => b.totalPoints - a.totalPoints);
-
-          // Find the current user's rank and totalPoints
-          const userIndex = sortedUsers.findIndex(u => u.email === user.email);
-          if (userIndex !== -1) {
-            setRank(userIndex + 1); // Rank is 1-based (index + 1)
-            setTotalPoints(sortedUsers[userIndex].totalPoints);
-          } else {
-            setRank(null);
-            setTotalPoints(0);
-          }
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching leaderboard data:', err);
-        setLoading(false);
-      });
-  }, [user]);
+      // Find the current user's rank and totalPoints
+      const userIndex = sortedUsers.findIndex(u => u.email === user.email);
+      if (userIndex !== -1) {
+        setRank(userIndex + 1); // Rank is 1-based (index + 1)
+        setTotalPoints(sortedUsers[userIndex].totalPoints);
+      } else {
+        setRank(null);
+        setTotalPoints(0);
+      }
+    }
+    setLoading(false);
+  }, [user, users]);
 
   const rankSuffix = rank => {
     if (rank === 1) return 'st';

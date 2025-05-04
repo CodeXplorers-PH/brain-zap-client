@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   FiSend,
   FiLinkedin,
@@ -10,29 +10,29 @@ import {
   FiShare2,
   FiPrinter,
   FiEdit3,
-} from "react-icons/fi";
-import { IoPieChart } from "react-icons/io5";
-import { RiUserCommunityFill } from "react-icons/ri";
-import { BsBriefcase, BsRobot } from "react-icons/bs";
-import { SparklesText } from "@/components/magicui/sparkles-text";
-import { Helmet } from "react-helmet";
+} from 'react-icons/fi';
+import { IoPieChart } from 'react-icons/io5';
+import { RiUserCommunityFill } from 'react-icons/ri';
+import { BsBriefcase, BsRobot } from 'react-icons/bs';
+import { SparklesText } from '@/components/magicui/sparkles-text';
+import { Helmet } from 'react-helmet';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -40,7 +40,7 @@ const Contact = () => {
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitSuccess(true);
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setFormData({ name: '', email: '', subject: '', message: '' });
 
       // Reset success message after 5 seconds
       setTimeout(() => setSubmitSuccess(false), 5000);
@@ -50,114 +50,114 @@ const Contact = () => {
   const uniqueFeatures = [
     {
       icon: <FiBarChart2 className="w-8 h-8" />,
-      title: "Interest-Based Quizzes",
+      title: 'Interest-Based Quizzes',
       description:
         "Generate personalized quizzes on topics you're passionate about to enhance your learning experience and knowledge retention.",
     },
     {
       icon: <FiTrendingUp className="w-8 h-8" />,
-      title: "Competitive Leaderboards",
+      title: 'Competitive Leaderboards',
       description:
-        "Compete globally and see your rank among other learners. Challenge yourself to climb the rankings and earn recognition.",
+        'Compete globally and see your rank among other learners. Challenge yourself to climb the rankings and earn recognition.',
     },
     {
       icon: <FiCalendar className="w-8 h-8" />,
-      title: "Daily Learning Streaks",
+      title: 'Daily Learning Streaks',
       description:
-        "Build consistent learning habits with daily streak rewards. Stay motivated and track your progress over time.",
+        'Build consistent learning habits with daily streak rewards. Stay motivated and track your progress over time.',
     },
     {
       icon: <FiAward className="w-8 h-8" />,
-      title: "Achievement System",
+      title: 'Achievement System',
       description:
-        "Earn badges and unlock rewards as you progress through various learning milestones and challenges.",
+        'Earn badges and unlock rewards as you progress through various learning milestones and challenges.',
     },
     {
       icon: <BsRobot className="w-8 h-8" />,
-      title: "AI-Powered Feedback",
+      title: 'AI-Powered Feedback',
       description:
-        "Get personalized insights on your performance with our advanced AI that analyzes your answers and provides tailored recommendations.",
+        'Get personalized insights on your performance with our advanced AI that analyzes your answers and provides tailored recommendations.',
     },
     {
       icon: <RiUserCommunityFill className="w-8 h-8" />,
-      title: "Learning Community",
+      title: 'Learning Community',
       description:
-        "Share your insights through our interactive blog section and connect with other learners who share your interests.",
+        'Share your insights through our interactive blog section and connect with other learners who share your interests.',
     },
     {
       icon: <FiPrinter className="w-8 h-8" />,
-      title: "Printable Results",
+      title: 'Printable Results',
       description:
-        "Save your quiz results for later study and reference. Export your progress reports to track improvements over time.",
+        'Save your quiz results for later study and reference. Export your progress reports to track improvements over time.',
     },
     {
       icon: <FiShare2 className="w-8 h-8" />,
-      title: "Social Sharing",
+      title: 'Social Sharing',
       description:
-        "Share your achievements across social media platforms and inspire others to join your learning journey.",
+        'Share your achievements across social media platforms and inspire others to join your learning journey.',
     },
     {
       icon: <IoPieChart className="w-8 h-8" />,
-      title: "Knowledge Analytics",
+      title: 'Knowledge Analytics',
       description:
-        "Track your learning progress with detailed analytics that identify strengths and areas for improvement across different subject areas.",
+        'Track your learning progress with detailed analytics that identify strengths and areas for improvement across different subject areas.',
     },
   ];
 
   const teamMembers = [
     {
-      name: "AJM Fajlay Rabby",
-      role: "Frontend Lead & Product Visionary",
-      bio: "A product-focused frontend lead turning vision into experience and ideas into interface.",
-      image: "https://avatars.githubusercontent.com/u/55575386?v=4",
+      name: 'AJM Fajlay Rabby',
+      role: 'Frontend Lead & Product Visionary',
+      bio: 'A product-focused frontend lead turning vision into experience and ideas into interface.',
+      image: 'https://avatars.githubusercontent.com/u/55575386?v=4',
       links: {
-        linkedin: "https://www.linkedin.com/in/ornobaadi/",
-        github: "https://github.com/ornobaadi",
-        portfolio: "https://ornobaadi-1.web.app/",
+        linkedin: 'https://www.linkedin.com/in/ornobaadi/',
+        github: 'https://github.com/ornobaadi',
+        portfolio: 'https://ornobaadi-1.web.app/',
       },
     },
     {
-      name: "Md. Atef Abrar Bhuyian",
-      role: "Technical Lead & Fullstack Solutions Architect",
-      bio: "A fullstack architect bridging frontend and backend with robust, scalable solutions.",
-      image: "https://avatars.githubusercontent.com/u/122459257?v=4",
+      name: 'Md. Atef Abrar Bhuyian',
+      role: 'Technical Lead & Fullstack Solutions Architect',
+      bio: 'A fullstack architect bridging frontend and backend with robust, scalable solutions.',
+      image: 'https://avatars.githubusercontent.com/u/122459257?v=4',
       links: {
-        linkedin: "https://www.linkedin.com/in/atef-abrar-bhuyian/",
-        github: "https://github.com/Atef-Abrar-Bhuyian",
-        portfolio: "https://atef-abrar-bhuyian.netlify.app/",
+        linkedin: 'https://www.linkedin.com/in/atef-abrar-bhuyian/',
+        github: 'https://github.com/Atef-Abrar-Bhuyian',
+        portfolio: 'https://atef-abrar-bhuyian.netlify.app/',
       },
     },
     {
-      name: "Shahid Hasan Rumon",
-      role: "Backend Architect & API Integrations Expert",
-      bio: "A backend maestro specializing in API integrations and scalable system design.",
-      image: "https://avatars.githubusercontent.com/u/142591239?v=4",
+      name: 'Shahid Hasan Rumon',
+      role: 'Backend Architect & API Integrations Expert',
+      bio: 'A backend maestro specializing in API integrations and scalable system design.',
+      image: 'https://avatars.githubusercontent.com/u/142591239?v=4',
       links: {
-        linkedin: "https://www.linkedin.com/in/shrumon/",
-        github: "https://github.com/rumon3-1416",
-        portfolio: "https://shahidhasanrumon.netlify.app/",
+        linkedin: 'https://www.linkedin.com/in/shrumon/',
+        github: 'https://github.com/rumon3-1416',
+        portfolio: 'https://shahidhasanrumon.netlify.app/',
       },
     },
     {
-      name: "Prapoo Rozario",
-      role: "Performance Engineer & Security Specialist",
-      bio: "A performance-driven engineer refining system speed and enhancing security protocols.",
-      image: "https://avatars.githubusercontent.com/u/174159523?v=4",
+      name: 'Prapoo Rozario',
+      role: 'Performance Engineer & Security Specialist',
+      bio: 'A performance-driven engineer refining system speed and enhancing security protocols.',
+      image: 'https://avatars.githubusercontent.com/u/174159523?v=4',
       links: {
-        linkedin: "https://www.linkedin.com/in/Prapoo/",
-        github: "https://github.com/PrapooRozario",
-        portfolio: "https://prapoo-rozario.vercel.app/",
+        linkedin: 'https://www.linkedin.com/in/Prapoo/',
+        github: 'https://github.com/PrapooRozario',
+        portfolio: 'https://prapoo-rozario.vercel.app/',
       },
     },
     {
-      name: "Md Ahbabuzzaman",
-      role: "Gamification & User Engagement Engineer",
-      bio: "A gamification expert crafting features that boost user engagement and retention.",
-      image: "https://avatars.githubusercontent.com/u/160356472?v=4",
+      name: 'Md Ahbabuzzaman',
+      role: 'Gamification & User Engagement Engineer',
+      bio: 'A gamification expert crafting features that boost user engagement and retention.',
+      image: 'https://avatars.githubusercontent.com/u/160356472?v=4',
       links: {
-        linkedin: "https://www.linkedin.com/in/zaman-ahbab/",
-        github: "https://github.com/ahbab-zaman",
-        portfolio: "https://ahbab-portfolio.vercel.app/",
+        linkedin: 'https://www.linkedin.com/in/zaman-ahbab/',
+        github: 'https://github.com/ahbab-zaman',
+        portfolio: 'https://ahbab-portfolio.vercel.app/',
       },
     },
   ];
@@ -196,8 +196,8 @@ const Contact = () => {
                   key={index}
                   className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6 hover:bg-gray-800/70 transition duration-300 w-full max-w-sm flex-grow"
                   style={{
-                    flexBasis: "calc(33.333% - 1.5rem)",
-                    minWidth: "280px",
+                    flexBasis: 'calc(33.333% - 1.5rem)',
+                    minWidth: '280px',
                   }}
                 >
                   <div className="flex flex-col items-center text-center">
@@ -206,9 +206,9 @@ const Contact = () => {
                         src={member.image}
                         alt={member.name}
                         className="rounded-full w-full h-full object-cover"
-                        onError={(e) => {
+                        onError={e => {
                           e.target.onerror = null;
-                          e.target.src = "/api/placeholder/100/100";
+                          e.target.src = '/api/placeholder/100/100';
                         }}
                       />
                     </div>
@@ -275,8 +275,8 @@ const Contact = () => {
                     </h3>
                   </div>
                   <p className="text-gray-400 text-sm leading-relaxed">
-                    {feature.description.split(" ").slice(0, 12).join(" ") +
-                      (feature.description.split(" ").length > 12 ? "..." : "")}
+                    {feature.description.split(' ').slice(0, 12).join(' ') +
+                      (feature.description.split(' ').length > 12 ? '...' : '')}
                   </p>
                 </div>
               ))}
@@ -377,11 +377,11 @@ const Contact = () => {
                     rows="6"
                     className="w-full px-4 py-3 bg-gray-800/70 border border-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-white transition-all duration-300"
                     placeholder={
-                      formData.subject === "feature"
-                        ? "Describe your feature idea..."
-                        : formData.subject === "bug"
-                        ? "Please describe the issue in detail..."
-                        : "Your message here..."
+                      formData.subject === 'feature'
+                        ? 'Describe your feature idea...'
+                        : formData.subject === 'bug'
+                        ? 'Please describe the issue in detail...'
+                        : 'Your message here...'
                     }
                   ></textarea>
                 </div>
@@ -391,7 +391,7 @@ const Contact = () => {
                     type="submit"
                     disabled={isSubmitting}
                     className={`w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg shadow-purple-500/20 hover:shadow-xl hover:shadow-purple-500/30 ${
-                      isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                      isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                     }`}
                   >
                     {isSubmitting ? (
@@ -402,12 +402,12 @@ const Contact = () => {
                     ) : (
                       <>
                         <span>
-                          Submit{" "}
-                          {formData.subject === "feature"
-                            ? "Request"
-                            : formData.subject === "bug"
-                            ? "Report"
-                            : "Feedback"}
+                          Submit{' '}
+                          {formData.subject === 'feature'
+                            ? 'Request'
+                            : formData.subject === 'bug'
+                            ? 'Report'
+                            : 'Feedback'}
                         </span>
                         <FiSend className="w-5 h-5" />
                       </>

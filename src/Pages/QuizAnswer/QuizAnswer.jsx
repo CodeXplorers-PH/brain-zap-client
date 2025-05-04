@@ -12,6 +12,7 @@ import {
 import { FaXTwitter } from 'react-icons/fa6';
 import useAuth from '@/hooks/useAuth';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useStreak from '@/hooks/useStreak';
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -26,6 +27,7 @@ const QuizAnswer = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
+  const { refetch } = useStreak();
   const { category } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -109,8 +111,9 @@ const QuizAnswer = () => {
           questions: JSON.parse(storedQuiz),
           answers: JSON.parse(storedAnswers),
         })
-        .then(res => {
+        .then(() => {
           localStorage.setItem(`history_posted`, 'true');
+          refetch();
         })
         .catch(err => {
           console.log('Error saving history:', err);
@@ -124,7 +127,7 @@ const QuizAnswer = () => {
         })
         .catch(err => console.log('Level Update Error --> ', err.message));
     }
-  }, [user, category, questions]);
+  }, [category, questions]);
 
   const handleQuizAgain = () => {
     localStorage.removeItem('quiz_questions');

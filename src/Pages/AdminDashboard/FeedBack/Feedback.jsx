@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import {
   Calendar,
   Mail,
@@ -7,127 +7,91 @@ import {
   MailCheck,
   Search,
   Filter,
-} from "lucide-react";
-import Swal from "sweetalert2";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { Helmet } from "react-helmet";
+} from 'lucide-react';
+import Swal from 'sweetalert2';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useFeedbacks from '@/hooks/useFeedBacks';
+import { Helmet } from 'react-helmet';
 
 const Feedback = () => {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filterType, setFilterType] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+  const { feedbacks, loading, refetch } = useFeedbacks();
+
+  const [filterType, setFilterType] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    const fetchFeedbackData = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosSecure.post(`/adminDashboard`, {
-          query: `
-            query {
-              feedback {
-                _id
-                name
-                email
-                message
-                feedbackType
-                date
-                read
-              }
-            }
-          `,
-        });
-        const data = res?.data?.data?.feedback;
-        setFeedbacks(data);
-      } catch (error) {
-        console.error("Error fetching feedback data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeedbackData();
-  }, [axiosSecure]);
-
-  const handleMarkAsRead = (id) => {
+  const handleMarkAsRead = id => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You want to mark this feedback as read?",
-      icon: "question",
+      title: 'Are you sure?',
+      text: 'You want to mark this feedback as read?',
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: "#8b5cf6",
-      cancelButtonColor: "#374151",
-      confirmButtonText: "Yes, mark as read",
-      background: "#1f2937",
-      color: "#fff",
-    }).then((result) => {
+      confirmButtonColor: '#8b5cf6',
+      cancelButtonColor: '#374151',
+      confirmButtonText: 'Yes, mark as read',
+      background: '#1f2937',
+      color: '#fff',
+    }).then(result => {
       if (result.isConfirmed) {
         axiosSecure
           .patch(`/feedbackRead/${id}`)
-          .then((res) => {
+          .then(res => {
             if (res?.data?.success) {
               Swal.fire({
-                title: "Success!",
-                text: "Feedback has been marked as read.",
-                icon: "success",
-                background: "#1f2937",
-                color: "#fff",
-                confirmButtonColor: "#8b5cf6",
+                title: 'Success!',
+                text: 'Feedback has been marked as read.',
+                icon: 'success',
+                background: '#1f2937',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6',
               });
-              setFeedbacks((prevFeedbacks) =>
-                prevFeedbacks.map((fb) =>
-                  fb._id === id ? { ...fb, read: "Done" } : fb
-                )
-              );
             }
           })
-          .catch((error) => {
-            console.error("Failed to mark as read:", error);
+          .then(() => refetch())
+          .catch(error => {
+            console.error('Failed to mark as read:', error);
           });
       }
     });
   };
 
-  const handleDeleteFeedback = (id) => {
+  const handleDeleteFeedback = id => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "This action cannot be undone.",
-      icon: "warning",
+      title: 'Are you sure?',
+      text: 'This action cannot be undone.',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#374151",
-      confirmButtonText: "Yes, delete it",
-      background: "#1f2937",
-      color: "#fff",
-    }).then((result) => {
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#374151',
+      confirmButtonText: 'Yes, delete it',
+      background: '#1f2937',
+      color: '#fff',
+    }).then(result => {
       if (result.isConfirmed) {
         axiosSecure
           .delete(`/feedbackDelete/${id}`)
-          .then((res) => {
+          .then(res => {
             if (res?.data?.success) {
               Swal.fire({
-                title: "Deleted!",
-                text: "Feedback has been removed.",
-                icon: "success",
-                background: "#1f2937",
-                color: "#fff",
-                confirmButtonColor: "#8b5cf6",
+                title: 'Deleted!',
+                text: 'Feedback has been removed.',
+                icon: 'success',
+                background: '#1f2937',
+                color: '#fff',
+                confirmButtonColor: '#8b5cf6',
               });
-              setFeedbacks((prevFeedbacks) =>
-                prevFeedbacks.filter((fb) => fb._id !== id)
-              );
             }
           })
-          .catch((error) => {
-            console.error("Failed to delete feedback:", error);
+          .then(() => refetch())
+          .catch(error => {
+            console.error('Failed to delete feedback:', error);
             Swal.fire({
-              title: "Error",
-              text: "An error occurred while deleting the feedback.",
-              icon: "error",
-              background: "#1f2937",
-              color: "#fff",
-              confirmButtonColor: "#8b5cf6",
+              title: 'Error',
+              text: 'An error occurred while deleting the feedback.',
+              icon: 'error',
+              background: '#1f2937',
+              color: '#fff',
+              confirmButtonColor: '#8b5cf6',
             });
           });
       }
@@ -135,36 +99,36 @@ const Feedback = () => {
   };
 
   const feedbackTypeColors = {
-    Feedback: "bg-emerald-500",
-    "Feature Request": "bg-blue-500",
-    "Bug Report": "bg-red-300",
-    Question: "bg-amber-500",
+    Feedback: 'bg-emerald-500',
+    'Feature Request': 'bg-blue-500',
+    'Bug Report': 'bg-red-300',
+    Question: 'bg-amber-500',
   };
 
   const filterOptions = [
-    "All",
-    "Feedback",
-    "Feature Request",
-    "Bug Report",
-    "Question",
-    "Unread",
-    "Read",
+    'All',
+    'Feedback',
+    'Feature Request',
+    'Bug Report',
+    'Question',
+    'Unread',
+    'Read',
   ];
 
-  const filteredFeedbacks = feedbacks.filter((feedback) => {
+  const filteredFeedbacks = feedbacks.filter(feedback => {
     const matchesSearch =
       feedback.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       feedback.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       feedback.message.toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (filterType === "All") return matchesSearch;
-    if (filterType === "Unread")
+    if (filterType === 'All') return matchesSearch;
+    if (filterType === 'Unread')
       return (
-        matchesSearch && !(feedback.read === true || feedback.read === "Done")
+        matchesSearch && !(feedback.read === true || feedback.read === 'Done')
       );
-    if (filterType === "Read")
+    if (filterType === 'Read')
       return (
-        matchesSearch && (feedback.read === true || feedback.read === "Done")
+        matchesSearch && (feedback.read === true || feedback.read === 'Done')
       );
     return matchesSearch && feedback.feedbackType === filterType;
   });
@@ -216,7 +180,7 @@ const Feedback = () => {
               className="block w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               placeholder="Search by name, email or content..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="relative">
@@ -226,9 +190,9 @@ const Feedback = () => {
             <select
               className="block w-full md:w-48 pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none"
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              onChange={e => setFilterType(e.target.value)}
             >
-              {filterOptions.map((option) => (
+              {filterOptions.map(option => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -275,8 +239,7 @@ const Feedback = () => {
               <h3 className="text-sm font-medium text-gray-300">Feedback</h3>
             </div>
             <p className="text-2xl font-bold text-white">
-              {feedbacks.filter((f) => f.feedbackType === "Feedback").length ||
-                0}
+              {feedbacks.filter(f => f.feedbackType === 'Feedback').length || 0}
             </p>
           </div>
 
@@ -290,7 +253,7 @@ const Feedback = () => {
               </h3>
             </div>
             <p className="text-2xl font-bold text-white">
-              {feedbacks.filter((f) => f.feedbackType === "Feature Request")
+              {feedbacks.filter(f => f.feedbackType === 'Feature Request')
                 .length || 0}
             </p>
           </div>
@@ -303,8 +266,8 @@ const Feedback = () => {
               <h3 className="text-sm font-medium text-gray-300">Bug Reports</h3>
             </div>
             <p className="text-2xl font-bold text-white">
-              {feedbacks.filter((f) => f.feedbackType === "Bug Report")
-                .length || 0}
+              {feedbacks.filter(f => f.feedbackType === 'Bug Report').length ||
+                0}
             </p>
           </div>
         </div>
@@ -339,9 +302,9 @@ const Feedback = () => {
                           {feedback.name ? (
                             <span className="text-xs font-medium text-white">
                               {feedback.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
+                                .split(' ')
+                                .map(n => n[0])
+                                .join('')
                                 .toUpperCase()}
                             </span>
                           ) : (
@@ -361,13 +324,13 @@ const Feedback = () => {
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${
                             feedbackTypeColors[feedback.feedbackType] ||
-                            "bg-gray-500"
+                            'bg-gray-500'
                           }`}
                         >
                           {feedback.feedbackType}
                         </span>
                         {(feedback.read === true ||
-                          feedback.read === "Done") && (
+                          feedback.read === 'Done') && (
                           <span className="text-xs px-2 py-1 rounded-full bg-green-900/30 text-green-400">
                             Read
                           </span>
@@ -385,14 +348,14 @@ const Feedback = () => {
                       <div className="flex gap-2">
                         <button
                           className={`p-2 rounded-md text-white transition-colors duration-200 ${
-                            feedback?.read === true || feedback?.read === "Done"
-                              ? "bg-green-500/20 text-green-400 cursor-default"
-                              : "bg-gray-700 hover:bg-green-500/20 hover:text-green-400"
+                            feedback?.read === true || feedback?.read === 'Done'
+                              ? 'bg-green-500/20 text-green-400 cursor-default'
+                              : 'bg-gray-700 hover:bg-green-500/20 hover:text-green-400'
                           }`}
                           title="Mark as Read"
                           onClick={() => handleMarkAsRead(feedback?._id)}
                           disabled={
-                            feedback?.read === true || feedback?.read === "Done"
+                            feedback?.read === true || feedback?.read === 'Done'
                           }
                         >
                           <CheckCircle size={16} />
@@ -414,8 +377,8 @@ const Feedback = () => {
                   <p className="text-gray-400">No feedback messages found</p>
                   <p className="text-gray-500 text-sm mt-1">
                     {searchQuery
-                      ? "Try a different search query or filter"
-                      : "All clear! No messages to display"}
+                      ? 'Try a different search query or filter'
+                      : 'All clear! No messages to display'}
                   </p>
                 </div>
               )}

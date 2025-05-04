@@ -1,31 +1,13 @@
+import React, { Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // Full application routes
 import Error from '@/Pages/404/Error';
 import Layout from '@/Layouts/Layout';
-// import Blog from "@/Pages/Blog/Blog";
-// import Home from "@/Pages/Home/Home";
-// import Login from "@/Pages/Auth/Login";
-// import Pricing from "@/Pages/Pricing/Pricing";
-// import StartQuiz from "@/Pages/StartQuiz/StartQuiz";
-// import Signup from "@/Pages/Auth/Signup";
-// import QuizPage from "@/Pages/QuizPage/QuizPage";
-// import QuizAnswer from "@/Pages/QuizAnswer/QuizAnswer";
-// import Contact from "@/Pages/Contact/Contact";
-// import Profile from "@/Pages/Profile/Profile";
-// import CheckoutPage from "@/Pages/Checkout/Checkout";
-// import BlogDetail from "@/Pages/Blog/BlogDetail";
 import PrivateRoute from './PrivateRoute';
-// import PersonalizedQuiz from "@/Pages/QuizPersonalized/PersonalizedQuiz";
 import AdminRoute from './AdminRoute';
-// import AdminDashboard from "@/Layouts/AdminDashboard";
-// import AdminHome from "@/Pages/AdminDashboard/AdminHome/AdminHome";
-// import AllUsers from "@/Pages/AdminDashboard/AllUsers/AllUsers";
-// import Leaderboard from "@/Pages/Leaderboard/Leaderboard";
-// import Feedback from "@/Pages/AdminDashboard/FeedBack/Feedback";
-// import MakeEvents from "@/Pages/AdminDashboard/MakeEvents/MakeEvents";
-import React, { lazy, Suspense } from 'react';
 import Loader from '@/components/Loader/Loader';
+
 const Blog = React.lazy(() => import('@/Pages/Blog/Blog'));
 const StartQuiz = React.lazy(() => import('@/Pages/StartQuiz/StartQuiz'));
 const Home = React.lazy(() => import('@/Pages/Home/Home'));
