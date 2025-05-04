@@ -27,6 +27,7 @@ const Signup = () => {
   // Navigate to Home page
   useEffect(() => {
     user && navigate('/');
+    document.title = 'Sign Up | BrainZap';
   }, [user]);
 
   const validatePassword = pass => {

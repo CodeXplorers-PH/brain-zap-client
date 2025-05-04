@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Mail,
   User,
@@ -61,6 +61,10 @@ const AdminHome = () => {
     latestFeedback: feedbacks = [],
     totalRevenue = 0,
   } = dashboardData;
+
+  useEffect(() => {
+      document.title = 'Admin Home | BrainZap';
+    },[])
 
   const onPieEnter = (_, index) => {
     setActiveIndex(index);

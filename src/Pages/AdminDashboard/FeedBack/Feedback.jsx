@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Calendar,
   Mail,
@@ -113,6 +113,10 @@ const Feedback = () => {
     'Unread',
     'Read',
   ];
+
+  useEffect(() => {
+      document.title = 'Admin Feedback | BrainZap';
+    },[])
 
   const filteredFeedbacks = feedbacks.filter(feedback => {
     const matchesSearch =

@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
 import useQuiz from '@/hooks/useQuiz';
 
 const QuizPage = () => {
   const { questions, loading, error } = useQuiz();
   const { category } = useParams();
-  const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+        document.title = `${category.charAt(0).toUpperCase()+category.slice(1)} | BrainZap`;
+  }, [category]);
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">

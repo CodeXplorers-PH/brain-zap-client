@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
@@ -14,6 +14,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useAdminUsers from '@/hooks/useAdminUsers';
+
 
 const AllUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -224,6 +225,10 @@ const AllUsers = () => {
       }
     });
   };
+
+  useEffect(() => {
+      document.title = 'All Users | BrainZap';
+    },[])
 
   const filteredUsers = users?.filter(u => {
     const matchesSearch =

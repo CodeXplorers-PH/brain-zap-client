@@ -27,6 +27,7 @@ const Login = () => {
   // Scroll to top
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = 'Login | BrainZap';
   }, []);
 
   // Navigate to start-quiz if already login
