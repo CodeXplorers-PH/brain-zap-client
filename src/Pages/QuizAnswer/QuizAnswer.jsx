@@ -127,7 +127,7 @@ const QuizAnswer = () => {
         })
         .catch(err => console.log('Level Update Error --> ', err.message));
     }
-  }, [user, category, questions]);
+  }, [category, questions]);
 
   const handleQuizAgain = () => {
     localStorage.removeItem('quiz_questions');
