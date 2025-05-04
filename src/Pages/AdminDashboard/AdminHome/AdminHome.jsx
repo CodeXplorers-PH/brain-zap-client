@@ -7,7 +7,7 @@ import {
   ArrowRight,
   Activity,
   Bell,
-} from 'lucide-react';
+} from 'lucide-react'; // icon from lucide react
 import { MdOutlineAttachMoney } from 'react-icons/md';
 import {
   PieChart,
@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
   Cell,
   Tooltip,
-} from 'recharts';
+} from 'recharts';  // import pie chart from react rechart
 import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import useAdminHome from '@/hooks/useAdminHome';

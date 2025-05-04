@@ -8,9 +8,13 @@ import useUsers from '@/hooks/useUsers';
 const Leaderboard = () => {
   const { user } = useAuth();
   const users = useUsers();
+  // state for top users
   const [topUsers, setTopUsers] = useState([]);
+  // state for other users
   const [otherUsers, setOtherUsers] = useState([]);
+  // state for loading
   const [loading, setLoading] = useState(true);
+  // state for rendering pdf format
   const [exportFormat, setExportFormat] = useState('pdf');
 
   useEffect(() => {
@@ -57,6 +61,7 @@ const Leaderboard = () => {
     return 'U';
   };
 
+  // Ranking array
   const podiumStyles = [
     {
       rank: 2,
@@ -87,6 +92,7 @@ const Leaderboard = () => {
     },
   ];
 
+  // PDF rendering function
   const exportToPDF = () => {
     const doc = new jsPDF('p', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -280,6 +286,7 @@ const Leaderboard = () => {
     }
   };
 
+  // loading function
   if (loading) {
     return (
       <>
