@@ -18,6 +18,19 @@
 - **Premium Blogging**: Premium users can post blogs and share insights with the community.
 - **Blog Interactions**: All users can read and like blog posts.
 - **Responsive Design**: Seamless experience across desktop and mobile devices.
+- **Leaderboard System**: Compete with others through global and category-specific leaderboards.
+- **Social Media Sharing**: Share quiz scores and achievements directly to social platforms.
+- **Printable Answer Sheets**: Print completed quiz answer sheets for offline review or documentation.
+- **Achievements & Badges**: Unlock and collect achievements based on quiz performance and streaks.
+- **Enhanced Quiz History**: View detailed stats and review any past quiz attempts.
+- **Admin Dashboard**:
+  - View total users, total revenue, and total feedback.
+  - Visual analytics via graph charts.
+- **Feedback Management**: Admins can view, mark as read, or delete user feedback submissions.
+- **User Management (Admin Only)**:
+  - Promote users to admin role.
+  - Temporarily lock users (e.g., for 1 hour).
+  - Permanently delete user accounts.
 
 ---
 
