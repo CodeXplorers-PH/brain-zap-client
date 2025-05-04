@@ -20,6 +20,7 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import useAdminHome from '@/hooks/useAdminHome';
+import { Helmet } from 'react-helmet';
 
 const SummaryCard = ({ icon, title, value, color, change }) => (
   <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50">
@@ -183,342 +184,350 @@ const AdminHome = () => {
   );
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-white">
-            Welcome back,{' '}
-            <span className="text-purple-400">{user?.displayName}</span>
-          </h1>
-          <p className="text-gray-400">
-            Here's what's happening on your platform today
-          </p>
-        </div>
-        <div className="flex space-x-2">
-          <button className="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-gray-300 hover:bg-gray-700 border border-gray-700">
-            <Calendar size={16} />
-            <span>Today</span>
-          </button>
-          <button className="relative rounded-lg bg-gray-800 px-3 py-2 text-gray-300 hover:bg-gray-700 border border-gray-700">
-            <Bell size={16} />
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-xs text-white">
-              2
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Overview */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Overview</h2>
-          <div className="flex items-center text-xs font-medium text-purple-400">
-            <span>Last 30 days</span>
+    <>
+      <Helmet>
+        <title>Brain Zap AI | Dashboard | Admin Home</title>
+      </Helmet>
+      s
+      <div className="space-y-8">
+        {/* Welcome Section */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-white">
+              Welcome back,{' '}
+              <span className="text-purple-400">{user?.displayName}</span>
+            </h1>
+            <p className="text-gray-400">
+              Here's what's happening on your platform today
+            </p>
+          </div>
+          <div className="flex space-x-2">
+            <button className="flex items-center gap-2 rounded-lg bg-gray-800 px-4 py-2 text-gray-300 hover:bg-gray-700 border border-gray-700">
+              <Calendar size={16} />
+              <span>Today</span>
+            </button>
+            <button className="relative rounded-lg bg-gray-800 px-3 py-2 text-gray-300 hover:bg-gray-700 border border-gray-700">
+              <Bell size={16} />
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-xs text-white">
+                2
+              </span>
+            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {loading ? (
-            <>
-              {Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <div key={index}>{renderSkeletonCard()}</div>
-                ))}
-            </>
-          ) : (
-            <>
-              <SummaryCard
-                icon={<Users size={18} className="text-white" />}
-                title="Total Users"
-                value={users}
-                color="bg-purple-500/20 text-purple-400"
-                change="+12%"
-              />
-              <SummaryCard
-                icon={<Mail size={18} className="text-white" />}
-                title="Total Messages"
-                value={messages}
-                color="bg-blue-500/20 text-blue-400"
-                change="+5%"
-              />
-              <SummaryCard
-                icon={<MdOutlineAttachMoney size={18} className="text-white" />}
-                title="Total Revenue"
-                value={`$ ${totalRevenue.toFixed(2)}`}
-                color="bg-green-500/20 text-green-400"
-                change="0%"
-              />
-              <SummaryCard
-                icon={<Activity size={18} className="text-white" />}
-                title="Total Feedback"
-                value={messages}
-                color="bg-amber-500/20 text-amber-400"
-                change="+18%"
-              />
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* User Overview Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* User Distribution */}
-        <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50 col-span-1 lg:col-span-2">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">
-                User Distribution
-              </h2>
-              <Link
-                to="/dashboard/allUsers"
-                className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1"
-              >
-                View all users <ArrowRight size={14} />
-              </Link>
-            </div>
-
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Pie Chart */}
-              <div className="h-64 w-full lg:w-2/3">
-                {loading ? (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="h-32 w-32 rounded-full bg-gray-700 animate-pulse"></div>
-                  </div>
-                ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        activeIndex={activeIndex}
-                        activeShape={renderActiveShape}
-                        data={data}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={2}
-                        dataKey="value"
-                        onMouseEnter={onPieEnter}
-                      >
-                        {data.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={entry.color}
-                            stroke="rgba(0,0,0,0.1)"
-                            strokeWidth={1}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#1f2937',
-                          borderColor: '#374151',
-                          borderRadius: '0.375rem',
-                          color: '#f9fafb',
-                        }}
-                        formatter={(value, name) => [
-                          `${value} Users (${((value / users) * 100).toFixed(
-                            1
-                          )}%)`,
-                          name,
-                        ]}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                )}
-              </div>
-
-              {/* User Type Cards */}
-              <div className="w-full lg:w-1/3 flex flex-col gap-3">
-                {loading ? (
-                  <>
-                    {Array(3)
-                      .fill(0)
-                      .map((_, index) => (
-                        <div
-                          key={index}
-                          className="h-14 bg-gray-700/50 rounded-md animate-pulse"
-                        ></div>
-                      ))}
-                  </>
-                ) : (
-                  <>
-                    <div className="bg-gray-700/20 rounded-md p-3 border border-green-500/20 hover:border-green-500/40 transition-all">
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          <span className="text-xs font-medium text-white">
-                            Free Users
-                          </span>
-                        </div>
-                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-900/30 text-green-400 font-semibold">
-                          {users > 0
-                            ? Math.round((totalFreeUsers / users) * 100)
-                            : 0}
-                          %
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-white mb-1">
-                        {totalFreeUsers}
-                      </div>
-                      <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-green-500 rounded-full transition-all duration-700 ease-in-out"
-                          style={{
-                            width: `${
-                              users > 0 ? (totalFreeUsers / users) * 100 : 0
-                            }%`,
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <div className="bg-gray-700/20 rounded-md p-3 border border-purple-500/20 hover:border-purple-500/40 transition-all">
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                          <span className="text-xs font-medium text-white">
-                            Pro Users
-                          </span>
-                        </div>
-                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-900/30 text-purple-400 font-semibold">
-                          {users > 0
-                            ? Math.round((totalProUsers / users) * 100)
-                            : 0}
-                          %
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-white mb-1">
-                        {totalProUsers}
-                      </div>
-                      <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-purple-500 rounded-full transition-all duration-700 ease-in-out"
-                          style={{
-                            width: `${
-                              users > 0 ? (totalProUsers / users) * 100 : 0
-                            }%`,
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <div className="bg-gray-700/20 rounded-md p-3 border border-blue-500/20 hover:border-blue-500/40 transition-all">
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                          <span className="text-xs font-medium text-white">
-                            Elite Users
-                          </span>
-                        </div>
-                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-blue-900/30 text-blue-400 font-semibold">
-                          {users > 0
-                            ? Math.round((totalEliteUsers / users) * 100)
-                            : 0}
-                          %
-                        </span>
-                      </div>
-                      <div className="text-xl font-bold text-white mb-1">
-                        {totalEliteUsers}
-                      </div>
-                      <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-blue-500 rounded-full transition-all duration-700 ease-in-out"
-                          style={{
-                            width: `${
-                              users > 0 ? (totalEliteUsers / users) * 100 : 0
-                            }%`,
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Feedback */}
+        {/* Stats Overview */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">
-              Recent Feedback
-            </h2>
-            <Link
-              to="/dashboard/feedback"
-              className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1"
-            >
-              View all messages <ArrowRight size={14} />
-            </Link>
+            <h2 className="text-lg font-semibold text-white">Overview</h2>
+            <div className="flex items-center text-xs font-medium text-purple-400">
+              <span>Last 30 days</span>
+            </div>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {loading ? (
               <>
-                {Array(3)
+                {Array(4)
                   .fill(0)
                   .map((_, index) => (
-                    <div key={index}>{renderSkeletonFeedback()}</div>
+                    <div key={index}>{renderSkeletonCard()}</div>
                   ))}
               </>
-            ) : feedbacks && feedbacks.length > 0 ? (
-              feedbacks.slice(0, 2).map((feedback, idx) => (
-                <div
-                  key={idx}
-                  className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50 p-5"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
-                        {feedback.name ? (
-                          <span className="text-xs font-medium text-white">
-                            {feedback.name
-                              .split(' ')
-                              .map(n => n[0])
-                              .join('')
-                              .toUpperCase()}
-                          </span>
-                        ) : (
-                          <User size={14} className="text-gray-400" />
-                        )}
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-white">
-                          {feedback.name}
-                        </h3>
-                        <p className="text-xs text-gray-400">
-                          {feedback.email}
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        feedbackTypeColors[feedback.feedbackType] ||
-                        'bg-gray-500'
-                      }`}
-                    >
-                      {feedback.feedbackType}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-300 line-clamp-2">
-                    {feedback.message}
-                  </p>
-                  <div className="mt-3 text-xs text-gray-500">
-                    {feedback.date}
-                  </div>
-                </div>
-              ))
             ) : (
-              <div className="col-span-full text-center py-10">
-                <p className="text-gray-400">No feedback available</p>
-              </div>
+              <>
+                <SummaryCard
+                  icon={<Users size={18} className="text-white" />}
+                  title="Total Users"
+                  value={users}
+                  color="bg-purple-500/20 text-purple-400"
+                  change="+12%"
+                />
+                <SummaryCard
+                  icon={<Mail size={18} className="text-white" />}
+                  title="Total Messages"
+                  value={messages}
+                  color="bg-blue-500/20 text-blue-400"
+                  change="+5%"
+                />
+                <SummaryCard
+                  icon={
+                    <MdOutlineAttachMoney size={18} className="text-white" />
+                  }
+                  title="Total Revenue"
+                  value={`$ ${totalRevenue.toFixed(2)}`}
+                  color="bg-green-500/20 text-green-400"
+                  change="+70%"
+                />
+                <SummaryCard
+                  icon={<Activity size={18} className="text-white" />}
+                  title="Total Feedback"
+                  value={messages}
+                  color="bg-amber-500/20 text-amber-400"
+                  change="+18%"
+                />
+              </>
             )}
           </div>
         </section>
-      </section>
-    </div>
+
+        {/* User Overview Section */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* User Distribution */}
+          <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50 col-span-1 lg:col-span-2">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-white">
+                  User Distribution
+                </h2>
+                <Link
+                  to="/dashboard/allUsers"
+                  className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1"
+                >
+                  View all users <ArrowRight size={14} />
+                </Link>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Pie Chart */}
+                <div className="h-64 w-full lg:w-2/3">
+                  {loading ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="h-32 w-32 rounded-full bg-gray-700 animate-pulse"></div>
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          activeIndex={activeIndex}
+                          activeShape={renderActiveShape}
+                          data={data}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="value"
+                          onMouseEnter={onPieEnter}
+                        >
+                          {data.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={entry.color}
+                              stroke="rgba(0,0,0,0.1)"
+                              strokeWidth={1}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1f2937',
+                            borderColor: '#374151',
+                            borderRadius: '0.375rem',
+                            color: '#f9fafb',
+                          }}
+                          formatter={(value, name) => [
+                            `${value} Users (${((value / users) * 100).toFixed(
+                              1
+                            )}%)`,
+                            name,
+                          ]}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+
+                {/* User Type Cards */}
+                <div className="w-full lg:w-1/3 flex flex-col gap-3">
+                  {loading ? (
+                    <>
+                      {Array(3)
+                        .fill(0)
+                        .map((_, index) => (
+                          <div
+                            key={index}
+                            className="h-14 bg-gray-700/50 rounded-md animate-pulse"
+                          ></div>
+                        ))}
+                    </>
+                  ) : (
+                    <>
+                      <div className="bg-gray-700/20 rounded-md p-3 border border-green-500/20 hover:border-green-500/40 transition-all">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                            <span className="text-xs font-medium text-white">
+                              Free Users
+                            </span>
+                          </div>
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-900/30 text-green-400 font-semibold">
+                            {users > 0
+                              ? Math.round((totalFreeUsers / users) * 100)
+                              : 0}
+                            %
+                          </span>
+                        </div>
+                        <div className="text-xl font-bold text-white mb-1">
+                          {totalFreeUsers}
+                        </div>
+                        <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-green-500 rounded-full transition-all duration-700 ease-in-out"
+                            style={{
+                              width: `${
+                                users > 0 ? (totalFreeUsers / users) * 100 : 0
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-700/20 rounded-md p-3 border border-purple-500/20 hover:border-purple-500/40 transition-all">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                            <span className="text-xs font-medium text-white">
+                              Pro Users
+                            </span>
+                          </div>
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-900/30 text-purple-400 font-semibold">
+                            {users > 0
+                              ? Math.round((totalProUsers / users) * 100)
+                              : 0}
+                            %
+                          </span>
+                        </div>
+                        <div className="text-xl font-bold text-white mb-1">
+                          {totalProUsers}
+                        </div>
+                        <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-purple-500 rounded-full transition-all duration-700 ease-in-out"
+                            style={{
+                              width: `${
+                                users > 0 ? (totalProUsers / users) * 100 : 0
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-700/20 rounded-md p-3 border border-blue-500/20 hover:border-blue-500/40 transition-all">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                            <span className="text-xs font-medium text-white">
+                              Elite Users
+                            </span>
+                          </div>
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-blue-900/30 text-blue-400 font-semibold">
+                            {users > 0
+                              ? Math.round((totalEliteUsers / users) * 100)
+                              : 0}
+                            %
+                          </span>
+                        </div>
+                        <div className="text-xl font-bold text-white mb-1">
+                          {totalEliteUsers}
+                        </div>
+                        <div className="mt-1 w-full h-1.5 bg-gray-600 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-blue-500 rounded-full transition-all duration-700 ease-in-out"
+                            style={{
+                              width: `${
+                                users > 0 ? (totalEliteUsers / users) * 100 : 0
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Feedback */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">
+                Recent Feedback
+              </h2>
+              <Link
+                to="/dashboard/feedback"
+                className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1"
+              >
+                View all messages <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            <div className="grid gap-4">
+              {loading ? (
+                <>
+                  {Array(3)
+                    .fill(0)
+                    .map((_, index) => (
+                      <div key={index}>{renderSkeletonFeedback()}</div>
+                    ))}
+                </>
+              ) : feedbacks && feedbacks.length > 0 ? (
+                feedbacks.slice(0, 2).map((feedback, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50 p-5"
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
+                          {feedback.name ? (
+                            <span className="text-xs font-medium text-white">
+                              {feedback.name
+                                .split(' ')
+                                .map(n => n[0])
+                                .join('')
+                                .toUpperCase()}
+                            </span>
+                          ) : (
+                            <User size={14} className="text-gray-400" />
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-white">
+                            {feedback.name}
+                          </h3>
+                          <p className="text-xs text-gray-400">
+                            {feedback.email}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          feedbackTypeColors[feedback.feedbackType] ||
+                          'bg-gray-500'
+                        }`}
+                      >
+                        {feedback.feedbackType}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-300 line-clamp-2">
+                      {feedback.message}
+                    </p>
+                    <div className="mt-3 text-xs text-gray-500">
+                      {feedback.date}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-10">
+                  <p className="text-gray-400">No feedback available</p>
+                </div>
+              )}
+            </div>
+          </section>
+        </section>
+      </div>
+    </>
   );
 };
 

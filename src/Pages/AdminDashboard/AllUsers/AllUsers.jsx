@@ -14,6 +14,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useAdminUsers from '@/hooks/useAdminUsers';
+import { Helmet } from 'react-helmet';
 
 const AllUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -351,164 +352,171 @@ const AllUsers = () => {
   );
 
   return (
-    <div className="space-y-6">
-      {/* Header with welcome and stats */}
-      <div className="flex flex-col lg:flex-row items-start justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <User className="text-purple-400" size={24} />
-            User Management
-          </h1>
-          <p className="text-gray-400">View and manage all registered users</p>
-        </div>
-        {/* <div className="flex gap-2 flex-wrap">
+    <>
+      <Helmet>
+        <title>Brain Zap AI | Dashboard | All Users</title>
+      </Helmet>
+      <div className="space-y-6">
+        {/* Header with welcome and stats */}
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <User className="text-purple-400" size={24} />
+              User Management
+            </h1>
+            <p className="text-gray-400">
+              View and manage all registered users
+            </p>
+          </div>
+          {/* <div className="flex gap-2 flex-wrap">
           <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
             <Download size={16} />
             Export Users
           </button>
         </div> */}
-      </div>
+        </div>
 
-      {/* Stats cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-400 text-sm">Total Users</p>
-              <h3 className="text-2xl font-bold text-white mt-1">
-                {totalUsers}
-              </h3>
+        {/* Stats cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Total Users</p>
+                <h3 className="text-2xl font-bold text-white mt-1">
+                  {totalUsers}
+                </h3>
+              </div>
+              <div className="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                <User size={20} className="text-purple-400" />
+              </div>
             </div>
-            <div className="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center">
-              <User size={20} className="text-purple-400" />
+          </div>
+
+          <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Admin Users</p>
+                <h3 className="text-2xl font-bold text-white mt-1">
+                  {adminUsers}
+                </h3>
+              </div>
+              <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <ShieldCheck size={20} className="text-blue-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Standard Users</p>
+                <h3 className="text-2xl font-bold text-white mt-1">
+                  {standardUsers}
+                </h3>
+              </div>
+              <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                <User size={20} className="text-green-400" />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-400 text-sm">Admin Users</p>
-              <h3 className="text-2xl font-bold text-white mt-1">
-                {adminUsers}
-              </h3>
-            </div>
-            <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <ShieldCheck size={20} className="text-blue-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gray-800 rounded-lg border border-gray-700/50 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-400 text-sm">Standard Users</p>
-              <h3 className="text-2xl font-bold text-white mt-1">
-                {standardUsers}
-              </h3>
-            </div>
-            <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
-              <User size={20} className="text-green-400" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Search and filter */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
-        <div className="relative w-full md:w-64">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-          />
-          <input
-            type="text"
-            placeholder="Search users..."
-            className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <div className="relative w-full md:w-auto">
-            <Filter
+        {/* Search and filter */}
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
+          <div className="relative w-full md:w-64">
+            <Search
               size={18}
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
             />
-            <select
-              className="pl-10 pr-8 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white appearance-none focus:ring-2 focus:ring-purple-500 focus:outline-none"
-              value={filterRole}
-              onChange={e => setFilterRole(e.target.value)}
-            >
-              <option value="all">All Roles</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
+            <input
+              type="text"
+              placeholder="Search users..."
+              className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
           </div>
-          <button className="p-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 hover:text-purple-400">
-            <SlidersHorizontal size={18} />
-          </button>
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="relative w-full md:w-auto">
+              <Filter
+                size={18}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
+              <select
+                className="pl-10 pr-8 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white appearance-none focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                value={filterRole}
+                onChange={e => setFilterRole(e.target.value)}
+              >
+                <option value="all">All Roles</option>
+                <option value="admin">Admin</option>
+                {/* <option value="">User</option> */}
+              </select>
+            </div>
+            <button className="p-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 hover:text-purple-400">
+              <SlidersHorizontal size={18} />
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* User table */}
-      <div className="bg-gray-800 rounded-lg border border-gray-700/50 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-900/50 text-gray-400 text-xs uppercase">
-                <th className="py-3 px-4 text-left">User</th>
-                <th className="py-3 px-4 text-left">Membership</th>
-                <th className="py-3 px-4 text-left">Role</th>
-                <th className="py-3 px-4 text-left">Joined</th>
-                <th className="py-3 px-4 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                Array(5)
-                  .fill(0)
-                  .map((_, index) => renderSkeletonRow(index))
-              ) : filteredUsers.length > 0 ? (
-                filteredUsers.map(renderUserRow)
-              ) : (
-                <tr>
-                  <td colSpan="5" className="text-center py-8 text-gray-400">
-                    <div className="flex flex-col items-center">
-                      <AlertTriangle
-                        size={28}
-                        className="text-yellow-500 mb-2"
-                      />
-                      <p>No users found matching your search criteria</p>
-                    </div>
-                  </td>
+        {/* User table */}
+        <div className="bg-gray-800 rounded-lg border border-gray-700/50 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-900/50 text-gray-400 text-xs uppercase">
+                  <th className="py-3 px-4 text-left">User</th>
+                  <th className="py-3 px-4 text-left">Membership</th>
+                  <th className="py-3 px-4 text-left">Role</th>
+                  <th className="py-3 px-4 text-left">Joined</th>
+                  <th className="py-3 px-4 text-left">Actions</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between py-4 px-6 border-t border-gray-800">
-          <div className="flex items-center text-sm text-gray-400">
-            <span>
-              Showing {filteredUsers.length} of {totalUsers} users
-            </span>
+              </thead>
+              <tbody>
+                {loading ? (
+                  Array(5)
+                    .fill(0)
+                    .map((_, index) => renderSkeletonRow(index))
+                ) : filteredUsers.length > 0 ? (
+                  filteredUsers.map(renderUserRow)
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center py-8 text-gray-400">
+                      <div className="flex flex-col items-center">
+                        <AlertTriangle
+                          size={28}
+                          className="text-yellow-500 mb-2"
+                        />
+                        <p>No users found matching your search criteria</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1 rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600">
-              Previous
-            </button>
-            <button className="px-3 py-1 rounded-md bg-purple-600 text-white">
-              1
-            </button>
-            <button className="px-3 py-1 rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600">
-              Next
-            </button>
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between py-4 px-6 border-t border-gray-800">
+            <div className="flex items-center text-sm text-gray-400">
+              <span>
+                Showing {filteredUsers.length} of {totalUsers} users
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="px-3 py-1 rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600">
+                Previous
+              </button>
+              <button className="px-3 py-1 rounded-md bg-purple-600 text-white">
+                1
+              </button>
+              <button className="px-3 py-1 rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600">
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -12,6 +12,7 @@ import AchievementTab from './AchievementTab';
 import StreakCalendar from './StreakCalendar';
 import LeaderboardRank from './LeaderboardRank';
 import useHistory from '@/hooks/useHistory';
+import { Helmet } from 'react-helmet';
 
 const Profile = () => {
   const { user, userType } = useAuth();
@@ -34,15 +35,20 @@ const Profile = () => {
   };
 
   return (
-    <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
-      <div className="max-w-4xl mx-auto">
-        {/* Profile Header */}
-        <ProfileHeader stats={stats} userType={userType} />
+    <>
+      <Helmet>
+        <title>Brain Zap AI | Profile</title>
+      </Helmet>
+      <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
+        <div className="max-w-4xl mx-auto">
+          {/* Profile Header */}
+          <ProfileHeader stats={stats} userType={userType} />
 
-        {/* Tabs Navigation - Made Responsive */}
-        <div className="overflow-x-auto no-scrollbar mb-2">
-          <div className="flex space-x-2 min-w-max">
-            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          {/* Tabs Navigation - Made Responsive */}
+          <div className="overflow-x-auto no-scrollbar mb-2">
+            <div className="flex space-x-2 min-w-max">
+              <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            </div>
           </div>
         </div>
 
@@ -87,7 +93,7 @@ const Profile = () => {
         {/* Achievement Tab */}
         {activeTab === 'achievements' && <AchievementTab xpPoints={xpPoints} />}
       </div>
-    </div>
+    </>
   );
 };
 

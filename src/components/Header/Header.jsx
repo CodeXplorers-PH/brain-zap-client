@@ -143,7 +143,7 @@ const Header = () => {
             ease: 'easeInOut',
             delay: isOpen ? 0.05 : 0,
           }}
-          className="lg:hidden flex flex-col absolute left-1/2 -translate-1/2 text-center space-y-4"
+          className="lg:hidden flex flex-col font-semibold absolute -top-[50px] left-[112px] -translate-1/2 text-left space-y-4"
         >
           {Navs.map((navlink, index) => (
             <NavLinkItem key={index} navlink={navlink} location={location} />
@@ -167,7 +167,7 @@ const NavLinkItem = ({ navlink, location }) => (
   <li className="list-none">
     <Link
       to={navlink.path}
-      className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${
+      className={`font-bold mx-1 relative text-lg lg:text-base overflow-hidden group ${
         location.pathname === navlink.path
           ? 'text-purple-400 font-semibold'
           : 'text-gray-300'
