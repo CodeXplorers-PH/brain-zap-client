@@ -1,14 +1,14 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { LogOut, ShieldUser, User } from 'lucide-react';
-import LockedErr from '../ui/LockedErr';
-import { motion } from 'framer-motion';
-import streakImg from '../../assets/img/streak.png';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useWindowSize } from 'react-use';
-import { Toaster } from 'react-hot-toast';
-import useAuth from '@/hooks/useAuth';
-import useStreak from '@/hooks/useStreak';
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { LogOut, ShieldUser, User } from "lucide-react";
+import LockedErr from "../ui/LockedErr";
+import { motion } from "framer-motion"; // framer motion for animation
+import streakImg from "../../assets/img/streak.png";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"; // static images for avatar
+import { useWindowSize } from "react-use";
+import { Toaster } from "react-hot-toast"; // react toast
+import useAuth from "@/hooks/useAuth";
+import useStreak from "@/hooks/useStreak";
 
 const Header = () => {
   const { user, isAdmin, loading, logOut } = useAuth();
@@ -35,12 +35,13 @@ const Header = () => {
     }
   }, [width]);
 
+  // All nav links for navbar
   const Navs = [
-    { path: '/start-quiz', pathName: 'Start Quiz' },
-    { path: '/pricing', pathName: 'Pricing' },
-    { path: '/leaderboard', pathName: 'Leaderboard' },
-    { path: '/blogs', pathName: 'Blog' },
-    { path: '/contact', pathName: 'Contact' },
+    { path: "/start-quiz", pathName: "Start Quiz" },
+    { path: "/pricing", pathName: "Pricing" },
+    { path: "/leaderboard", pathName: "Leaderboard" },
+    { path: "/blogs", pathName: "Blog" },
+    { path: "/contact", pathName: "Contact" },
   ];
 
   return (
@@ -48,8 +49,8 @@ const Header = () => {
       <Toaster />
       <LockedErr />
       <motion.div
-        animate={{ paddingBottom: isOpen ? '200px' : '8px' }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        animate={{ paddingBottom: isOpen ? "200px" : "8px" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className="relative flex items-center justify-between py-2 px-4 w-full max-w-6xl bg-gray-900/80 backdrop-blur-md rounded-2xl lg:rounded-full shadow-2xl border border-gray-800/50"
       >
         {/* Logo Section */}
@@ -58,7 +59,7 @@ const Header = () => {
             {isOpen ? (
               <motion.button
                 onClick={() => setIsOpen(!isOpen)}
-                whileHover={{ color: '#ffffff' }}
+                whileHover={{ color: "#ffffff" }}
                 className="p-2 text-gray-300"
               >
                 <svg
@@ -79,7 +80,7 @@ const Header = () => {
             ) : (
               <motion.button
                 onClick={() => setIsOpen(!isOpen)}
-                whileHover={{ color: '#ffffff' }}
+                whileHover={{ color: "#ffffff" }}
                 className="p-2 text-gray-300"
               >
                 <svg
@@ -140,7 +141,7 @@ const Header = () => {
           initial={{ y: 200 }}
           animate={{ opacity: isOpen ? 1 : 0 }}
           transition={{
-            ease: 'easeInOut',
+            ease: "easeInOut",
             delay: isOpen ? 0.05 : 0,
           }}
           className="lg:hidden flex flex-col font-semibold absolute -top-[50px] left-[112px] -translate-1/2 text-left space-y-4"
@@ -169,14 +170,14 @@ const NavLinkItem = ({ navlink, location }) => (
       to={navlink.path}
       className={`font-medium mx-1 relative text-lg lg:text-base overflow-hidden group ${
         location.pathname === navlink.path
-          ? 'text-purple-400 font-semibold'
-          : 'text-gray-300'
+          ? "text-purple-400 font-semibold"
+          : "text-gray-300"
       }`}
     >
       {navlink.pathName}
       <span
         className={`absolute left-0 lg:bottom-0 -bottom-1 w-full h-0.5 bg-purple-600 transform ${
-          location.pathname === navlink.path ? 'scale-x-100' : 'scale-x-0'
+          location.pathname === navlink.path ? "scale-x-100" : "scale-x-0"
         } group-hover:scale-x-100 transition-transform duration-300`}
       ></span>
     </Link>
