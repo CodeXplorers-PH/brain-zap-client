@@ -6,14 +6,6 @@ const useStreak = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const { data: streak = 0, refetch } = useQuery({
-    queryKey: ['streak', user],
-    queryFn: async () => {
-      const str = await getStreak();
-      return str;
-    },
-  });
-
   const getStreak = async () => {
     if (!user?.email) {
       return 0;
@@ -55,6 +47,15 @@ const useStreak = () => {
 
     return streakCount;
   };
+
+  const { data: streak = 0, refetch } = useQuery({
+    queryKey: ['streak', user],
+    queryFn: getStreak,
+    enabled: !!user,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
   return { streak, refetch };
 };

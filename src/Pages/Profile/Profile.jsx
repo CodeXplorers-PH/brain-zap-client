@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import React, { useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import ProfileTabs from './ProfileTabs';
 import About from './About';
@@ -12,28 +11,16 @@ import ProfileHeader from './ProfileHeader';
 import AchievementTab from './AchievementTab';
 import StreakCalendar from './StreakCalendar';
 import LeaderboardRank from './LeaderboardRank';
+import useHistory from '@/hooks/useHistory';
 
 const Profile = () => {
   const { user, userType } = useAuth();
+  const userQuizHistory = useHistory();
   const [activeTab, setActiveTab] = useState('profile');
-
-  const [userQuizHistory, setUserQuizHistory] = useState([]);
 
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
-
-  const axiosSecure = useAxiosSecure();
-
-  // Get History
-  useEffect(() => {
-    if (!user) return;
-
-    axiosSecure.get(`/quiz_history`).then(res => {
-      const history = res?.data || [];
-      setUserQuizHistory(history);
-    });
-  }, [user]);
 
   // Sample stats - replace with actual data from your application
   const stats = {

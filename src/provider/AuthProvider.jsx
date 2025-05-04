@@ -63,7 +63,6 @@ const AuthProvider = ({ children }) => {
 
   const authInfo = {
     user,
-    setUser,
     userLevel,
     userType,
     isAdmin,
