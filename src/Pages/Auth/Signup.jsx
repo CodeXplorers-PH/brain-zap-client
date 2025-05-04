@@ -1,13 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import SocialLogin from './SocialLogin';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import useFormData from '@/hooks/useFormData';
+import useAuth from '@/hooks/useAuth';
 
 const Signup = () => {
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [strength, setStrength] = useState(0);
@@ -21,6 +22,12 @@ const Signup = () => {
   const { createNewUser, updateUserProfile } = useAuthContext();
   const formData = useFormData();
   const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
+
+  // Navigate to Home page
+  useEffect(() => {
+    user && navigate('/');
+  }, [user]);
 
   const validatePassword = pass => {
     const errors = {};
@@ -83,8 +90,6 @@ const Signup = () => {
               photoURL: photo,
               email,
             });
-            // Navigate to Home page
-            navigate('/');
           })
           .catch(err => {
             console.log('Error updating user profile', err.message);
