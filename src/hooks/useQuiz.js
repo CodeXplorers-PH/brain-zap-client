@@ -1,14 +1,10 @@
 import { useLocation, useParams } from 'react-router-dom';
 import useAxiosSecure from './useAxiosSecure';
-import { useMutation } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 
 const useQuiz = () => {
-  const mountRef = useRef(true);
-  const hasFetchedRef = useRef(false);
-  const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const isMounted = useRef(true);
 
   const axiosSecure = useAxiosSecure();
   const { category } = useParams();
@@ -16,15 +12,26 @@ const useQuiz = () => {
 
   // Get Search Params
   const queryParams = new URLSearchParams(search);
-
   const difficulty = queryParams.get('difficulty');
   const quizzesNumber = Number(queryParams.get('quizzesNumber'));
   const quizzesType = queryParams.get('type');
 
   const localStorageKey = `quiz_questions`;
 
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   // Fetch Quiz
   const fetchQuestions = async () => {
+    const storedQuiz = localStorage.getItem(localStorageKey);
+    if (storedQuiz) {
+      return JSON.parse(storedQuiz);
+    }
+
     const { data: generatedQuiz } = await axiosSecure.post('/graphql_s', {
       query: `
         query GetQuizzes($topic: String!, $difficulty: String!, $quizzesNumber: Int!, $type: String!) {
@@ -43,46 +50,36 @@ const useQuiz = () => {
       },
     });
 
-    return generatedQuiz?.data?.getQuizzes;
-  };
+    const questions = generatedQuiz?.data?.getQuizzes;
 
-  const { mutate } = useMutation({
-    mutationFn: fetchQuestions,
-    onSuccess: data => {
-      if (mountRef.current) {
-        setQuestions(data);
-        localStorage.setItem(localStorageKey, JSON.stringify(data));
-        setLoading(false);
-      }
-    },
-    onError: err => {
-      console.error('Error fetching questions: ', err);
-      if (mountRef.current) {
-        setError('Failed to load questions. Please try again later.');
-        setLoading(false);
-      }
-    },
-  });
-
-  useEffect(() => {
-    mountRef.current = true;
-    const storedQuiz = localStorage.getItem(localStorageKey);
-
-    if (storedQuiz) {
-      setQuestions(JSON.parse(storedQuiz));
-      setLoading(false);
-    } else if (!hasFetchedRef.current) {
-      hasFetchedRef.current = true;
-      setLoading(true);
-      mutate();
+    if (isMounted.current) {
+      localStorage.setItem(localStorageKey, JSON.stringify(questions));
     }
 
-    return () => {
-      mountRef.current = false;
-    };
-  }, []);
+    return questions;
+  };
 
-  return { questions, loading, error };
+  // Query Fn
+  const {
+    data: questions = [],
+    isLoading,
+    isFetching,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['quiz', category, difficulty, quizzesNumber, quizzesType],
+    queryFn: fetchQuestions,
+  });
+
+  if (error) {
+    console.log('Error to fetch Quizzes --> ', error);
+  }
+
+  return {
+    questions,
+    loading: isLoading || isFetching,
+    error: isError ? 'Failed to load questions. Please try again later.' : null,
+  };
 };
 
 export default useQuiz;
