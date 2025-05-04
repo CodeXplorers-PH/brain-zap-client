@@ -10,44 +10,14 @@ import {
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useFeedbacks from '@/hooks/useFeedBacks';
 
 const Feedback = () => {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { feedbacks, loading, refetch } = useFeedbacks();
+
   const [filterType, setFilterType] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const axiosSecure = useAxiosSecure();
-
-  useEffect(() => {
-    const fetchFeedbackData = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosSecure.post(`/adminDashboard`, {
-          query: `
-            query {
-              feedback {
-                _id
-                name
-                email
-                message
-                feedbackType
-                date
-                read
-              }
-            }
-          `,
-        });
-        const data = res?.data?.data?.feedback;
-        setFeedbacks(data);
-      } catch (error) {
-        console.error('Error fetching feedback data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeedbackData();
-  }, [axiosSecure]);
 
   const handleMarkAsRead = id => {
     Swal.fire({
@@ -74,13 +44,9 @@ const Feedback = () => {
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6',
               });
-              setFeedbacks(prevFeedbacks =>
-                prevFeedbacks.map(fb =>
-                  fb._id === id ? { ...fb, read: 'Done' } : fb
-                )
-              );
             }
           })
+          .then(() => refetch())
           .catch(error => {
             console.error('Failed to mark as read:', error);
           });
@@ -113,11 +79,9 @@ const Feedback = () => {
                 color: '#fff',
                 confirmButtonColor: '#8b5cf6',
               });
-              setFeedbacks(prevFeedbacks =>
-                prevFeedbacks.filter(fb => fb._id !== id)
-              );
             }
           })
+          .then(() => refetch())
           .catch(error => {
             console.error('Failed to delete feedback:', error);
             Swal.fire({
