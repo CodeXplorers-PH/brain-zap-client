@@ -40,6 +40,7 @@ const QuizAnswer = () => {
   // Scroll to top view
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = 'Quiz Answer | BrainZap';
   }, []);
 
   useEffect(() => {
