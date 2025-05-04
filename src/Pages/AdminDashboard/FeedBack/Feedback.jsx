@@ -11,7 +11,6 @@ import {
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 import useFeedbacks from '@/hooks/useFeedBacks';
-import { Helmet } from 'react-helmet-async';
 
 const Feedback = () => {
   const { feedbacks, loading, refetch } = useFeedbacks();
@@ -147,9 +146,6 @@ const Feedback = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Admin | Feedback | BrainZap</title>
-      </Helmet>
       <div className="space-y-8">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">

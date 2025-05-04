@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FiSend,
   FiLinkedin,
@@ -15,7 +15,6 @@ import { IoPieChart } from 'react-icons/io5';
 import { RiUserCommunityFill } from 'react-icons/ri';
 import { BsBriefcase, BsRobot } from 'react-icons/bs';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import { Helmet } from 'react-helmet-async';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -26,6 +25,10 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+      document.title = 'Contact | BrainZap';
+    },[])
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -164,9 +167,6 @@ const Contact = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Contact | BrainZap</title>
-      </Helmet>
       <div className="relative overflow-hidden bg-gray-900 min-h-screen">
         {/* Content Section */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-20">

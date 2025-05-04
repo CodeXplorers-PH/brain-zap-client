@@ -3,7 +3,6 @@ import { useAuthContext } from '@/hooks/useAuthContext';
 import Banner from '../StartQuiz/Sections/Banner';
 import PersonalizedQuizSection from '../QuizPersonalized/PersonalizedQuiz';
 import QuizCategories from '../StartQuiz/Sections/QuizCategories';
-import { Helmet } from 'react-helmet-async';
 
 const StartQuiz = () => {
   const { user, userType, loading } = useAuthContext();
@@ -11,6 +10,7 @@ const StartQuiz = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     localStorage.removeItem('quiz_questions');
+    document.title = 'Start Quiz | BrainZap';
   }, [user]);
 
   // Determine if user has a Pro or Elite subscription
@@ -28,9 +28,6 @@ const StartQuiz = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Start Quiz | BrainZap</title>
-      </Helmet>
       <div className="bg-gray-900 min-h-screen">
         <Banner />
         <div className="relative">

@@ -14,7 +14,6 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useAdminUsers from '@/hooks/useAdminUsers';
-import { Helmet } from 'react-helmet-async';
 
 const AllUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -353,9 +352,6 @@ const AllUsers = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Admin | All Users | BrainZap </title>
-      </Helmet>
       <div className="space-y-6">
         {/* Header with welcome and stats */}
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 mb-6">

@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import useUsers from '@/hooks/useUsers';
-import { Helmet } from 'react-helmet-async';
 
 const Leaderboard = () => {
   const { user } = useAuth();
@@ -13,6 +12,11 @@ const Leaderboard = () => {
   const [otherUsers, setOtherUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [exportFormat, setExportFormat] = useState('pdf');
+
+  useEffect(() => {
+    document.title = 'Leaderboard | BrainZap';
+  },[])
+
 
   useEffect(() => {
     if (users?.success) {
@@ -291,9 +295,6 @@ const Leaderboard = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Leaderboard | BrainZap</title>
-      </Helmet>
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-28 md:pt-32 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-end items-center gap-2 my-2 lg:my-0">
