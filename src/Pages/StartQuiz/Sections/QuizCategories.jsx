@@ -701,13 +701,11 @@ const generateDifficulty = level => {
 const QuizCategories = () => {
   const [activeTab, setActiveTab] = useState('programming');
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [userLevel, setUserLevel] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState('');
   const [open, setOpen] = useState(false);
-  const { user } = useAuthContext();
+  const { userLevel } = useAuthContext();
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -716,16 +714,6 @@ const QuizCategories = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    axiosSecure
-      .get(`/userInfo`)
-      .then(res => setUserLevel(res?.data?.level?.level))
-      .catch(err => {
-        console.error('Error fetching user level:', err);
-        setUserLevel(0);
-      });
-  }, [user]);
 
   const handleSelectType = (subject, quizzesType) => {
     navigate(

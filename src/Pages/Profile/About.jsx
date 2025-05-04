@@ -1,7 +1,10 @@
 import React from 'react';
 import { Calendar, Award, Flame } from 'lucide-react';
+import useStreak from '@/hooks/useStreak';
 
-const About = ({ userInfo, stats, streak }) => {
+const About = ({ userType, stats }) => {
+  const { streak } = useStreak();
+
   return (
     <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
       <h2 className="text-xl font-semibold text-white mb-4">About</h2>
@@ -24,7 +27,7 @@ const About = ({ userInfo, stats, streak }) => {
           <Award size={18} className="text-purple-400 mr-3" />
           <div>
             <p className="text-gray-400 text-sm">Subscription</p>
-            <p className="text-white">{userInfo?.userInfo?.subscription || 'Free'}</p>
+            <p className="text-white">{userType || 'Free'}</p>
           </div>
         </div>
       </div>

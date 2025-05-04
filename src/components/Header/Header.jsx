@@ -1,25 +1,20 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
-import { ChartNoAxesCombined, LogOut, ShieldUser, User } from 'lucide-react';
-import { AuthContext } from '@/provider/AuthProvider';
+import { useEffect, useState } from 'react';
+import { LogOut, ShieldUser, User } from 'lucide-react';
 import LockedErr from '../ui/LockedErr';
-import { motion, useScroll } from 'framer-motion';
+import { motion } from 'framer-motion';
 import streakImg from '../../assets/img/streak.png';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useWindowSize } from 'react-use';
-import useAdmin from '@/hooks/useAdmin';
 import { Toaster } from 'react-hot-toast';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useAuth from '@/hooks/useAuth';
+import useStreak from '@/hooks/useStreak';
 
 const Header = () => {
-  const { user, logOut } = useContext(AuthContext);
-  const [userQuizHistory, setUserQuizHistory] = useState([]);
-  const [streak, setStreak] = useState(null);
+  const { user, isAdmin, loading, logOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const axiosSecure = useAxiosSecure();
+  const { streak } = useStreak();
   const location = useLocation();
-  const [isAdmin, isAdminLoading] = useAdmin();
-  const { scrollY } = useScroll();
   const { width } = useWindowSize();
 
   // Close the sidebar when the route changes in mobile view
@@ -28,50 +23,6 @@ const Header = () => {
       setIsOpen(false);
     }
   }, [location]);
-
-  // Fetching and calculating streak
-  useEffect(() => {
-    if (!user) return;
-
-    axiosSecure
-      .get(`/quiz_history`)
-      .then(res => {
-        const history = res?.data || [];
-        setUserQuizHistory(history);
-
-        const formatDateLocal = dateStr => {
-          const date = new Date(dateStr);
-          return date.toLocaleDateString('en-CA');
-        };
-
-        const quizDaysSet = new Set(history.map(q => formatDateLocal(q.date)));
-
-        const today = new Date();
-        const todayStr = today.toLocaleDateString('en-CA');
-
-        if (!quizDaysSet.has(todayStr)) {
-          setStreak(0);
-          return;
-        }
-
-        let streakCount = 1;
-
-        for (let i = 1; ; i++) {
-          const prevDate = new Date();
-          prevDate.setDate(today.getDate() - i);
-          const prevStr = prevDate.toLocaleDateString('en-CA');
-
-          if (quizDaysSet.has(prevStr)) {
-            streakCount++;
-          } else {
-            break;
-          }
-        }
-
-        setStreak(streakCount);
-      })
-      .catch(err => console.error(err));
-  }, [user, location]);
 
   // Handle scroll and window size
   useEffect(() => {
@@ -173,7 +124,7 @@ const Header = () => {
               user={user}
               logOut={logOut}
               isAdmin={isAdmin}
-              isAdminLoading={isAdminLoading}
+              loading={loading}
             />
           ) : (
             <Link to="/login">
@@ -232,7 +183,7 @@ const NavLinkItem = ({ navlink, location }) => (
   </li>
 );
 
-const UserProfileMenu = ({ user, logOut, isAdmin, isAdminLoading }) => (
+const UserProfileMenu = ({ user, logOut, isAdmin, loading }) => (
   <div className="dropdown dropdown-end">
     <div
       tabIndex={0}
@@ -269,7 +220,7 @@ const UserProfileMenu = ({ user, logOut, isAdmin, isAdminLoading }) => (
         </Link>
       </li>
 
-      {!isAdminLoading && isAdmin && (
+      {!loading && isAdmin && (
         <li>
           <Link
             to="/dashboard/adminHome"

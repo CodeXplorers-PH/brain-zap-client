@@ -1,22 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import useUserSubscriptionType from '@/hooks/useUserSubscriptionType';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 import { MessageCircle, X, Send, Zap } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
 
 const ZapChatWidget = () => {
+  const { user, userType } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const axiosSecure = useAxiosSecure();
   const bottomRef = useRef(null);
-  const [userType] = useUserSubscriptionType();
-  // console.log(userType);
   const [isTyping, setIsTyping] = useState(false);
-  const { user } = useAuth();
   const textareaRef = useRef(null);
   const chatContainerRef = useRef(null);
 

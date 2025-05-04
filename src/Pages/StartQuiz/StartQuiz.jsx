@@ -1,44 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import Banner from '../StartQuiz/Sections/Banner';
 import PersonalizedQuizSection from '../QuizPersonalized/PersonalizedQuiz';
 import QuizCategories from '../StartQuiz/Sections/QuizCategories';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const StartQuiz = () => {
-  const [userInfo, setUserInfo] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const { user } = useAuthContext();
-  const axiosSecure = useAxiosSecure();
+  const { user, userType, loading } = useAuthContext();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     localStorage.removeItem('quiz_questions');
-
-    const fetchUserInfo = async () => {
-      try {
-        setLoading(true); // Start loading
-        if (user) {
-          const { data } = await axiosSecure.get(`/userInfo`);
-          setUserInfo(data);
-        } else {
-          setUserInfo(null);
-        }
-      } catch (err) {
-        console.error('Error fetching user info:', err);
-        setUserInfo(null);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
-
-    fetchUserInfo();
+    document.title = 'Start Quiz | BrainZap';
   }, [user]);
 
   // Determine if user has a Pro or Elite subscription
-  const hasSubscription = userInfo?.userInfo?.subscription === 'Elite';
 
-  if (userInfo?.userInfo === null) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -50,21 +27,23 @@ const StartQuiz = () => {
   }
 
   return (
-    <div className="bg-gray-900 min-h-screen">
-      <Banner />
-      <div className="relative">
-        {/* Personalized Quiz Section with Loading Overlay */}
-        <PersonalizedQuizSection hasSubscription={hasSubscription} />
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm rounded-xl">
-            <div className="flex items-center justify-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+    <>
+      <div className="bg-gray-900 min-h-screen">
+        <Banner />
+        <div className="relative">
+          {/* Personalized Quiz Section with Loading Overlay */}
+          <PersonalizedQuizSection hasSubscription={userType} />
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm rounded-xl">
+              <div className="flex items-center justify-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+        <QuizCategories />
       </div>
-      <QuizCategories />
-    </div>
+    </>
   );
 };
 
