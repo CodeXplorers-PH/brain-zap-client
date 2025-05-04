@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import useAuth from '@/hooks/useAuth';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
@@ -14,22 +13,13 @@ import {
 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import useAdminUsers from '@/hooks/useAdminUsers';
 
 const AllUsers = () => {
-  const { user } = useAuth();
-  const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState('all');
-  const [loading, setLoading] = useState(true);
   const axiosSecure = useAxiosSecure();
-
-  useEffect(() => {
-    setLoading(true);
-    axiosSecure.get(`/allUsers/information`).then(res => {
-      setUsers(res?.data?.users);
-      setLoading(false);
-    });
-  }, [axiosSecure]);
+  const { users, loading, refetch } = useAdminUsers();
 
   const handleDelete = id => {
     Swal.fire({
@@ -56,7 +46,7 @@ const AllUsers = () => {
           .delete(`/deleteUser/${id}`)
           .then(res => {
             if (res.data?.message === 'User deleted successfully.') {
-              setUsers(prevUsers => prevUsers.filter(u => u._id !== id));
+              refetch();
               Swal.fire({
                 title: 'Deleted!',
                 text: 'User has been deleted.',
@@ -126,7 +116,8 @@ const AllUsers = () => {
         const unlockTime = Date.now() + 3600000;
         axiosSecure
           .post(`/lockoutUser/${id}`, { unlockTime })
-          .then(response => {
+          .then(() => {
+            refetch();
             Swal.fire({
               title: 'Locked!',
               text: 'User has been locked for 1 hr.',
@@ -144,7 +135,7 @@ const AllUsers = () => {
               },
             });
           })
-          .catch(error => {
+          .catch(() => {
             Swal.fire({
               title: 'Error!',
               text: 'There was an issue locking the user.',
@@ -188,14 +179,12 @@ const AllUsers = () => {
     }).then(result => {
       if (result.isConfirmed) {
         axiosSecure
-          .patch(`/makeAdmin/${id}/${user?.email}`)
+          .patch(`/makeAdmin/${id}`)
           .then(response => {
             if (
               response?.data?.message === 'User has been promoted to admin.'
             ) {
-              setUsers(prevUsers =>
-                prevUsers.map(u => (u._id === id ? { ...u, role: 'admin' } : u))
-              );
+              refetch();
               Swal.fire({
                 title: 'Success!',
                 text: 'User has been granted admin access.',
