@@ -16,12 +16,12 @@ const useUserInfo = () => {
     return data.userInfo;
   };
 
-  const { data: userInfo = null } = useQuery({
+  const { data: userInfo = null, refetch } = useQuery({
     queryKey: ['userInfo', user],
     queryFn: fetchUser,
   });
 
-  return userInfo;
+  return { userInfo, refetch };
 };
 
 export default useUserInfo;

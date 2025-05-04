@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import useUserInfo from '@/hooks/useUserInfo';
 
 const TransactionHistory = ({ user }) => {
-  const userInfo = useUserInfo();
+  const { userInfo } = useUserInfo();
 
   return (
     <>
