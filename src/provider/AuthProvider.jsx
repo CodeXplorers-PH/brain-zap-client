@@ -87,37 +87,12 @@ const AuthProvider = ({ children }) => {
         const { displayName, photoURL, email } = currentUser;
 
         try {
-          // Check if the account is locked
-          const res = await axiosPublic.patch('/account_lockout', { email });
-
-          setIsLocked(res?.data?.isLocked);
-          if (res?.data?.isLocked) {
-            logOut();
-            Swal.fire({
-              icon: 'warning',
-              title: 'Account Locked!',
-              text: `Your account has been temporarily locked due to multiple failed login attempts. Please try again after ${format(
-                new Date(res?.data?.unlockTime),
-                'h:mm a'
-              )}.`,
-              background: 'rgba(30, 30, 60, 0.85)',
-              color: '#fff',
-              backdrop: 'rgba(0, 0, 0, 0.4)',
-              customClass: {
-                popup:
-                  'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
-                title: 'text-blue-400 text-lg font-semibold',
-                confirmButton:
-                  'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
-                htmlContainer: 'text-sm text-gray-300',
-              },
-            });
-          }
 
           // Store token
           const { data: token } = await axiosPublic.post('/jwt', { email });
           token?.token && localStorage.setItem('access_token', token.token);
-
+          // Set Users
+          setUser(currentUser);
           // Save user data in the database
           displayName &&
             photoURL &&
@@ -142,8 +117,33 @@ const AuthProvider = ({ children }) => {
           setType(userInfo?.userInfo?.subscription || null);
           setIsAdmin(userInfo?.userInfo?.role === 'admin' ? true : false);
 
-          // Set Users
-          setUser(currentUser);
+          
+            // Check if the account is locked
+            const res = await axiosPublic.patch('/account_lockout', { email });
+
+            setIsLocked(res?.data?.isLocked);
+            if (res?.data?.isLocked) {
+              logOut();
+              Swal.fire({
+                icon: 'warning',
+                title: 'Account Locked!',
+                text: `Your account has been temporarily locked due to multiple failed login attempts. Please try again after ${format(
+                  new Date(res?.data?.unlockTime),
+                  'h:mm a'
+                )}.`,
+                background: 'rgba(30, 30, 60, 0.85)',
+                color: '#fff',
+                backdrop: 'rgba(0, 0, 0, 0.4)',
+                customClass: {
+                  popup:
+                    'rounded-xl shadow-lg border border-blue-500 backdrop-blur-lg',
+                  title: 'text-blue-400 text-lg font-semibold',
+                  confirmButton:
+                    'bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mt-4',
+                  htmlContainer: 'text-sm text-gray-300',
+                },
+              });
+            }
           setLoading(false);
         } catch (err) {
           console.error('Auth side effects failed:', err);
