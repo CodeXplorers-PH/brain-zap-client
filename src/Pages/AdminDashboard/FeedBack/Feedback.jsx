@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Calendar,
   Mail,
@@ -11,7 +11,6 @@ import {
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 import useFeedbacks from '@/hooks/useFeedBacks';
-import { Helmet } from 'react-helmet';
 
 const Feedback = () => {
   const { feedbacks, loading, refetch } = useFeedbacks();
@@ -115,6 +114,10 @@ const Feedback = () => {
     'Read',
   ];
 
+  useEffect(() => {
+      document.title = 'Admin Feedback | BrainZap';
+    },[])
+
   const filteredFeedbacks = feedbacks.filter(feedback => {
     const matchesSearch =
       feedback.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -147,9 +150,6 @@ const Feedback = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Dashboard | Feedback</title>
-      </Helmet>
       <div className="space-y-8">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">

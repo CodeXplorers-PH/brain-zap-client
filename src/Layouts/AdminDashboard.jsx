@@ -15,7 +15,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { MdOutlineQuiz } from 'react-icons/md';
-import { Helmet } from 'react-helmet';
 
 const AdminDashboard = () => {
   const { user, logOut } = useAuth();
@@ -67,9 +66,6 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Dashboard</title>
-      </Helmet>
       <div className="min-h-screen bg-gray-900 flex">
         {/* Mobile Header */}
         <div className="md:hidden fixed top-0 left-0 right-0 bg-gray-800 border-b border-gray-700/50 z-50 flex items-center justify-between px-4 py-3">

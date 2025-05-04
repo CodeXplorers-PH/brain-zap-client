@@ -8,17 +8,15 @@ import CTA from './Sections/CTA';
 import EidModal from '@/components/EidModal/EidModal';
 import EidDecoration from '@/components/EidDecoration/EidDecoration';
 import { useEffect } from 'react';
-import { Helmet } from 'react-helmet';
 
 const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = 'Home | BrainZap';
   }, []);
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Home</title>
-      </Helmet>
+
       <EidDecoration />
       <EidModal />
       <Hero />

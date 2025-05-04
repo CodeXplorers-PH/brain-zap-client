@@ -1,16 +1,12 @@
 import React from 'react';
 import { format } from 'date-fns';
 import useUserInfo from '@/hooks/useUserInfo';
-import { Helmet } from 'react-helmet';
 
 const TransactionHistory = ({ user }) => {
   const userInfo = useUserInfo();
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Transaction History</title>
-      </Helmet>
       <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6 text-center py-12">
         <h2 className="text-xl font-semibold text-white text-left mb-4">
           Transaction History

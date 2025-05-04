@@ -5,13 +5,13 @@ import { ApolloClient, gql, InMemoryCache, useQuery } from '@apollo/client';
 
 import CreatePostModal from '@/components/Blog/CreatePostModal';
 import BlogCard from '@/components/Blog/BlogCard';
-import { Helmet } from 'react-helmet';
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
   uri: `${import.meta.env.VITE_ServerUrl}/graphql`, // Make sure to set this in your environment variables
   cache: new InMemoryCache(),
 });
+
 
 const GET_BLOG = gql`
   query getBlogs($search: String, $category: String, $limit: Int, $skip: Int) {
@@ -65,6 +65,7 @@ const Blog = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = 'Blog | BrainZap';
   }, []);
 
   useEffect(() => {
@@ -134,9 +135,6 @@ const Blog = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Blog</title>
-      </Helmet>
       <div className="min-h-screen bg-gray-900 pt-32 md:pt-40 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

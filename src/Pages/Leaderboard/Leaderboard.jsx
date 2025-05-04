@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import useUsers from '@/hooks/useUsers';
-import { Helmet } from 'react-helmet';
 
 const Leaderboard = () => {
   const { user } = useAuth();
@@ -13,6 +12,11 @@ const Leaderboard = () => {
   const [otherUsers, setOtherUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [exportFormat, setExportFormat] = useState('pdf');
+
+  useEffect(() => {
+    document.title = 'Leaderboard | BrainZap';
+  },[])
+
 
   useEffect(() => {
     if (users?.success) {
@@ -279,10 +283,6 @@ const Leaderboard = () => {
   if (loading) {
     return (
       <>
-        <Helmet>
-          <title>Brain Zap AI | Leaderboard</title>
-        </Helmet>
-        s
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-20 sm:pt-32 md:pt-40 pb-16 px-4">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mb-4"></div>
@@ -295,9 +295,6 @@ const Leaderboard = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Leaderboard</title>
-      </Helmet>
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-28 md:pt-32 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-end items-center gap-2 my-2 lg:my-0">
@@ -417,11 +414,10 @@ const Leaderboard = () => {
                     {otherUsers.map((userData, index) => (
                       <tr
                         key={userData.email}
-                        className={`border-t border-gray-700 transition-all duration-200 hover:bg-gray-700/50 ${
-                          userData.email === user?.email
+                        className={`border-t border-gray-700 transition-all duration-200 hover:bg-gray-700/50 ${userData.email === user?.email
                             ? 'bg-purple-900/30'
                             : ''
-                        }`}
+                          }`}
                       >
                         <td className="p-2 sm:p-3 text-white text-xs sm:text-sm md:text-base">
                           {index + 4}

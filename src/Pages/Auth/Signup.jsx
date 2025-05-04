@@ -6,7 +6,6 @@ import { useAuthContext } from '@/hooks/useAuthContext';
 import useAxiosPublic from '@/hooks/useAxiosPublic';
 import useFormData from '@/hooks/useFormData';
 import useAuth from '@/hooks/useAuth';
-import { Helmet } from 'react-helmet';
 
 const Signup = () => {
   const { user } = useAuth();
@@ -28,6 +27,7 @@ const Signup = () => {
   // Navigate to Home page
   useEffect(() => {
     user && navigate('/');
+    document.title = 'Sign Up | BrainZap';
   }, [user]);
 
   const validatePassword = pass => {
@@ -185,9 +185,6 @@ const Signup = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Sign Up</title>
-      </Helmet>
       <div className="flex py-40 flex-col items-center justify-center bg-gray-900 min-h-screen px-4">
         <div className="w-full max-w-lg rounded-lg border border-gray-800 bg-gray-800 p-8 shadow-2xl">
           <div className="mb-8 text-center">

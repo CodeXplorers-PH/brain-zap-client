@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAuth from '@/hooks/useAuth';
 import ProfileTabs from './ProfileTabs';
 import About from './About';
@@ -12,7 +12,6 @@ import AchievementTab from './AchievementTab';
 import StreakCalendar from './StreakCalendar';
 import LeaderboardRank from './LeaderboardRank';
 import useHistory from '@/hooks/useHistory';
-import { Helmet } from 'react-helmet';
 
 const Profile = () => {
   const { user, userType } = useAuth();
@@ -22,6 +21,11 @@ const Profile = () => {
   const xpPoints = userQuizHistory.reduce((prev, curr) => prev + curr.score, 0);
   const totalScore = userQuizHistory.reduce((sum, quiz) => sum + quiz.score, 0);
   const avgScore = totalScore / userQuizHistory.length;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = 'Profile | BrainZap';
+  },[])
 
   // Sample stats - replace with actual data from your application
   const stats = {
@@ -36,9 +40,6 @@ const Profile = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Profile</title>
-      </Helmet>
       <div className="pt-32 pb-16 px-4 min-h-screen bg-gradient-to-b from-gray-900 to-gray-950">
         <div className="max-w-4xl mx-auto">
           {/* Profile Header */}
@@ -50,7 +51,6 @@ const Profile = () => {
               <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
           </div>
-        </div>
 
         {/* Profile Content */}
         {activeTab === 'profile' && (
@@ -92,6 +92,7 @@ const Profile = () => {
         )}
         {/* Achievement Tab */}
         {activeTab === 'achievements' && <AchievementTab xpPoints={xpPoints} />}
+      </div>
       </div>
     </>
   );

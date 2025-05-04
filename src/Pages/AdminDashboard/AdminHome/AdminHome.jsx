@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Mail,
   User,
@@ -20,7 +20,6 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import useAdminHome from '@/hooks/useAdminHome';
-import { Helmet } from 'react-helmet';
 
 const SummaryCard = ({ icon, title, value, color, change }) => (
   <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50">
@@ -62,6 +61,10 @@ const AdminHome = () => {
     latestFeedback: feedbacks = [],
     totalRevenue = 0,
   } = dashboardData;
+
+  useEffect(() => {
+      document.title = 'Admin Home | BrainZap';
+    },[])
 
   const onPieEnter = (_, index) => {
     setActiveIndex(index);
@@ -185,10 +188,6 @@ const AdminHome = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Dashboard | Admin Home</title>
-      </Helmet>
-      s
       <div className="space-y-8">
         {/* Welcome Section */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
@@ -14,7 +14,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useAdminUsers from '@/hooks/useAdminUsers';
-import { Helmet } from 'react-helmet';
+
 
 const AllUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -226,6 +226,10 @@ const AllUsers = () => {
     });
   };
 
+  useEffect(() => {
+      document.title = 'All Users | BrainZap';
+    },[])
+
   const filteredUsers = users?.filter(u => {
     const matchesSearch =
       u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -353,9 +357,6 @@ const AllUsers = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Dashboard | All Users</title>
-      </Helmet>
       <div className="space-y-6">
         {/* Header with welcome and stats */}
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 mb-6">

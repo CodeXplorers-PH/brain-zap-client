@@ -1,13 +1,9 @@
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Helmet } from 'react-helmet';
 
 const Error = () => {
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Error</title>
-      </Helmet>
       <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center px-4 text-center">
         {/* Animated 404 text */}
         <div className="relative mb-8">
