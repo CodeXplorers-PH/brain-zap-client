@@ -36,6 +36,7 @@ const AdminDashboard = () => {
     }
   }, [location]);
 
+  // Dashboard upper links
   const navItems = [
     {
       to: '/dashboard/adminHome',
@@ -54,6 +55,7 @@ const AdminDashboard = () => {
     },
   ];
 
+  // Dashboard lower links
   const secondaryNavItems = [
     { to: '/', icon: <House size={20} />, label: 'Home' },
     {

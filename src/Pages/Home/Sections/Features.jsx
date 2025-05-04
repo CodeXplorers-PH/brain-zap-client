@@ -28,7 +28,7 @@ const Features = () => {
     {
       id: 1,
       icon: <Sparkles className="w-6 h-6" />,
-      title: "AI-Powered Quizzes",
+      title: "AI-Powered Smart Quizzes",
       description:
         "Dynamic quizzes that adapt to your learning style in real-time",
       highlight: "Intelligent adaptation",

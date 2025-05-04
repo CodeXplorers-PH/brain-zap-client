@@ -16,9 +16,8 @@ const Home = () => {
   }, []);
   return (
     <>
-
-      <EidDecoration />
-      <EidModal />
+      {/* <EidDecoration /> */}
+      {/* <EidModal /> */}
       <Hero />
       <Features />
       <GetStarted />

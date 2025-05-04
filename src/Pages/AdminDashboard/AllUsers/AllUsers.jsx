@@ -227,8 +227,8 @@ const AllUsers = () => {
   };
 
   useEffect(() => {
-      document.title = 'All Users | BrainZap';
-    },[])
+    document.title = 'All Users | BrainZap';
+  }, [])
 
   const filteredUsers = users?.filter(u => {
     const matchesSearch =
@@ -244,7 +244,7 @@ const AllUsers = () => {
   const standardUsers = totalUsers - adminUsers;
 
   const renderUserRow = user => {
-    const membershipType = user.membershipType || 'Free';
+    const membershipType = user.subscription || 'Free';
     const membershipColor =
       {
         Free: 'bg-green-900/30 text-green-400',
@@ -272,11 +272,6 @@ const AllUsers = () => {
           </div>
         </td>
         <td className="py-3 px-4">
-          <span className={`px-2 py-1 rounded-full text-xs ${membershipColor}`}>
-            {membershipType}
-          </span>
-        </td>
-        <td className="py-3 px-4">
           {user?.role === 'admin' ? (
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-900/30 text-blue-400">
               <ShieldCheck size={14} className="mr-1" />
@@ -290,8 +285,14 @@ const AllUsers = () => {
           )}
         </td>
         <td className="py-3 px-4">
+          <span className={`px-2 py-1 rounded-full text-xs ${membershipColor}`}>
+            {membershipType}
+          </span>
+        </td>
+
+        <td className="py-3 px-4">
           <span className="text-sm text-gray-300">
-            {user?.createdAt?.split('T')[0] || 'N/A'}
+            {user?.subscriptionLastTime?.split('T')[0] || 'N/A'}
           </span>
         </td>
         <td className="py-3 px-4">
@@ -466,9 +467,9 @@ const AllUsers = () => {
               <thead>
                 <tr className="bg-gray-900/50 text-gray-400 text-xs uppercase">
                   <th className="py-3 px-4 text-left">User</th>
-                  <th className="py-3 px-4 text-left">Membership</th>
                   <th className="py-3 px-4 text-left">Role</th>
-                  <th className="py-3 px-4 text-left">Joined</th>
+                  <th className="py-3 px-4 text-left">Membership</th>
+                  <th className="py-3 px-4 text-left">Subscription Expires</th>
                   <th className="py-3 px-4 text-left">Actions</th>
                 </tr>
               </thead>

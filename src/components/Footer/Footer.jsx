@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";  // React router
 import { FaXTwitter } from "react-icons/fa6";
-import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+// twitter logo
+import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa"; // facebook logo, instagram logo, gitHub logo and linkedin logo
 
 const Footer = () => {
   return (
