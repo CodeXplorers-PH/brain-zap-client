@@ -34,51 +34,53 @@
 
 ---
 
-## Tech Stack
+## 🛠 Tech Stack
 
-### Frontend
+### 🧩 Frontend
 
 - **React.js** – Modern JavaScript library for building fast and interactive UIs
 - **React Router DOM** – Client-side routing for seamless navigation
-- **Tailwind CSS** & **tailwindcss-animate** – Utility-first CSS framework with animation support
-- **Shadcn UI**, **Radix UI**, **DaisyUI** – Accessible, customizable, and themeable UI component libraries
-- **Framer Motion** & **Motion One** – High-performance animation libraries
-- **Lucide React Icons**, **React Icons**, **Lottie React** – Scalable icons and animation support
-- **React Fast Marquee** – Smooth, customizable text animations
-- **React Toastify**, **SweetAlert2**, **React Hot Toast** – User-friendly toast and alert notifications
-- **Tiptap Editor** – Rich-text editor with support for images, links, code blocks, placeholders, and text alignment
-- **React Helmet** & **React Helmet Async** – Manage document head for SEO optimization
-- **Axios** – Promise-based HTTP client for browser and Node.js
-- **Confetti & Star Ratings** – For gamified interactions and achievements
-- **HTML2Canvas** & **jsPDF** – For exporting printable quiz answer sheets
-- **Recharts** – For rendering responsive and customizable charts (used in dashboards)
-- **Firebase** – Used for authentication and real-time data handling (if applicable)
+- **Tailwind CSS** – Utility-first CSS framework for rapid UI development
+- **DaisyUI** – Tailwind component library for quick prototyping
+- **Shadcn UI & Radix UI** – Accessible, headless component libraries for custom UI development
+  - Includes Radix components like `Accordion`, `Dialog`, `Slider`, `Avatar`, `Label`, etc.
+- **Framer Motion & Motion One** – Powerful libraries for smooth, performant animations
+- **React Icons, Lucide React, Lottie React** – Crisp icons and animations
+- **React Fast Marquee** – Customizable text animation component
+- **React Toastify, SweetAlert2, React Hot Toast** – Toast and alert notification libraries
+- **React Star Ratings & React Spinners** – UI components for rating systems and loading indicators
+- **React Countdown & React Confetti** – Fun, interactive utilities for engagement
 
-### Backend
+### 🔙 Backend
 
-- **Node.js** – JavaScript runtime for server-side logic
-- **Express.js** – Minimal and fast web application framework
-- **GraphQL** – Flexible query language for building APIs
-- **MongoDB** – Scalable and flexible NoSQL database
-- **React Query** – For server state management with GraphQL and REST APIs
+- **Node.js** – JavaScript runtime environment for backend logic
+- **Express.js** – Minimal, flexible web framework for server-side routing and middleware
+- **GraphQL** – Declarative data fetching with a flexible query language
+- **MongoDB** – NoSQL document database for scalable data storage
 
-### Authentication & Payments
+### 🔐 Authentication & 💳 Payments
 
-- **Firebase** – Authentication, hosting, and real-time data
-- **Stripe.js** & **React Stripe.js** – Seamless and secure payment integration
+- **Firebase** – User authentication, hosting, and real-time database
+- **Stripe.js & React Stripe.js** – Secure payment processing
 
-### Utilities & Dev Tools
+### 🧰 Editor & Rich Text
 
-- **Axios** – Promise-based HTTP client for API communication
-- **Date-fns** – Modern date utility library
-- **Class Variance Authority (CVA)** & **clsx** – Class merging and conditional styling
-- **Tailwind Merge** – Prevent class conflicts when combining Tailwind classes
+- **TipTap (with extensions)** – Flexible, headless rich-text editor with code blocks, images, placeholders, alignment, and links
 
-### Development & Tooling
+### ⚙️ Utilities & Dev Tools
 
-- **Vite** – Lightning-fast frontend build tool
-- **ESLint** – Code linting to ensure consistent style and catch errors early
-- **DaisyUI** – Tailwind CSS component library for rapid prototyping
+- **Axios** – Promise-based HTTP client for API requests
+- **Date-fns** – Modern JavaScript date utility library
+- **Class Variance Authority (CVA) & clsx** – Class merging and conditional styling helpers
+- **Tailwind Merge** – Prevent conflicting Tailwind utility classes
+- **html2canvas & jsPDF** – Convert components to canvas and generate PDFs
+- **React Use** – Hooks collection for better reusability
+
+### ⚡ Development Tooling
+
+- **Vite** – Fast and modern build tool for frontend projects
+- **ESLint** – Linter to enforce code standards and catch issues early
+- **@tailwindcss/vite** – Integration plugin to support Tailwind with Vite
 
 ---
 
