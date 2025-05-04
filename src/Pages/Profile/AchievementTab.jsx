@@ -98,6 +98,7 @@ const AchievementTab = ({ xpPoints }) => {
   return (
     <>
       <div className="relative p-3">
+        {/* Confetti for achievements */}
         {showConfetti && (
           <Confetti width={window.innerWidth} height={window.innerHeight} />
         )}
