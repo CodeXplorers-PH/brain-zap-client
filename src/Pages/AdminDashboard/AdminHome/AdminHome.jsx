@@ -20,7 +20,7 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import useAdminHome from '@/hooks/useAdminHome';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const SummaryCard = ({ icon, title, value, color, change }) => (
   <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700/50">
@@ -186,9 +186,8 @@ const AdminHome = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Dashboard Home | BrainZap</title>
+        <title>Admin Home | BrainZap</title>
       </Helmet>
-      s
       <div className="space-y-8">
         {/* Welcome Section */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">

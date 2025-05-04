@@ -5,7 +5,7 @@ import { ApolloClient, gql, InMemoryCache, useQuery } from '@apollo/client';
 
 import CreatePostModal from '@/components/Blog/CreatePostModal';
 import BlogCard from '@/components/Blog/BlogCard';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
@@ -135,7 +135,7 @@ const Blog = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Blog</title>
+        <title>Blog | BrainZap</title>
       </Helmet>
       <div className="min-h-screen bg-gray-900 pt-32 md:pt-40 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">

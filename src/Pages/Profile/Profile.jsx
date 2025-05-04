@@ -12,7 +12,7 @@ import AchievementTab from './AchievementTab';
 import StreakCalendar from './StreakCalendar';
 import LeaderboardRank from './LeaderboardRank';
 import useHistory from '@/hooks/useHistory';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Profile = () => {
   const { user, userType } = useAuth();

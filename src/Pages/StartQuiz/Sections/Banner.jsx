@@ -1,5 +1,4 @@
 import { useAuthContext } from '@/hooks/useAuthContext';
-import { Helmet } from 'react-helmet';
 
 const Banner = () => {
   const { user } = useAuthContext();

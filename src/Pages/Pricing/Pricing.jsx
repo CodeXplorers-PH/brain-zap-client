@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PricingPlan from './Sections/PricingPlan';
 import FreeTrial from './Sections/FreeTrial';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Pricing = () => {
   useEffect(() => {

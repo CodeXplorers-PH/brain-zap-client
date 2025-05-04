@@ -1,7 +1,6 @@
 import React from 'react';
 import { format } from 'date-fns';
 import useUserInfo from '@/hooks/useUserInfo';
-import { Helmet } from 'react-helmet';
 
 const TransactionHistory = ({ user }) => {
   const userInfo = useUserInfo();

@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import useUsers from '@/hooks/useUsers';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Leaderboard = () => {
   const { user } = useAuth();
@@ -413,11 +413,10 @@ const Leaderboard = () => {
                     {otherUsers.map((userData, index) => (
                       <tr
                         key={userData.email}
-                        className={`border-t border-gray-700 transition-all duration-200 hover:bg-gray-700/50 ${
-                          userData.email === user?.email
+                        className={`border-t border-gray-700 transition-all duration-200 hover:bg-gray-700/50 ${userData.email === user?.email
                             ? 'bg-purple-900/30'
                             : ''
-                        }`}
+                          }`}
                       >
                         <td className="p-2 sm:p-3 text-white text-xs sm:text-sm md:text-base">
                           {index + 4}

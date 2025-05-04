@@ -15,7 +15,7 @@ import { IoPieChart } from 'react-icons/io5';
 import { RiUserCommunityFill } from 'react-icons/ri';
 import { BsBriefcase, BsRobot } from 'react-icons/bs';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Contact = () => {
   const [formData, setFormData] = useState({

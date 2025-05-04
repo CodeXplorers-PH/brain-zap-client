@@ -7,7 +7,7 @@ import useAxiosPublic from '@/hooks/useAxiosPublic';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
   const { user } = useAuth();
@@ -211,7 +211,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Sign In</title>
+        <title>Login | BrainZap</title>
       </Helmet>
       <div className="flex py-40 flex-col items-center justify-center bg-gray-900 min-h-screen px-4">
         <div className="w-full max-w-lg rounded-lg border border-gray-800 bg-gray-800 p-8 shadow-2xl">

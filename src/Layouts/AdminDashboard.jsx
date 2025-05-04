@@ -15,7 +15,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { MdOutlineQuiz } from 'react-icons/md';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const AdminDashboard = () => {
   const { user, logOut } = useAuth();

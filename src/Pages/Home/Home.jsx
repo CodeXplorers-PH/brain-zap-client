@@ -8,7 +8,7 @@ import CTA from './Sections/CTA';
 import EidModal from '@/components/EidModal/EidModal';
 import EidDecoration from '@/components/EidDecoration/EidDecoration';
 import { useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 const Home = () => {
   useEffect(() => {
