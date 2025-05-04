@@ -1,4 +1,5 @@
 // import { Award, FileText } from "lucide-react";
+// import static images from local computer
 import badge1 from "@/assets/img/badge1.png";
 import badge2 from "@/assets/img/badge2.png";
 import badge3 from "@/assets/img/badge3.png";
@@ -10,6 +11,7 @@ import badge8 from "@/assets/img/badge8.png";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 const AchievementTab = ({ xpPoints }) => {
+  // badges array
   const badges = [
     {
       id: 1,
@@ -60,8 +62,11 @@ const AchievementTab = ({ xpPoints }) => {
       image: badge8,
     },
   ];
+  // state for unlocked badges
   const [unlockedBadges, setUnlockedBadges] = useState([]);
+  // state for confetti
   const [showConfetti, setShowConfetti] = useState(false);
+  // state for newly unlocked badges
   const [newlyUnlockedBadgeId, setNewlyUnlockedBadgeId] = useState(null);
   useEffect(() => {
     const newlyUnlocked = badges.map((badge) => ({
