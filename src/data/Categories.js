@@ -1,3 +1,4 @@
+// dynamic categories for start quiz page
 export const categories = [
   {
     id: 1,
