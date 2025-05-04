@@ -354,7 +354,7 @@ const AllUsers = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Dashboard | All Users</title>
+        <title>Admin Dashboard | All Users | BrainZap</title>
       </Helmet>
       <div className="space-y-6">
         {/* Header with welcome and stats */}

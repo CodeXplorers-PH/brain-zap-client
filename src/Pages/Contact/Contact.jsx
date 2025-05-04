@@ -165,7 +165,7 @@ const Contact = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Contact</title>
+        <title>Contact | BrainZap</title>
       </Helmet>
       <div className="relative overflow-hidden bg-gray-900 min-h-screen">
         {/* Content Section */}

@@ -7,9 +7,6 @@ const Banner = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Brain Zap AI | Start Quiz</title>
-      </Helmet>
       <div className="pt-40 pb-12 text-center px-4 relative overflow-hidden">
         {/* Subtle Background Gradient */}
         <div className="absolute inset-0 opacity-90"></div>

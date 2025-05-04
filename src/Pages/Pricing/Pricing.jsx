@@ -10,7 +10,7 @@ const Pricing = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Pricing</title>
+        <title>Pricing | BrainZap</title>
       </Helmet>
       <div className="bg-gray-900 min-h-screen">
         <PricingPlan />

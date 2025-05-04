@@ -68,7 +68,7 @@ const AdminDashboard = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Dashboard</title>
+        <title>Dashboard | BrainZap AI </title>
       </Helmet>
       <div className="min-h-screen bg-gray-900 flex">
         {/* Mobile Header */}

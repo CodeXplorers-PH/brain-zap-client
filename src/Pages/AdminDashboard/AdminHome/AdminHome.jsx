@@ -186,7 +186,7 @@ const AdminHome = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Dashboard | Admin Home</title>
+        <title>Admin Dashboard Home | BrainZap</title>
       </Helmet>
       s
       <div className="space-y-8">

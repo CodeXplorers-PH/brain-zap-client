@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Home</title>
+        <title>Home | BrainZap</title>
       </Helmet>
       <EidDecoration />
       <EidModal />

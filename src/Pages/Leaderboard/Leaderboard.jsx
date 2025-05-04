@@ -279,10 +279,6 @@ const Leaderboard = () => {
   if (loading) {
     return (
       <>
-        <Helmet>
-          <title>Brain Zap AI | Leaderboard</title>
-        </Helmet>
-        s
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-20 sm:pt-32 md:pt-40 pb-16 px-4">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mb-4"></div>
@@ -296,7 +292,7 @@ const Leaderboard = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Leaderboard</title>
+        <title>Leaderboard | BrainZap</title>
       </Helmet>
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 pt-28 md:pt-32 pb-16 px-4">
         <div className="max-w-5xl mx-auto">

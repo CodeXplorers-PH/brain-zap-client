@@ -6,7 +6,7 @@ const Error = () => {
   return (
     <>
       <Helmet>
-        <title>Brain Zap AI | Error</title>
+        <title>Error | BrainZap</title>
       </Helmet>
       <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center px-4 text-center">
         {/* Animated 404 text */}
