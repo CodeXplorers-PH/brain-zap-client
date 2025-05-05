@@ -1,5 +1,7 @@
-import React from "react";
-import { Award, FileText } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Award } from "lucide-react";
+
+// Placeholder badge images
 import badge1 from "@/assets/img/badge1.png";
 import badge2 from "@/assets/img/badge2.png";
 import badge3 from "@/assets/img/badge3.png";
@@ -8,222 +10,162 @@ import badge5 from "@/assets/img/badge5.png";
 import badge6 from "@/assets/img/badge6.png";
 import badge7 from "@/assets/img/badge7.png";
 import badge8 from "@/assets/img/badge8.png";
-const Achievements = ({ xpPoints, setActiveTab }) => {
+
+const Achievements = ({ xpPoints, quizStats, setActiveTab }) => {
+  const achievements = [
+    {
+      id: 1,
+      name: "First Step Scholar",
+      description: "Completed your first quiz — the journey begins!",
+      image: badge1,
+      condition: () => (quizStats?.quizzesTaken || 0) >= 1,
+      progress: () => ({
+        current: quizStats?.quizzesTaken || 0,
+        required: 1,
+        label: "Quizzes Taken",
+      }),
+    },
+    {
+      id: 2,
+      name: "Perfect Prodigy",
+      description: "Scored 100% on a quiz — flawless victory!",
+      image: badge2,
+      condition: () => (quizStats?.perfectScores || 0) >= 1,
+      progress: () => ({
+        current: quizStats?.perfectScores || 0,
+        required: 1,
+        label: "Perfect Scores",
+      }),
+    },
+    {
+      id: 3,
+      name: "Category Conqueror",
+      description: "Explored 5 different quiz categories — a true knowledge seeker!",
+      image: badge3,
+      condition: () => (quizStats?.categoriesExplored || 0) >= 5,
+      progress: () => ({
+        current: quizStats?.categoriesExplored || 0,
+        required: 5,
+        label: "Categories Explored",
+      }),
+    },
+    {
+      id: 4,
+      name: "Leaderboard Legend",
+      description: "Reached the top 3 on the leaderboard — you're a quiz star!",
+      image: badge4,
+      condition: () => (quizStats?.leaderboardRank || Infinity) <= 3,
+      progress: () => ({
+        current: quizStats?.leaderboardRank || "N/A",
+        required: 3,
+        label: "Leaderboard Rank",
+      }),
+    },
+    {
+      id: 5,
+      name: "Streak Star",
+      description: "Took quizzes 7 days in a row — consistency is key!",
+      image: badge5,
+      condition: () => (quizStats?.streak || 0) >= 7,
+      progress: () => ({
+        current: quizStats?.streak || 0,
+        required: 7,
+        label: "Day Streak",
+      }),
+    },
+    {
+      id: 6,
+      name: "Point Powerhouse",
+      description: "Reached 1000 XP points — you're unstoppable!",
+      image: badge6,
+      condition: () => (xpPoints || 0) >= 1000,
+      progress: () => ({
+        current: xpPoints || 0,
+        required: 1000,
+        label: "XP Points",
+      }),
+    },
+    {
+      id: 7,
+      name: "Master Mind",
+      description: "Completed 50 quizzes — a true quiz master!",
+      image: badge7,
+      condition: () => (quizStats?.quizzesTaken || 0) >= 50,
+      progress: () => ({
+        current: quizStats?.quizzesTaken || 0,
+        required: 50,
+        label: "Quizzes Taken",
+      }),
+    },
+    {
+      id: 8,
+      name: "Epic Explorer",
+      description: "Unlocked 5 other achievements — you're on a roll!",
+      image: badge8,
+      condition: () =>
+        achievements.filter((a) => a.id !== 8 && a.condition()).length >= 5,
+      progress: () => ({
+        current: achievements.filter((a) => a.id !== 8 && a.condition()).length,
+        required: 5,
+        label: "Achievements Unlocked",
+      }),
+    },
+  ];
+
+  // Filter unlocked achievements, sort by ID (recent first), take top 2
+  const displayedAchievements = achievements
+    .filter((a) => a.condition())
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 2);
+
   return (
-    <div className="bg-gray-800/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-lg p-6">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xl font-semibold text-white">Achievements</h2>
-        <div>
-          <button
-            onClick={() => setActiveTab("achievements")}
-            className="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium text-purple-400 transition-colors mb-1"
-          >
-            See all
-          </button>
-        </div>
+    <div className="bg-gray-900/90 backdrop-blur-lg rounded-xl border border-gray-700 shadow-lg p-4 md:p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-white flex items-center">
+          <Award className="mr-2 text-purple-400" /> Recent Achievements
+        </h2>
+        <button
+          onClick={() => setActiveTab("achievements")}
+          className="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium text-white transition-colors"
+        >
+          Show All
+        </button>
       </div>
-      <div className="space-y-4">
-        <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-          {(xpPoints >= 8000 && (
-            <>
+
+      <div className="space-y-3">
+        {displayedAchievements.length > 0 ? (
+          displayedAchievements.map((achievement) => (
+            <div
+              key={achievement.id}
+              className="flex items-center bg-gray-800/50 rounded-lg p-3 transition-all duration-200 hover:bg-gray-800/70"
+            >
               <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                <img className="w-6" src={badge8} alt="" />
+                <img
+                  src={achievement.image}
+                  alt={achievement.name}
+                  className="w-8 h-8"
+                />
               </div>
               <div>
-                <p className="text-white font-medium">Elite Legend</p>
-                <p className="text-gray-400 text-sm">
-                  Code runs like magic (8000 XP)
-                </p>
+                <p className="text-white font-medium">{achievement.name}</p>
+                <p className="text-gray-400 text-sm">{achievement.description}</p>
+                <p className="text-gray-500 text-xs mt-1">Unlocked!</p>
               </div>
-            </>
-          )) ||
-            (xpPoints >= 7000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge7} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Quiz Cracker</p>
-                  <p className="text-gray-400 text-sm">
-                    Took a quiz 3 days in a row — learning is your superpower!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 6000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge6} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Habit Hero</p>
-                  <p className="text-gray-400 text-sm">
-                    Took a quiz 3 days in a row — learning is your superpower!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 5000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge5} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Master of Levels</p>
-                  <p className="text-gray-400 text-sm">
-                    Conquered all difficulty levels — from easy to expert like a
-                    boss!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 4000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge4} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Blitz Brain</p>
-                  <p className="text-gray-400 text-sm">
-                    Completed a quiz in lightning-fast time — sharp and swift!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 3000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge3} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Knowledge Voyager</p>
-                  <p className="text-gray-400 text-sm">
-                    Explored 3 different quiz categories — your curiosity knows
-                    no bounds!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 2000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge2} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Flawless Genius</p>
-                  <p className="text-gray-400 text-sm">
-                    Scored 100% on a quiz — not a single mistake in sight!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints >= 1000 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <img className="w-6" src={badge1} alt="" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Quiz Whiz</p>
-                  <p className="text-gray-400 text-sm">
-                    Completed your first quiz — the journey to mastery begins!
-                  </p>
-                </div>
-              </>
-            )) ||
-            (xpPoints < 999 && (
-              <>
-                <div className="bg-purple-600/20 p-2 rounded-lg mr-3">
-                  <Award size={24} className="text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">
-                    No Achievements Unlocked
-                  </p>
-                  <p className="text-gray-400 text-sm">Keep it up!</p>
-                </div>
-              </>
-            ))}
-        </div>
-
-        <div className="flex items-center bg-gray-700/40 rounded-lg p-3">
-          <div className="bg-gray-600/20 p-2 rounded-lg mr-3">
-            <FileText size={24} className="text-gray-400" />
+            </div>
+          ))
+        ) : (
+          <div className="flex items-center bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-gray-600/20 p-2 rounded-lg mr-3">
+              <Award size={24} className="text-gray-400" />
+            </div>
+            <div>
+              <p className="text-white font-medium">No Achievements Yet</p>
+              <p className="text-gray-400 text-sm">
+                Complete quizzes to unlock your first badge!
+              </p>
+            </div>
           </div>
-          <div>
-            {(xpPoints >= 8000 && (
-              <>
-                <p className="text-white font-medium">Ultimate Achiever</p>
-                <p className="text-gray-400 text-sm">
-                  Reached 4500+ XP - keep growing
-                </p>
-              </>
-            )) ||
-              (xpPoints >= 7000 && (
-                <>
-                  <p className="text-white font-medium">Ritual Mode</p>
-                  <p className="text-gray-400 text-sm">
-                    Reached 3500 XP - keep growing
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 6000 && (
-                <>
-                  <p className="text-white font-medium">Pathfinder</p>
-                  <p className="text-gray-400 text-sm">
-                    Reached 3000 XP - keep growing
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 5000 && (
-                <>
-                  <p className="text-white font-medium">Flash Finish</p>
-                  <p className="text-gray-400 text-sm">
-                    Reached 2500 XP - keep growing
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 4000 && (
-                <>
-                  <p className="text-white font-medium">Mind Wanderer</p>
-                  <p className="text-gray-400 text-sm">
-                    Reached 2000 XP - keep growing
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 3000 && (
-                <>
-                  <p className="text-white font-medium">Fire Flow</p>
-                  <p className="text-gray-400 text-sm">
-                    Stayed active for 30 days straight!
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 2000 && (
-                <>
-                  <p className="text-white font-medium">Zero Miss Legend</p>
-                  <p className="text-gray-400 text-sm">
-                    Completed 5 coding challenges!
-                  </p>
-                </>
-              )) ||
-              (xpPoints >= 1000 && (
-                <>
-                  <p className="text-white font-medium">Brain Spark</p>
-                  <p className="text-gray-400 text-sm">
-                    Completed first lesson in a record time
-                  </p>
-                </>
-              )) ||
-              (xpPoints < 999 && (
-                <>
-                  <p className="text-white font-medium">Keep Learning</p>
-                  <p className="text-gray-400 text-sm">
-                    Play Daily Quizzes to achieve badges!
-                  </p>
-                </>
-              ))}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

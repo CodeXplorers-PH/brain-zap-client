@@ -9,7 +9,9 @@ const QuizPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-        document.title = `${category.charAt(0).toUpperCase()+category.slice(1)} | BrainZap`;
+    document.title = `${
+      category.charAt(0).toUpperCase() + category.slice(1)
+    } Quiz | BrainZap`;
   }, [category]);
 
   return (
