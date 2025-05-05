@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   FaSignInAlt,
   FaPrint,
@@ -8,11 +8,12 @@ import {
   FaWhatsapp,
   FaLink,
   FaShareAlt,
-} from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
-import useAuth from '@/hooks/useAuth';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
-import useStreak from '@/hooks/useStreak';
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import useAuth from "@/hooks/useAuth";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useStreak from "@/hooks/useStreak";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -26,6 +27,8 @@ const QuizAnswer = () => {
   const [showScore, setShowScore] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const { userType } = useAuthContext();
+  const [freeUser, setFreeUser] = useState("");
 
   const { refetch } = useStreak();
   const { category } = useParams();
@@ -33,21 +36,21 @@ const QuizAnswer = () => {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
-  const optionLabels = ['A.', 'B.', 'C.', 'D.'];
+  const optionLabels = ["A.", "B.", "C.", "D."];
   const printContentRef = useRef(null);
   const shareableLink = window.location.href;
 
   // Scroll to top view
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Quiz Answer | BrainZap';
+    document.title = "Quiz Answer | BrainZap";
   }, []);
 
   useEffect(() => {
     const fetchResults = () => {
-      const storedQuiz = localStorage.getItem('quiz_questions');
-      const storedAnswers = localStorage.getItem('userAnswers');
-      const hasPosted = localStorage.getItem('history_posted');
+      const storedQuiz = localStorage.getItem("quiz_questions");
+      const storedAnswers = localStorage.getItem("userAnswers");
+      const hasPosted = localStorage.getItem("history_posted");
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -74,10 +77,10 @@ const QuizAnswer = () => {
           setScore(finalScore);
           setShowScore(true);
         } catch (error) {
-          console.error('Error parsing localStorage data:', error);
+          console.error("Error parsing localStorage data:", error);
         }
       } else {
-        console.warn('Quiz data or user answers not found in localStorage.');
+        console.warn("Quiz data or user answers not found in localStorage.");
       }
 
       setLoading(false);
@@ -99,13 +102,13 @@ const QuizAnswer = () => {
 
   useEffect(() => {
     const hasPosted = localStorage.getItem(`history_posted`);
-    const storedQuiz = localStorage.getItem('quiz_questions');
-    const storedAnswers = localStorage.getItem('userAnswers');
+    const storedQuiz = localStorage.getItem("quiz_questions");
+    const storedAnswers = localStorage.getItem("userAnswers");
 
     if (user && questions.length > 0 && !hasPosted) {
       // Save History
       axiosSecure
-        .post('/quiz_history', {
+        .post("/quiz_history", {
           date: new Date(),
           category: category,
           score: score,
@@ -113,36 +116,41 @@ const QuizAnswer = () => {
           answers: JSON.parse(storedAnswers),
         })
         .then(() => {
-          localStorage.setItem(`history_posted`, 'true');
+          localStorage.setItem(`history_posted`, "true");
           refetch();
         })
-        .catch(err => {
-          console.log('Error saving history:', err);
+        .catch((err) => {
+          console.log("Error saving history:", err);
         });
 
       // Update User Level
       axiosSecure
-        .put('/update_user_level', {
+        .put("/update_user_level", {
           score,
           difficulty: state.difficulty,
         })
-        .catch(err => console.log('Level Update Error --> ', err.message));
+        .catch((err) => console.log("Level Update Error --> ", err.message));
     }
   }, [category, questions]);
 
   const handleQuizAgain = () => {
-    localStorage.removeItem('quiz_questions');
-    localStorage.removeItem('userAnswers');
-    localStorage.removeItem('history_posted');
-    navigate('/start-quiz');
+    localStorage.removeItem("quiz_questions");
+    localStorage.removeItem("userAnswers");
+    localStorage.removeItem("history_posted");
+    navigate("/start-quiz");
   };
 
   const handleGetFeedback = async () => {
-    const storedQuiz = localStorage.getItem('quiz_questions');
-    const storedAnswers = localStorage.getItem('userAnswers');
+    if (!userType || userType === null) {
+      setFreeUser("Free");
+      return;
+    }
+
+    const storedQuiz = localStorage.getItem("quiz_questions");
+    const storedAnswers = localStorage.getItem("userAnswers");
 
     if (!storedQuiz || !storedAnswers) {
-      alert('No quiz data found!');
+      alert("No quiz data found!");
       return;
     }
 
@@ -152,15 +160,15 @@ const QuizAnswer = () => {
     setIsFetchingFeedback(true);
 
     try {
-      const { data: result } = await axiosSecure.post('/quiz_feedback', {
+      const { data: result } = await axiosSecure.post("/quiz_feedback", {
         quizData,
         userAnswers: parsedAnswers,
       });
 
       setFeedback(result);
     } catch (error) {
-      console.error('Error fetching AI feedback:', error);
-      alert('Failed to fetch feedback from AI.');
+      console.error("Error fetching AI feedback:", error);
+      alert("Failed to fetch feedback from AI.");
     } finally {
       setIsFetchingFeedback(false);
     }
@@ -168,10 +176,16 @@ const QuizAnswer = () => {
 
   // Print function to handle printing the quiz results
   const handlePrintResult = () => {
-    const printWindow = window.open('', '_blank');
+    if (!userType || userType === null) {
+      setFreeUser("Free");
+      console.log("1 : ", freeUser);
+      return;
+    }
+
+    const printWindow = window.open("", "_blank");
 
     if (!printWindow) {
-      alert('Please allow pop-ups to print your results.');
+      alert("Please allow pop-ups to print your results.");
       return;
     }
 
@@ -202,17 +216,17 @@ const QuizAnswer = () => {
               margin-bottom: 20px;
               border-radius: 8px;
               border: 1px solid ${
-                score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444'
+                score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
               };
               background-color: ${
-                score >= 70 ? '#d1fae5' : score >= 40 ? '#fef3c7' : '#fee2e2'
+                score >= 70 ? "#d1fae5" : score >= 40 ? "#fef3c7" : "#fee2e2"
               };
             }
             .score-text {
               font-size: 24px;
               font-weight: bold;
               color: ${
-                score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444'
+                score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
               };
             }
             .question-container {
@@ -288,9 +302,9 @@ const QuizAnswer = () => {
         <body>
           <div class="header">
             <h1>BrainZap Quiz Results</h1>
-            <p>Category: ${category || 'General Knowledge'}</p>
+            <p>Category: ${category || "General Knowledge"}</p>
             <p>Date: ${currentDate}</p>
-            ${user ? `<p>User: ${user.displayName}</p>` : ''}
+            ${user ? `<p>User: ${user.displayName}</p>` : ""}
           </div>
           
           <div class="score-banner">
@@ -298,10 +312,10 @@ const QuizAnswer = () => {
             <p>
               ${
                 score >= 70
-                  ? 'Excellent work!'
+                  ? "Excellent work!"
                   : score >= 40
-                  ? 'Good effort!'
-                  : 'Keep practicing!'
+                  ? "Good effort!"
+                  : "Keep practicing!"
               } 
               You answered ${
                 Object.values(userAnswers).filter(
@@ -332,33 +346,33 @@ const QuizAnswer = () => {
                         const isSelected = userSelected === option;
                         const isCorrectOption = correctAnswer === option;
 
-                        let className = 'option';
+                        let className = "option";
                         if (isSelected && isCorrect)
-                          className += ' selected-correct';
+                          className += " selected-correct";
                         else if (isSelected && isWrong)
-                          className += ' selected-wrong';
+                          className += " selected-wrong";
                         else if (isCorrectOption)
-                          className += ' correct-option';
+                          className += " correct-option";
 
                         return `
                         <div class="${className}">
                           <span>${optionLabels[i]}</span> ${option}
-                          ${isSelected && isCorrect ? ' ✓' : ''}
-                          ${isSelected && isWrong ? ' ✗' : ''}
+                          ${isSelected && isCorrect ? " ✓" : ""}
+                          ${isSelected && isWrong ? " ✗" : ""}
                           ${
                             !isSelected && isCorrectOption
-                              ? ' (Correct Answer)'
-                              : ''
+                              ? " (Correct Answer)"
+                              : ""
                           }
                         </div>
                       `;
                       })
-                      .join('')}
+                      .join("")}
                   </div>
                 </div>
               `;
               })
-              .join('')}
+              .join("")}
           </div>
           
           ${
@@ -371,7 +385,7 @@ const QuizAnswer = () => {
                 <h3>🌟 Strengths</h3>
                 <p>${
                   feedback[0]?.Strengths ||
-                  'No specific strengths were identified.'
+                  "No specific strengths were identified."
                 }</p>
               </div>
               
@@ -379,7 +393,7 @@ const QuizAnswer = () => {
                 <h3>⚠️ Weaknesses</h3>
                 <p>${
                   feedback[1]?.Weaknesses ||
-                  'No significant weaknesses were found.'
+                  "No significant weaknesses were found."
                 }</p>
               </div>
               
@@ -387,12 +401,12 @@ const QuizAnswer = () => {
                 <h3>📚 Recommendations</h3>
                 <p>${
                   feedback[2]?.Recommendations ||
-                  'No specific recommendations available.'
+                  "No specific recommendations available."
                 }</p>
               </div>
             </div>
           `
-              : ''
+              : ""
           }
           
           <div class="footer">
@@ -413,31 +427,31 @@ const QuizAnswer = () => {
   };
 
   // Social media sharing
-  const handleShareSocial = platform => {
+  const handleShareSocial = (platform) => {
     const shareText = `I scored ${score}% on the ${category} quiz! Can you beat my score?`;
     const url = encodeURIComponent(shareableLink);
 
-    let shareUrl = '';
+    let shareUrl = "";
 
     switch (platform) {
-      case 'facebook':
+      case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encodeURIComponent(
           shareText
         )}`;
         break;
-      case 'twitter':
+      case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           shareText
         )}&url=${url}`;
         break;
-      case 'linkedin':
+      case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${encodeURIComponent(
           shareText
         )}`;
         break;
-      case 'whatsapp':
+      case "whatsapp":
         shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-          shareText + ' ' + shareableLink
+          shareText + " " + shareableLink
         )}`;
         break;
       default:
@@ -447,8 +461,8 @@ const QuizAnswer = () => {
     if (shareUrl) {
       window.open(
         shareUrl,
-        '_blank',
-        'width=600,height=400,noopener,noreferrer'
+        "_blank",
+        "width=600,height=400,noopener,noreferrer"
       );
     }
 
@@ -463,8 +477,8 @@ const QuizAnswer = () => {
       .then(() => {
         setLinkCopied(true);
       })
-      .catch(err => {
-        console.error('Could not copy text: ', err);
+      .catch((err) => {
+        console.error("Could not copy text: ", err);
       });
   };
 
@@ -515,10 +529,10 @@ const QuizAnswer = () => {
           <div
             className={`mb-10 p-6 rounded-xl border ${
               score >= 70
-                ? 'border-green-500/30 bg-green-900/10'
+                ? "border-green-500/30 bg-green-900/10"
                 : score >= 40
-                ? 'border-yellow-500/30 bg-yellow-900/10'
-                : 'border-red-500/30 bg-red-900/10'
+                ? "border-yellow-500/30 bg-yellow-900/10"
+                : "border-red-500/30 bg-red-900/10"
             } text-center relative`}
             id="shareableContent"
           >
@@ -531,14 +545,14 @@ const QuizAnswer = () => {
             </button>
 
             <h2 className="text-2xl font-bold text-white mb-2">
-              Your Score:{' '}
+              Your Score:{" "}
               <span
                 className={
                   score >= 70
-                    ? 'text-green-400'
+                    ? "text-green-400"
                     : score >= 40
-                    ? 'text-yellow-400'
-                    : 'text-red-400'
+                    ? "text-yellow-400"
+                    : "text-red-400"
                 }
               >
                 {score}%
@@ -546,16 +560,16 @@ const QuizAnswer = () => {
             </h2>
             <p className="text-gray-300">
               {score >= 70
-                ? 'Excellent work!'
+                ? "Excellent work!"
                 : score >= 40
-                ? 'Good effort!'
-                : 'Keep practicing!'}{' '}
-              You answered{' '}
+                ? "Good effort!"
+                : "Keep practicing!"}{" "}
+              You answered{" "}
               {
                 Object.values(userAnswers).filter(
                   (ans, i) => ans === correctAnswers[i]
                 ).length
-              }{' '}
+              }{" "}
               out of {questions.length} questions correctly.
             </p>
           </div>
@@ -574,14 +588,14 @@ const QuizAnswer = () => {
                 key={index}
                 className={`rounded-xl p-6 border ${
                   isCorrect
-                    ? 'border-green-500/30 bg-green-900/10'
+                    ? "border-green-500/30 bg-green-900/10"
                     : isWrong
-                    ? 'border-red-500/30 bg-red-900/10'
-                    : 'border-gray-700 bg-gray-800/50'
+                    ? "border-red-500/30 bg-red-900/10"
+                    : "border-gray-700 bg-gray-800/50"
                 }`}
               >
                 <h3 className="text-xl font-semibold text-white mb-4">
-                  <span className="text-purple-400">Q{index + 1}:</span>{' '}
+                  <span className="text-purple-400">Q{index + 1}:</span>{" "}
                   {q.question}
                 </h3>
 
@@ -595,17 +609,17 @@ const QuizAnswer = () => {
                         key={i}
                         className={`p-4 rounded-lg flex items-start border ${
                           isSelected && isCorrect
-                            ? 'border-green-500 bg-green-900/30'
+                            ? "border-green-500 bg-green-900/30"
                             : isSelected && isWrong
-                            ? 'border-red-500 bg-red-900/30'
+                            ? "border-red-500 bg-red-900/30"
                             : isCorrectOption
-                            ? 'border-green-500 bg-green-900/30'
-                            : 'border-gray-700 bg-gray-800'
+                            ? "border-green-500 bg-green-900/30"
+                            : "border-gray-700 bg-gray-800"
                         }`}
                       >
                         <span
                           className={`font-mono mr-3 mt-0.5 ${
-                            isCorrectOption ? 'text-green-400' : 'text-gray-400'
+                            isCorrectOption ? "text-green-400" : "text-gray-400"
                           }`}
                         >
                           {optionLabels[i]}
@@ -623,7 +637,7 @@ const QuizAnswer = () => {
                     </p>
                   ) : isWrong ? (
                     <p className="text-red-400">
-                      <span className="mr-2">✗</span> The correct answer was:{' '}
+                      <span className="mr-2">✗</span> The correct answer was:{" "}
                       <span className="text-green-400 font-medium">
                         {correctAnswer}
                       </span>
@@ -642,8 +656,8 @@ const QuizAnswer = () => {
             disabled={isFetchingFeedback}
             className={`flex-1 py-4 rounded-xl font-bold transition-all ${
               isFetchingFeedback
-                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
             }`}
           >
             {isFetchingFeedback ? (
@@ -652,12 +666,14 @@ const QuizAnswer = () => {
                 Feedback...
               </span>
             ) : (
-              'Get AI Feedback'
+              "Get AI Feedback"
             )}
           </button>
           <button
             onClick={handlePrintResult}
-            className="flex-1 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold hover:bg-gray-700 transition-all"
+            className="flex-1 py-4 rounded-xl text-white font-bold transition-all 
+            bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700
+            "
           >
             <FaPrint className="inline-block mr-2" />
             Print Result
@@ -684,7 +700,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[0]?.Strengths ||
-                    'No specific strengths were identified.'}
+                    "No specific strengths were identified."}
                 </p>
               </div>
 
@@ -694,7 +710,7 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[1]?.Weaknesses ||
-                    'No significant weaknesses were found.'}
+                    "No significant weaknesses were found."}
                 </p>
               </div>
 
@@ -704,9 +720,64 @@ const QuizAnswer = () => {
                 </h4>
                 <p className="text-gray-300">
                   {feedback[2]?.Recommendations ||
-                    'No specific recommendations available.'}
+                    "No specific recommendations available."}
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {freeUser === "Free" && (
+          <div className="mt-14">
+            <div className="w-full border bg-gray-900/90 backdrop-blur-md p-6 rounded-xl  border-indigo-600/40 shadow-xl shadow-purple-900/10 text-center">
+              <div className="mb-4 text-indigo-400 relative">
+                <div className="absolute inset-0 bg-indigo-600/10 blur-md rounded-full"></div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-10 h-10 mx-auto relative"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">
+                Please Subscribe to Pro or Elite
+              </h3>
+              <p className="text-gray-300 text-sm mb-4">
+                Gain access to AI Feedback / Print Result feature and premium
+                tools by upgrading your plan.
+              </p>
+              <button
+                onClick={() => navigate("/pricing")}
+                className="w-full py-2.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-700 hover:via-purple-700 hover:to-blue-700 rounded-lg text-white font-medium transition-all duration-300 shadow-md shadow-indigo-900/20 flex items-center justify-center gap-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M16 4L19 7L16 10"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M19 7H10C7.23858 7 5 9.23858 5 12C5 14.7614 7.23858 17 10 17H19"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Upgrade Now
+              </button>
             </div>
           </div>
         )}
@@ -722,7 +793,7 @@ const QuizAnswer = () => {
               recommendations.
             </p>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate("/login")}
               className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
             >
               <FaSignInAlt className="inline-block mr-2" />
@@ -757,7 +828,7 @@ const QuizAnswer = () => {
                 <div>
                   <p className="text-gray-300 text-sm">Quiz Results</p>
                   <p className="text-white font-medium">
-                    {category || 'General Knowledge'}
+                    {category || "General Knowledge"}
                   </p>
                 </div>
               </div>
@@ -769,7 +840,7 @@ const QuizAnswer = () => {
             {/* Social Media Share Buttons */}
             <div className="grid grid-cols-4 gap-4 mb-6">
               <button
-                onClick={() => handleShareSocial('facebook')}
+                onClick={() => handleShareSocial("facebook")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 <FaFacebookF className="text-white text-xl mb-1" />
@@ -777,7 +848,7 @@ const QuizAnswer = () => {
               </button>
 
               <button
-                onClick={() => handleShareSocial('twitter')}
+                onClick={() => handleShareSocial("twitter")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-gray-900 hover:bg-black transition-colors"
               >
                 <FaXTwitter className="text-white text-xl mb-1" />
@@ -785,7 +856,7 @@ const QuizAnswer = () => {
               </button>
 
               <button
-                onClick={() => handleShareSocial('linkedin')}
+                onClick={() => handleShareSocial("linkedin")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors"
               >
                 <FaLinkedinIn className="text-white text-xl mb-1" />
@@ -793,7 +864,7 @@ const QuizAnswer = () => {
               </button>
 
               <button
-                onClick={() => handleShareSocial('whatsapp')}
+                onClick={() => handleShareSocial("whatsapp")}
                 className="flex flex-col items-center justify-center p-3 rounded-lg bg-green-600 hover:bg-green-700 transition-colors"
               >
                 <FaWhatsapp className="text-white text-xl mb-1" />
@@ -810,7 +881,7 @@ const QuizAnswer = () => {
                 onClick={copyToClipboard}
                 className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg transition-colors"
               >
-                {linkCopied ? 'Copied!' : <FaLink />}
+                {linkCopied ? "Copied!" : <FaLink />}
               </button>
             </div>
 
