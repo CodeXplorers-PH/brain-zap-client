@@ -18,7 +18,7 @@ const Footer = () => {
               BrainZap
             </Link>
             <p className="text-gray-400 mt-2 text-sm">
-              AI-powered learning reimagined
+            Master Anything, One Quiz at a Time.
             </p>
           </div>
 
