@@ -5,8 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Shield, Rocket, Star, Trophy, BadgeCheck, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-import { Shield, Rocket, Star, Users, BadgeCheck, Zap } from "lucide-react";
 
 const Faq = () => {
   const container = {
@@ -29,198 +29,199 @@ const Faq = () => {
   };
 
   return (
-    <section className="relative bg-gray-900 py-28 px-4 overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl opacity-20 animate-pulse"
-          style={{ animationDuration: "15s" }}
-        ></div>
-        <div
-          className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-blue-900/20 rounded-full filter blur-3xl opacity-20 animate-pulse"
-          style={{ animationDuration: "12s" }}
-        ></div>
-      </div>
-
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
-
+    <section className="relative py-28 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section header */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-800/70 border border-gray-700 backdrop-blur-sm mb-6">
             <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-300">FAQ</span>
+            <span className="text-sm font-medium text-gray-300">
+              Got Questions?
+            </span>
           </div>
-
           <h2 className="text-5xl font-bold text-white mb-6 tracking-tight">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-pink-400">
-              Frequently Asked Questions
+              BrainZap FAQs
             </span>
           </h2>
-
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Get the insights you need to understand how BrainZap revolutionizes
-            your learning experience with AI-powered quizzes.
+            Everything you need to know about BrainZap’s quizzes, plans, and how to excel.
           </p>
         </div>
-
-        {/* Accordion Container */}
-        <div className="max-w-4xl mx-auto">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto"
+        >
           <Accordion type="single" collapsible className="space-y-6">
-            <div variants={item}>
+            <motion.div variants={item}>
               <AccordionItem
                 value="item-1"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-purple-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 bg-gray-800/30"
               >
-                {/* Background gradient */}
                 <div className="absolute -left-24 -bottom-24 w-48 h-48 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-10 rounded-full blur-xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-125"></div>
-
                 <AccordionTrigger className="px-8 py-6 text-xl text-white transition-colors hover:text-purple-300 flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <span>How do I know I can trust BrainZap?</span>
+                    <span>What can I do with BrainZap’s Free plan?</span>
                   </div>
                 </AccordionTrigger>
-
                 <AccordionContent className="text-gray-400 space-y-5 px-8 pb-6">
                   <div className="flex items-start space-x-3">
                     <BadgeCheck className="text-green-500 mt-1 flex-shrink-0" />
                     <p>
-                      <span className="font-bold text-green-400">
-                        AI-Powered Precision
-                      </span>{" "}
-                      – Our cutting-edge AI analyzes verified sources to create
-                      engaging, accurate quizzes that challenge and enlighten
-                      you.
+                      <span className="font-bold text-green-400">Explore Quizzes</span> – Take AI-generated quizzes in 7+ categories like Programming, Science, and Math with MCQ or True/False formats.
                     </p>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <Shield className="text-blue-500 mt-1 flex-shrink-0" />
+                    <Star className="text-blue-500 mt-1 flex-shrink-0" />
                     <p>
-                      <span className="font-bold text-blue-400">
-                        Ironclad Privacy
-                      </span>{" "}
-                      – We take data protection seriously. Your personal
-                      information is encrypted and never shared with third
-                      parties.
+                      <span className="font-bold text-blue-400">Track Progress</span> – Monitor your quiz scores, streaks, and achievements in your profile dashboard.
                     </p>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <Zap className="text-yellow-500 mt-1 flex-shrink-0" />
+                    <Trophy className="text-yellow-500 mt-1 flex-shrink-0" />
                     <p>
-                      <span className="font-bold text-yellow-400">
-                        24/7 Support
-                      </span>{" "}
-                      – Our dedicated team is always ready to help, ensuring you
-                      have the best possible experience with BrainZap.
+                      <span className="font-bold text-yellow-400">Read Blogs</span> – Learn from community insights and blog posts shared by Pro and Elite users.
                     </p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </div>
-
-            <div>
+            </motion.div>
+            <motion.div variants={item}>
               <AccordionItem
                 value="item-2"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-blue-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 bg-gray-800/30"
               >
-                {/* Background gradient */}
                 <div className="absolute -right-24 -top-24 w-48 h-48 bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-500 opacity-10 rounded-full blur-xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-125"></div>
-
                 <AccordionTrigger className="px-8 py-6 text-xl text-white transition-colors hover:text-blue-300 flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <span>Who can use BrainZap?</span>
+                    <span>What’s exclusive to Pro and Elite plans?</span>
                   </div>
                 </AccordionTrigger>
-
                 <AccordionContent className="text-gray-400 space-y-5 px-8 pb-6">
                   <div className="flex items-start space-x-3">
-                    <Star className="text-blue-500 mt-1 flex-shrink-0" />
+                    <Zap className="text-purple-500 mt-1 flex-shrink-0" />
                     <p>
-                      <span className="font-bold text-blue-400">
-                        Lifelong Learners
-                      </span>{" "}
-                      – Perfect for students, professionals, and anyone
-                      passionate about continuous learning and knowledge
-                      expansion.
+                      <span className="font-bold text-purple-400">Pro Plan</span> – Get AI-powered feedback on quiz performance, share results on social media, and write blogs with our Rich Text Editor.
                     </p>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <Rocket className="text-green-500 mt-1 flex-shrink-0" />
+                    <Rocket className="text-blue-500 mt-1 flex-shrink-0"/>
                     <p>
-                      <span className="font-bold text-green-400">
-                        Skill Development
-                      </span>{" "}
-                      – Whether you're preparing for exams, want to explore new
-                      topics, or simply enjoy challenging yourself, BrainZap is
-                      for you.
-                    </p>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <BadgeCheck className="text-purple-500 mt-1 flex-shrink-0" />
-                    <p>
-                      <span className="font-bold text-purple-400">
-                        No Barriers
-                      </span>{" "}
-                      – Our intuitive interface makes learning accessible to
-                      everyone, regardless of age, background, or expertise
-                      level.
-                    </p>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </div>
-
-            <div>
-              <AccordionItem
-                value="item-3"
-                className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-teal-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10 bg-gray-800/30"
-              >
-                {/* Background gradient */}
-                <div className="absolute -left-24 -top-24 w-48 h-48 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-500 opacity-10 rounded-full blur-xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-125"></div>
-
-                <AccordionTrigger className="px-8 py-6 text-xl text-white transition-colors hover:text-teal-300 flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <span>Do you offer a free trial?</span>
-                  </div>
-                </AccordionTrigger>
-
-                <AccordionContent className="text-gray-400 space-y-5 px-8 pb-6">
-                  <div className="flex items-start space-x-3">
-                    <Zap className="text-blue-500 mt-1 flex-shrink-0" />
-                    <p>
-                      <span className="font-bold text-blue-400">
-                        Absolutely!
-                      </span>{" "}
-                      – We offer a generous free tier that lets you experience
-                      the magic of AI-generated quizzes without any commitment.
+                      <span className="font-bold text-blue-400">Elite Plan</span> – All Pro features, plus create custom quizzes on any topic, with adjustable question counts and difficulty levels.
                     </p>
                   </div>
                   <div className="flex items-start space-x-3">
                     <Star className="text-green-500 mt-1 flex-shrink-0" />
                     <p>
-                      <span className="font-bold text-green-400">
-                        No Credit Card Required
-                      </span>{" "}
-                      – Start exploring, learning, and challenging yourself
-                      instantly with zero financial risk.
-                    </p>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <BadgeCheck className="text-yellow-500 mt-1 flex-shrink-0" />
-                    <p>
-                      <span className="font-bold text-yellow-400">
-                        Upgrade Anytime
-                      </span>{" "}
-                      – When you're ready to unlock premium features, upgrading
-                      is quick, easy, and packed with value.
+                      <span className="font-bold text-green-400">Both Plans</span> – Unlock advanced analytics and priority access to new quiz categories.
                     </p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </div>
+            </motion.div>
+            <motion.div variants={item}>
+              <AccordionItem
+                value="item-3"
+                className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-teal-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10 bg-gray-800/30"
+              >
+                <div className="absolute -left-24 -top-24 w-48 h-48 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-500 opacity-10 rounded-full blur-xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-125"></div>
+                <AccordionTrigger className="px-8 py-6 text-xl text-white transition-colors hover:text-teal-300 flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <span>How do I compete on BrainZap?</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-400 space-y-5 px-8 pb-6">
+                  <div className="flex items-start space-x-3">
+                    <Trophy className="text-yellow-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-yellow-400">Earn Points</span> – Gain points by completing quizzes, with bonuses for accuracy and speed.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <BadgeCheck className="text-green-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-green-400">Climb Leaderboards</span> – Track your rank globally or within categories and showcase your expertise.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Star className="text-blue-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-blue-400">Unlock Achievements</span> – Hit milestones like quiz streaks or category mastery to earn badges.
+                    </p>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </motion.div>
+            <motion.div variants={item}>
+              <AccordionItem
+                value="item-4"
+                className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-amber-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 bg-gray-800/30"
+              >
+                <div className="absolute -right-24 -bottom-24 w-48 h-48 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 opacity-10 rounded-full blur-xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-125"></div>
+                <AccordionTrigger className="px-8 py-6 text-xl text-white transition-colors hover:text-amber-300 flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <span>Can I share my knowledge on BrainZap?</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-400 space-y-5 px-8 pb-6">
+                  <div className="flex items-start space-x-3">
+                    <Rocket className="text-blue-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-blue-400">Write Blogs</span> – Pro and Elite users can create and share blog posts using our Rich Text Editor to inspire others.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Zap className="text-purple-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-purple-400">Share Results</span> – Pro and Elite users can post quiz scores on social media to highlight their expertise.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Star className="text-green-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-green-400">Community Learning</span> – Free users can read blogs and engage with posts to learn from the community.
+                    </p>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </motion.div>
+            <motion.div variants={item}>
+              <AccordionItem
+                value="item-5"
+                className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-pink-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10 bg-gray-800/30"
+              >
+                <div className="absolute -left-24 -top-24 w-48 h-48 bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500 opacity-10 rounded-full blur-xl transition-all duration-500 group-hover:opacity-20 group-hover:scale-125"></div>
+                <AccordionTrigger className="px-8 py-6 text-xl text-white transition-colors hover:text-pink-300 flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <span>How do I get started with BrainZap?</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-400 space-y-5 px-8 pb-6">
+                  <div className="flex items-start space-x-3">
+                    <Shield className="text-green-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-green-400">Sign Up</span> – Create a free account in seconds to access quizzes and track your progress.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Rocket className="text-blue-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-blue-400">Take a Quiz</span> – Choose from 7+ categories or explore featured quizzes to start learning.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Star className="text-yellow-500 mt-1 flex-shrink-0" />
+                    <p>
+                      <span className="font-bold text-yellow-400">Upgrade Anytime</span> – Unlock Pro or Elite plans for custom quizzes, AI feedback, and more.
+                    </p>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </motion.div>
           </Accordion>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
