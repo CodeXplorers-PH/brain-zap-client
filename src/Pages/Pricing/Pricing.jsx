@@ -9,7 +9,7 @@ const Pricing = () => {
   }, []);
   return (
     <>
-      <div className="bg-gray-900 min-h-screen">
+      <div className="bg-gray-950 min-h-screen">
         <PricingPlan />
         <FreeTrial />
       </div>

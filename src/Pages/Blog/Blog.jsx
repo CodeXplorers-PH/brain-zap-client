@@ -135,7 +135,7 @@ const Blog = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-900 pt-32 md:pt-40 pb-20 px-4 sm:px-6">
+      <div className="min-h-screen bg-gray-950 pt-32 md:pt-40 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">

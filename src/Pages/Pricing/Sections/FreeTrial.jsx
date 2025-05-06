@@ -5,7 +5,7 @@ const FreeTrial = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-950">
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900/80 via-purple-900/80 to-pink-800/80 rounded-3xl shadow-xl border border-purple-700/30 backdrop-blur-sm">
           {/* Content */}
