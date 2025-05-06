@@ -2,9 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaSignInAlt, FaPrint, FaFacebookF, FaLinkedinIn, FaWhatsapp, FaLink, FaShareAlt } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import useAuth from "@/hooks/useAuth";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useStreak from "@/hooks/useStreak";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const QuizAnswer = () => {
-  const { user } = { user: { displayName: 'Demo User' } }; // Mock auth
+  const { user } = useAuth();
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const [correctAnswers, setCorrectAnswers] = useState({});
@@ -15,20 +19,18 @@ const QuizAnswer = () => {
   const [showScore, setShowScore] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const { userType } = useAuthContext();
   const [freeUser, setFreeUser] = useState("");
 
-  const { refetch } = { refetch: () => console.log('Streak refetched') }; // Mock streak
+  const { refetch } = useStreak();
   const { category } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const axiosSecure = {
-    post: () => Promise.resolve({ data: 'Mock feedback' }),
-    put: () => Promise.resolve({ data: 'Mock update' }),
-  }; // Mock axios
-  const printContentRef = useRef(null);
-  const shareableLink = window.location.href;
+  const axiosSecure = useAxiosSecure();
 
   const optionLabels = ["A.", "B.", "C.", "D."];
+  const printContentRef = useRef(null);
+  const shareableLink = window.location.href;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -65,6 +67,8 @@ const QuizAnswer = () => {
         } catch (error) {
           console.error("Error parsing localStorage data:", error);
         }
+      } else {
+        console.warn("Quiz data or user answers not found in localStorage.");
       }
       setLoading(false);
     };
@@ -80,6 +84,37 @@ const QuizAnswer = () => {
     }
   }, [linkCopied]);
 
+  useEffect(() => {
+    const hasPosted = localStorage.getItem("history_posted");
+    const storedQuiz = localStorage.getItem("quiz_questions");
+    const storedAnswers = localStorage.getItem("userAnswers");
+
+    if (user && questions.length > 0 && !hasPosted) {
+      axiosSecure
+        .post("/quiz_history", {
+          date: new Date(),
+          category: category,
+          score: score,
+          questions: JSON.parse(storedQuiz),
+          answers: JSON.parse(storedAnswers),
+        })
+        .then(() => {
+          localStorage.setItem("history_posted", "true");
+          refetch();
+        })
+        .catch((err) => {
+          console.log("Error saving history:", err);
+        });
+
+      axiosSecure
+        .put("/update_user_level", {
+          score,
+          difficulty: state?.difficulty || "medium",
+        })
+        .catch((err) => console.log("Level Update Error --> ", err.message));
+    }
+  }, [category, questions, score, state, user, axiosSecure, refetch]);
+
   const handleQuizAgain = () => {
     localStorage.removeItem("quiz_questions");
     localStorage.removeItem("userAnswers");
@@ -88,7 +123,7 @@ const QuizAnswer = () => {
   };
 
   const handleGetFeedback = async () => {
-    if (!user) {
+    if (!userType || userType === null) {
       setFreeUser("Free");
       return;
     }
@@ -101,24 +136,68 @@ const QuizAnswer = () => {
       return;
     }
 
-    setIsFetchingFeedback(true);
+    let quizData, parsedAnswers;
     try {
-      const mockFeedback = [
-        { Strengths: "Great understanding of core concepts." },
-        { Weaknesses: "Needs practice with advanced topics." },
-        { Recommendations: "Review asynchronous JavaScript." },
-      ];
-      setFeedback(mockFeedback);
+      quizData = JSON.parse(storedQuiz);
+      parsedAnswers = JSON.parse(storedAnswers);
     } catch (error) {
-      console.error("Error fetching AI feedback:", error);
-      alert("Failed to fetch feedback from AI.");
+      console.error("Error parsing localStorage data for feedback:", error);
+      alert("Invalid quiz data. Please try taking the quiz again.");
+      return;
+    }
+
+    if (!Array.isArray(quizData) || !quizData.every(q => q.question && q.options && q.answer)) {
+      console.error("Invalid quizData format:", quizData);
+      alert("Quiz data is malformed. Please try again.");
+      return;
+    }
+    if (!parsedAnswers || typeof parsedAnswers !== "object") {
+      console.error("Invalid userAnswers format:", parsedAnswers);
+      alert("User answers are malformed. Please try again.");
+      return;
+    }
+
+    console.log("Sending feedback request:", { quizData, userAnswers: parsedAnswers });
+
+    setIsFetchingFeedback(true);
+
+    try {
+      const { data: result } = await axiosSecure.post("/quiz_feedback", {
+        quizData,
+        userAnswers: parsedAnswers,
+      });
+
+      console.log("Feedback response:", result);
+
+      let normalizedFeedback;
+      if (Array.isArray(result)) {
+        normalizedFeedback = result;
+      } else if (typeof result === "object" && result !== null) {
+        normalizedFeedback = [
+          { Strengths: result.strengths || "No specific strengths identified." },
+          { Weaknesses: result.weaknesses || "No significant weaknesses found." },
+          { Recommendations: result.recommendations || "No specific recommendations available." },
+        ];
+      } else {
+        console.warn("Unexpected feedback format:", result);
+        normalizedFeedback = [
+          { Strengths: "No specific strengths identified." },
+          { Weaknesses: "No significant weaknesses found." },
+          { Recommendations: "No specific recommendations available." },
+        ];
+      }
+
+      setFeedback(normalizedFeedback);
+    } catch (error) {
+      console.error("Error fetching AI feedback:", error.response?.data || error.message);
+      alert("Failed to fetch AI feedback. Please try again later.");
     } finally {
       setIsFetchingFeedback(false);
     }
   };
 
   const handlePrintResult = () => {
-    if (!user) {
+    if (!userType || userType === null) {
       setFreeUser("Free");
       return;
     }
@@ -314,7 +393,7 @@ const QuizAnswer = () => {
 
   if (!questions.length) {
     return (
-      <div className="bg-primary-dark min-h-screen pt-40 flex items-center justify-center">
+      <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center p-10 bg-gray-800/30 rounded-3xl border border-gray-700/20 backdrop-blur-sm">
           <h2 className="text-3xl font-bold text-white mb-6">No Results Found</h2>
           <p className="text-gray-300 mb-8 text-lg">It seems there's nothing to show here.</p>
@@ -634,7 +713,7 @@ const QuizAnswer = () => {
             background-color: white !important;
             color: black !important;
           }
-          .bg-primary-dark {
+          .bg-gray-900 {
             background-color: white !important;
           }
           * {
