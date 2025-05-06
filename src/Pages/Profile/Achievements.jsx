@@ -149,7 +149,6 @@ const Achievements = ({ xpPoints, quizStats, setActiveTab }) => {
               <div>
                 <p className="text-white font-medium">{achievement.name}</p>
                 <p className="text-gray-400 text-sm">{achievement.description}</p>
-                <p className="text-gray-500 text-xs mt-1">Unlocked!</p>
               </div>
             </div>
           ))

@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
 import useQuiz from '@/hooks/useQuiz';
 
 const QuizPage = () => {
   const { questions, loading, error } = useQuiz();
   const { category } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -14,29 +15,31 @@ const QuizPage = () => {
     } Quiz | BrainZap`;
   }, [category]);
 
+  const handleQuizSubmit = (answers) => {
+    // Optionally process answers here
+    navigate(`/quiz/${category}/answer`);
+  };
+
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
-      <h2 className="text-4xl md:text-5xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 capitalize">
-        {category} Quiz
-      </h2>
 
       {loading ? (
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
-          <p className="text-gray-400 text-xl">Generating Questions...</p>
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mb-6"></div>
+          <p className="text-gray-300 text-2xl font-medium">Generating Questions...</p>
         </div>
       ) : error ? (
-        <div className="text-center">
-          <p className="text-red-400 text-xl mb-4">{error}</p>
+        <div className="text-center p-10 bg-gray-800/30 rounded-3xl border border-gray-700/30 backdrop-blur-sm">
+          <p className="text-red-400 text-2xl mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-gray-800 rounded-lg text-white hover:bg-gray-700 transition-colors"
+            className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl text-white font-semibold center hover:from-indigo-700 hover:to-blue-700 transition-all"
           >
             Retry
           </button>
         </div>
       ) : (
-        <Quiz questions={questions} />
+        <Quiz questions={questions} category={category} onSubmit={handleQuizSubmit} />
       )}
     </div>
   );
