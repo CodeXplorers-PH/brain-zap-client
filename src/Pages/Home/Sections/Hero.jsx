@@ -102,7 +102,7 @@ const Hero = () => {
           </div>
           <div className="relative h-full w-full flex items-center justify-center rounded-xl overflow-hidden">
             <img
-              src="/quiz-result.png"
+              src="/banner.png"
               alt="AI-powered quiz interface with personalized feedback"
               className="rounded-xl w-full object-cover shadow-lg transition-all duration-700 hover:scale-[1.01]"
             />
