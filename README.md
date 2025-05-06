@@ -1,6 +1,6 @@
 # BRAINZAP
 
-![BrainZap Banner](./public/quiz-result.png)
+![BrainZap Banner](./public/readme.jpg)
 
 **BRAINZAP** is an interactive, AI-powered quiz platform designed to supercharge your learning experience. Whether you're brushing up on programming skills or diving into something new, BRAINZAP adapts to your level and helps you grow — one question at a time.
 
@@ -100,4 +100,4 @@ Explore the live version of BRAINZAP here: [BRAINZAP Live](https://brain-zap-992
 
 ---
 
-Made by Team **CodeXplorers**
+Made by  [**Team CodeXplorers**](https://github.com/CodeXplorers-PH)

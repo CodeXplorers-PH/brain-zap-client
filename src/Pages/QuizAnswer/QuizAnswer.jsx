@@ -1,14 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  FaSignInAlt,
-  FaPrint,
-  FaFacebookF,
-  FaLinkedinIn,
-  FaWhatsapp,
-  FaLink,
-  FaShareAlt,
-} from "react-icons/fa";
+import { FaSignInAlt, FaPrint, FaFacebookF, FaLinkedinIn, FaWhatsapp, FaLink, FaShareAlt } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
@@ -40,7 +32,6 @@ const QuizAnswer = () => {
   const printContentRef = useRef(null);
   const shareableLink = window.location.href;
 
-  // Scroll to top view
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Quiz Answer | BrainZap";
@@ -50,7 +41,6 @@ const QuizAnswer = () => {
     const fetchResults = () => {
       const storedQuiz = localStorage.getItem("quiz_questions");
       const storedAnswers = localStorage.getItem("userAnswers");
-      const hasPosted = localStorage.getItem("history_posted");
 
       if (storedQuiz && storedAnswers) {
         try {
@@ -69,9 +59,7 @@ const QuizAnswer = () => {
             }
           });
 
-          const finalScore = Math.round(
-            (correctCount / parsedQuiz.length) * 100
-          );
+          const finalScore = Math.round((correctCount / parsedQuiz.length) * 100);
 
           setCorrectAnswers(answers);
           setScore(finalScore);
@@ -82,7 +70,6 @@ const QuizAnswer = () => {
       } else {
         console.warn("Quiz data or user answers not found in localStorage.");
       }
-
       setLoading(false);
     };
 
@@ -91,22 +78,18 @@ const QuizAnswer = () => {
   }, [category, user]);
 
   useEffect(() => {
-    // Reset copy status after 3 seconds
     if (linkCopied) {
-      const timer = setTimeout(() => {
-        setLinkCopied(false);
-      }, 3000);
+      const timer = setTimeout(() => setLinkCopied(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [linkCopied]);
 
   useEffect(() => {
-    const hasPosted = localStorage.getItem(`history_posted`);
+    const hasPosted = localStorage.getItem("history_posted");
     const storedQuiz = localStorage.getItem("quiz_questions");
     const storedAnswers = localStorage.getItem("userAnswers");
 
     if (user && questions.length > 0 && !hasPosted) {
-      // Save History
       axiosSecure
         .post("/quiz_history", {
           date: new Date(),
@@ -116,22 +99,21 @@ const QuizAnswer = () => {
           answers: JSON.parse(storedAnswers),
         })
         .then(() => {
-          localStorage.setItem(`history_posted`, "true");
+          localStorage.setItem("history_posted", "true");
           refetch();
         })
         .catch((err) => {
           console.log("Error saving history:", err);
         });
 
-      // Update User Level
       axiosSecure
         .put("/update_user_level", {
           score,
-          difficulty: state.difficulty,
+          difficulty: state?.difficulty || "medium",
         })
         .catch((err) => console.log("Level Update Error --> ", err.message));
     }
-  }, [category, questions]);
+  }, [category, questions, score, state, user, axiosSecure, refetch]);
 
   const handleQuizAgain = () => {
     localStorage.removeItem("quiz_questions");
@@ -154,8 +136,28 @@ const QuizAnswer = () => {
       return;
     }
 
-    const quizData = JSON.parse(storedQuiz);
-    const parsedAnswers = JSON.parse(storedAnswers);
+    let quizData, parsedAnswers;
+    try {
+      quizData = JSON.parse(storedQuiz);
+      parsedAnswers = JSON.parse(storedAnswers);
+    } catch (error) {
+      console.error("Error parsing localStorage data for feedback:", error);
+      alert("Invalid quiz data. Please try taking the quiz again.");
+      return;
+    }
+
+    if (!Array.isArray(quizData) || !quizData.every(q => q.question && q.options && q.answer)) {
+      console.error("Invalid quizData format:", quizData);
+      alert("Quiz data is malformed. Please try again.");
+      return;
+    }
+    if (!parsedAnswers || typeof parsedAnswers !== "object") {
+      console.error("Invalid userAnswers format:", parsedAnswers);
+      alert("User answers are malformed. Please try again.");
+      return;
+    }
+
+    console.log("Sending feedback request:", { quizData, userAnswers: parsedAnswers });
 
     setIsFetchingFeedback(true);
 
@@ -165,156 +167,95 @@ const QuizAnswer = () => {
         userAnswers: parsedAnswers,
       });
 
-      setFeedback(result);
+      console.log("Feedback response:", result);
+
+      let normalizedFeedback;
+      if (Array.isArray(result)) {
+        normalizedFeedback = result;
+      } else if (typeof result === "object" && result !== null) {
+        normalizedFeedback = [
+          { Strengths: result.strengths || "No specific strengths identified." },
+          { Weaknesses: result.weaknesses || "No significant weaknesses found." },
+          { Recommendations: result.recommendations || "No specific recommendations available." },
+        ];
+      } else {
+        console.warn("Unexpected feedback format:", result);
+        normalizedFeedback = [
+          { Strengths: "No specific strengths identified." },
+          { Weaknesses: "No significant weaknesses found." },
+          { Recommendations: "No specific recommendations available." },
+        ];
+      }
+
+      setFeedback(normalizedFeedback);
     } catch (error) {
-      console.error("Error fetching AI feedback:", error);
-      alert("Failed to fetch feedback from AI.");
+      console.error("Error fetching AI feedback:", error.response?.data || error.message);
+      alert("Failed to fetch AI feedback. Please try again later.");
     } finally {
       setIsFetchingFeedback(false);
     }
   };
 
-  // Print function to handle printing the quiz results
   const handlePrintResult = () => {
     if (!userType || userType === null) {
       setFreeUser("Free");
-      console.log("1 : ", freeUser);
       return;
     }
 
     const printWindow = window.open("", "_blank");
-
     if (!printWindow) {
       alert("Please allow pop-ups to print your results.");
       return;
     }
 
-    // Get formatted date for the print
     const currentDate = new Date().toLocaleDateString();
-
-    // Generate the HTML content for printing
     const printContent = `
       <!DOCTYPE html>
       <html>
         <head>
           <title>BrainZap Quiz Results - ${category}</title>
           <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 20px;
-              color: #333;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 20px;
-              padding-bottom: 10px;
-              border-bottom: 2px solid #6366f1;
-            }
-            .score-banner {
-              text-align: center;
-              padding: 15px;
-              margin-bottom: 20px;
-              border-radius: 8px;
-              border: 1px solid ${
-                score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
-              };
-              background-color: ${
-                score >= 70 ? "#d1fae5" : score >= 40 ? "#fef3c7" : "#fee2e2"
-              };
-            }
-            .score-text {
-              font-size: 24px;
-              font-weight: bold;
-              color: ${
-                score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
-              };
-            }
-            .question-container {
-              margin-bottom: 25px;
-              padding: 15px;
-              border-radius: 8px;
-              background-color: #f9fafb;
-              border: 1px solid #e5e7eb;
-            }
-            .question {
-              font-weight: bold;
-              margin-bottom: 10px;
-            }
-            .options {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 10px;
-            }
-            .option {
-              padding: 10px;
-              border-radius: 5px;
-              border: 1px solid #e5e7eb;
-            }
-            .selected-correct {
-              background-color: #d1fae5;
-              border-color: #10b981;
-            }
-            .selected-wrong {
-              background-color: #fee2e2;
-              border-color: #ef4444;
-            }
-            .correct-option {
-              background-color: #d1fae5;
-              border-color: #10b981;
-            }
-            .feedback-container {
-              margin-top: 30px;
-              border: 1px solid #e5e7eb;
-              border-radius: 8px;
-              padding: 15px;
-            }
-            .feedback-section {
-              margin-bottom: 15px;
-              padding: 10px;
-              border-radius: 5px;
-            }
-            .strengths {
-              background-color: #d1fae5;
-              border: 1px solid #10b981;
-            }
-            .weaknesses {
-              background-color: #fee2e2;
-              border: 1px solid #ef4444;
-            }
-            .recommendations {
-              background-color: #dbeafe;
-              border: 1px solid #3b82f6;
-            }
-            .footer {
-              text-align: center;
-              margin-top: 30px;
-              font-size: 12px;
-              color: #6b7280;
-            }
-            @media print {
-              body {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-              }
-            }
+            body { font-family: 'Inter', sans-serif; padding: 40px; color: #1f2937; line-height: 1.6; }
+            .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #4f46e5; }
+            .score-banner { text-align: center; padding: 20px; margin-bottom: 30px; border-radius: 12px; border: 2px solid ${
+              score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
+            }; background: ${
+              score >= 70 ? "#ecfdf5" : score >= 40 ? "#fefce8" : "#fef2f2"
+            }; }
+            .score-text { font-size: 32px; font-weight: 800; color: ${
+              score >= 70 ? "#10b981" : score >= 40 ? "#f59e0b" : "#ef4444"
+            }; }
+            .question-container { margin-bottom: 30px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+            .question { font-weight: 700; font-size: 18px; margin-bottom: 15px; }
+            .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+            .option { padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; background: #f9fafb; }
+            .selected-correct { background: #d1fae5; border-color: #10b981; font-weight: 500; }
+            .selected-wrong { background: #fee2e2; border-color: #ef4444; font-weight: 500; }
+            .correct-option { background: #d1fae5; border-color: #10b981; font-weight: 500; }
+            .feedback-container { margin-top: 40px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; background: #ffffff; }
+            .feedback-section { margin-bottom: 20px; padding: 15px; border-radius: 8px; }
+            .strengths { background: #ecfdf5; border: 1px solid #10b981; }
+            .weaknesses { background: #fef2f2; border: 1px solid #ef4444; }
+            .recommendations { background: #eff6ff; border: 1px solid #3b82f6; }
+            .footer { text-align: center; margin-top: 40px; font-size: 14px; color: #6b7280; }
+            @media print { body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
           </style>
         </head>
         <body>
           <div class="header">
-            <h1>BrainZap Quiz Results</h1>
-            <p>Category: ${category || "General Knowledge"}</p>
-            <p>Date: ${currentDate}</p>
-            ${user ? `<p>User: ${user.displayName}</p>` : ""}
+            <h1 style="font-size: 36px; font-weight: 800;">BrainZap Quiz Results</h1>
+            <p style="font-size: 18px;">Category: ${category || "General Knowledge"}</p>
+            <p style="font-size: 16px;">Date: ${currentDate}</p>
+            ${user ? `<p style="font-size: 16px;">User: ${user.displayName}</p>` : ""}
           </div>
-          
           <div class="score-banner">
             <h2 class="score-text">Your Score: ${score}%</h2>
-            <p>
+            <p style="font-size: 16px;">
               ${
                 score >= 70
-                  ? "Excellent work!"
+                  ? "Outstanding performance!"
                   : score >= 40
-                  ? "Good effort!"
+                  ? "Solid effort!"
                   : "Keep practicing!"
               } 
               You answered ${
@@ -325,7 +266,6 @@ const QuizAnswer = () => {
               out of ${questions.length} questions correctly.
             </p>
           </div>
-          
           <div class="questions-list">
             ${questions
               .map((q, index) => {
@@ -337,9 +277,8 @@ const QuizAnswer = () => {
                 return `
                 <div class="question-container">
                   <div class="question">
-                    <span>Q${index + 1}:</span> ${q.question}
+                    <span style="color: #4f46e5;">Q${index + 1}:</span> ${q.question}
                   </div>
-                  
                   <div class="options">
                     ${q.options
                       .map((option, i) => {
@@ -356,7 +295,7 @@ const QuizAnswer = () => {
 
                         return `
                         <div class="${className}">
-                          <span>${optionLabels[i]}</span> ${option}
+                          <span style="font-weight: 600;">${optionLabels[i]}</span> ${option}
                           ${isSelected && isCorrect ? " ✓" : ""}
                           ${isSelected && isWrong ? " ✗" : ""}
                           ${
@@ -374,41 +313,27 @@ const QuizAnswer = () => {
               })
               .join("")}
           </div>
-          
           ${
             feedback
               ? `
             <div class="feedback-container">
-              <h2>AI Feedback</h2>
-              
+              <h2 style="font-size: 24px; font-weight: 700;">AI-Powered Feedback</h2>
               <div class="feedback-section strengths">
-                <h3>🌟 Strengths</h3>
-                <p>${
-                  feedback[0]?.Strengths ||
-                  "No specific strengths were identified."
-                }</p>
+                <h3 style="font-size: 18px; color: #10b981;">🌟 Strengths</h3>
+                <p>${feedback[0]?.Strengths || "No specific strengths identified."}</p>
               </div>
-              
               <div class="feedback-section weaknesses">
-                <h3>⚠️ Weaknesses</h3>
-                <p>${
-                  feedback[1]?.Weaknesses ||
-                  "No significant weaknesses were found."
-                }</p>
+                <h3 style="font-size: 18px; color: #ef4444;">⚠️ Areas for Improvement</h3>
+                <p>${feedback[1]?.Weaknesses || "No significant weaknesses found."}</p>
               </div>
-              
               <div class="feedback-section recommendations">
-                <h3>📚 Recommendations</h3>
-                <p>${
-                  feedback[2]?.Recommendations ||
-                  "No specific recommendations available."
-                }</p>
+                <h3 style="font-size: 18px; color: #3b82f6;">📚 Recommendations</h3>
+                <p>${feedback[2]?.Recommendations || "No specific recommendations available."}</p>
               </div>
             </div>
           `
               : ""
           }
-          
           <div class="footer">
             <p>Generated by BrainZap</p>
           </div>
@@ -419,82 +344,48 @@ const QuizAnswer = () => {
     printWindow.document.open();
     printWindow.document.write(printContent);
     printWindow.document.close();
-
-    // Wait for content to load before printing
     printWindow.onload = function () {
       printWindow.print();
     };
   };
 
-  // Social media sharing
   const handleShareSocial = (platform) => {
     const shareText = `I scored ${score}% on the ${category} quiz! Can you beat my score?`;
     const url = encodeURIComponent(shareableLink);
-
     let shareUrl = "";
-
     switch (platform) {
       case "facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encodeURIComponent(
-          shareText
-        )}`;
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encodeURIComponent(shareText)}`;
         break;
       case "twitter":
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          shareText
-        )}&url=${url}`;
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${url}`;
         break;
       case "linkedin":
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${encodeURIComponent(
-          shareText
-        )}`;
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${encodeURIComponent(shareText)}`;
         break;
       case "whatsapp":
-        shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-          shareText + " " + shareableLink
-        )}`;
+        shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareableLink)}`;
         break;
       default:
         break;
     }
-
     if (shareUrl) {
-      window.open(
-        shareUrl,
-        "_blank",
-        "width=600,height=400,noopener,noreferrer"
-      );
+      window.open(shareUrl, "_blank", "width=600,height=400,noopener,noreferrer");
     }
-
-    // Close modal after sharing
     setTimeout(() => setShowShareModal(false), 500);
   };
 
   const copyToClipboard = () => {
     const textToCopy = `I scored ${score}% on the ${category} quiz! Try it yourself: ${shareableLink}`;
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        setLinkCopied(true);
-      })
-      .catch((err) => {
-        console.error("Could not copy text: ", err);
-      });
-  };
-
-  // Generate social share image
-  const generateShareImage = () => {
-    return `/api/social-share-image?score=${score}&category=${encodeURIComponent(
-      category
-    )}`;
+    navigator.clipboard.writeText(textToCopy).then(() => setLinkCopied(true));
   };
 
   if (loading) {
     return (
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
-          <p className="text-gray-400 text-xl">Loading your results...</p>
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mb-6"></div>
+          <p className="text-gray-300 text-2xl font-medium">Loading your results...</p>
         </div>
       </div>
     );
@@ -503,16 +394,12 @@ const QuizAnswer = () => {
   if (!questions.length) {
     return (
       <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
-        <div className="text-center p-8 bg-gray-800/50 rounded-xl border border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-300 mb-4">
-            No Results Found
-          </h2>
-          <p className="text-gray-400 mb-6">
-            It seems there's nothing to show here.
-          </p>
+        <div className="text-center p-10 bg-gray-800/30 rounded-3xl border border-gray-700/20 backdrop-blur-sm">
+          <h2 className="text-3xl font-bold text-white mb-6">No Results Found</h2>
+          <p className="text-gray-300 mb-8 text-lg">It seems there's nothing to show here.</p>
           <button
             onClick={handleQuizAgain}
-            className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg text-white hover:from-purple-700 hover:to-blue-700 transition-colors"
+            className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl text-white font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all"
           >
             Take a Quiz
           </button>
@@ -523,60 +410,41 @@ const QuizAnswer = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
-      <div className="max-w-4xl mx-auto" ref={printContentRef}>
-        {/* Score Banner with Share Button */}
+      <div className="max-w-5xl mx-auto" ref={printContentRef}>
+        {/* Score Banner */}
         {showScore && (
           <div
-            className={`mb-10 p-6 rounded-xl border ${
+            className={`mb-12 p-8 rounded-3xl border backdrop-blur-sm relative ${
               score >= 70
-                ? "border-green-500/30 bg-green-900/10"
+                ? "border-teal-500/30 bg-teal-900/10"
                 : score >= 40
-                ? "border-yellow-500/30 bg-yellow-900/10"
+                ? "border-amber-500/30 bg-amber-900/10"
                 : "border-red-500/30 bg-red-900/10"
-            } text-center relative`}
-            id="shareableContent"
+            }`}
           >
             <button
               onClick={() => setShowShareModal(true)}
-              className="absolute top-4 right-4 bg-gray-800/70 p-2 rounded-full hover:bg-gray-700/90 transition-all no-print"
+              className="absolute top-6 right-6 bg-gray-800/50 p-3 rounded-full hover:bg-gray-700/50 transition-all no-print"
               aria-label="Share results"
             >
-              <FaShareAlt className="text-white" />
+              <FaShareAlt className="text-white w-5 h-5" />
             </button>
-
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Your Score:{" "}
-              <span
-                className={
-                  score >= 70
-                    ? "text-green-400"
-                    : score >= 40
-                    ? "text-yellow-400"
-                    : "text-red-400"
-                }
-              >
-                {score}%
-              </span>
+            <h2 className="text-4xl font-bold text-white mb-4 text-center">
+              Your Score: <span className={
+                score >= 70 ? "text-teal-400" : score >= 40 ? "text-amber-400" : "text-red-400"
+              }>{score}%</span>
             </h2>
-            <p className="text-gray-300">
-              {score >= 70
-                ? "Excellent work!"
-                : score >= 40
-                ? "Good effort!"
-                : "Keep practicing!"}{" "}
-              You answered{" "}
-              {
-                Object.values(userAnswers).filter(
-                  (ans, i) => ans === correctAnswers[i]
-                ).length
-              }{" "}
-              out of {questions.length} questions correctly.
+            <p className="text-gray-300 text-lg text-center">
+              {score >= 70 ? "Outstanding performance!" : score >= 40 ? "Solid effort!" : "Keep practicing!"}
+              {" "}You answered{" "}
+              {Object.values(userAnswers).filter((ans, i) => ans === correctAnswers[i]).length}
+              {" "}out of {questions.length} questions correctly.
             </p>
           </div>
         )}
 
         {/* Questions List */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           {questions.map((q, index) => {
             const userSelected = userAnswers[index];
             const correctAnswer = correctAnswers[index];
@@ -586,20 +454,18 @@ const QuizAnswer = () => {
             return (
               <div
                 key={index}
-                className={`rounded-xl p-6 border ${
+                className={`rounded-3xl p-8 border backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
                   isCorrect
-                    ? "border-green-500/30 bg-green-900/10"
+                    ? "border-teal-500/30 bg-teal-900/10"
                     : isWrong
                     ? "border-red-500/30 bg-red-900/10"
-                    : "border-gray-700 bg-gray-800/50"
+                    : "border-gray-700/30 bg-gray-800/30"
                 }`}
               >
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  <span className="text-purple-400">Q{index + 1}:</span>{" "}
-                  {q.question}
+                <h3 className="text-xl font-semibold text-white mb-6">
+                  <span className="text-indigo-400">Q{index + 1}:</span> {q.question}
                 </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {q.options.map((option, i) => {
                     const isSelected = userSelected === option;
                     const isCorrectOption = correctAnswer === option;
@@ -607,40 +473,33 @@ const QuizAnswer = () => {
                     return (
                       <div
                         key={i}
-                        className={`p-4 rounded-lg flex items-start border ${
+                        className={`p-5 rounded-2xl flex items-start border transition-all duration-200 ${
                           isSelected && isCorrect
-                            ? "border-green-500 bg-green-900/30"
+                            ? "border-teal-500 bg-teal-900/30"
                             : isSelected && isWrong
                             ? "border-red-500 bg-red-900/30"
                             : isCorrectOption
-                            ? "border-green-500 bg-green-900/30"
-                            : "border-gray-700 bg-gray-800"
+                            ? "border-teal-500 bg-teal-900/30"
+                            : "border-gray-700/30 bg-gray-800/50"
                         }`}
                       >
-                        <span
-                          className={`font-mono mr-3 mt-0.5 ${
-                            isCorrectOption ? "text-green-400" : "text-gray-400"
-                          }`}
-                        >
-                          {optionLabels[i]}
-                        </span>
+                        <span className={`font-mono mr-4 mt-0.5 ${
+                          isCorrectOption ? "text-teal-400" : "text-gray-400"
+                        }`}>{optionLabels[i]}</span>
                         <span className="text-gray-200">{option}</span>
                       </div>
                     );
                   })}
                 </div>
-
-                <div className="mt-4">
+                <div className="mt-6">
                   {isCorrect ? (
-                    <p className="text-green-400 flex items-center">
-                      <span className="mr-2">✓</span> Correct answer!
+                    <p className="text-teal-400 flex items-center text-lg">
+                      <span className="mr-3">✓</span> Correct answer!
                     </p>
                   ) : isWrong ? (
-                    <p className="text-red-400">
-                      <span className="mr-2">✗</span> The correct answer was:{" "}
-                      <span className="text-green-400 font-medium">
-                        {correctAnswer}
-                      </span>
+                    <p className="text-red-400 text-lg">
+                      <span className="mr-3">✗</span> The correct answer was:{" "}
+                      <span className="text-teal-400 font-medium">{correctAnswer}</span>
                     </p>
                   ) : null}
                 </div>
@@ -650,20 +509,19 @@ const QuizAnswer = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-10 no-print">
+        <div className="flex flex-col sm:flex-row gap-4 mt-12 no-print">
           <button
             onClick={handleGetFeedback}
             disabled={isFetchingFeedback}
-            className={`flex-1 py-4 rounded-xl font-bold transition-all ${
+            className={`flex-1 py-4 rounded-2xl text-white font-bold transition-all duration-300 ${
               isFetchingFeedback
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                ? "bg-gray-700/50 text-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
             }`}
           >
             {isFetchingFeedback ? (
               <span className="flex items-center justify-center">
-                <span className="animate-spin mr-2">🌀</span> Generating
-                Feedback...
+                <span className="animate-spin mr-3">🌀</span> Generating Feedback...
               </span>
             ) : (
               "Get AI Feedback"
@@ -671,16 +529,14 @@ const QuizAnswer = () => {
           </button>
           <button
             onClick={handlePrintResult}
-            className="flex-1 py-4 rounded-xl text-white font-bold transition-all 
-            bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700
-            "
+            className="flex-1 py-4 rounded-2xl text-white font-bold transition-all duration-300 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
           >
             <FaPrint className="inline-block mr-2" />
             Print Result
           </button>
           <button
             onClick={handleQuizAgain}
-            className="flex-1 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold hover:bg-gray-700 transition-all"
+            className="flex-1 py-4 bg-gray-800/50 border border-gray-700/30 rounded-2xl text-white font-bold hover:bg-gray-700/50 transition-all duration-300"
           >
             Try Another Quiz
           </button>
@@ -688,113 +544,80 @@ const QuizAnswer = () => {
 
         {/* AI Feedback Section */}
         {feedback && (
-          <div className="mt-10 bg-gray-800/50 border border-gray-700 rounded-xl p-6 backdrop-blur-sm">
-            <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-6">
-              AI Feedback
+          <div className="mt-12 bg-gray-800/30 border border-gray-700/20 rounded-3xl p-8 backdrop-blur-sm">
+            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-8">
+              AI-Powered Feedback
             </h3>
-
             <div className="space-y-6">
-              <div className="p-4 bg-green-900/10 border border-green-500/30 rounded-lg">
-                <h4 className="flex items-center text-lg font-semibold text-green-400 mb-2">
-                  <span className="mr-2">🌟</span> Strengths
+              <div className="p-6 bg-teal-900/10 border border-teal-500/30 rounded-2xl transition-all duration-300 hover:scale-105">
+                <h4 className="flex items-center text-xl font-semibold text-teal-400 mb-3">
+                  <span className="mr-3">🌟</span> Strengths
                 </h4>
-                <p className="text-gray-300">
-                  {feedback[0]?.Strengths ||
-                    "No specific strengths were identified."}
+                <p className="text-gray-300 text-lg">
+                  {feedback[0]?.Strengths || "No specific strengths identified."}
                 </p>
               </div>
-
-              <div className="p-4 bg-red-900/10 border border-red-500/30 rounded-lg">
-                <h4 className="flex items-center text-lg font-semibold text-red-400 mb-2">
-                  <span className="mr-2">⚠️</span> Weaknesses
+              <div className="p-6 bg-red-900/10 border border-red-500/30 rounded-2xl transition-all duration-300 hover:scale-105">
+                <h4 className="flex items-center text-xl font-semibold text-red-400 mb-3">
+                  <span className="mr-3">⚠️</span> Areas for Improvement
                 </h4>
-                <p className="text-gray-300">
-                  {feedback[1]?.Weaknesses ||
-                    "No significant weaknesses were found."}
+                <p className="text-gray-300 text-lg">
+                  {feedback[1]?.Weaknesses || "No significant weaknesses found."}
                 </p>
               </div>
-
-              <div className="p-4 bg-blue-900/10 border border-blue-500/30 rounded-lg">
-                <h4 className="flex items-center text-lg font-semibold text-blue-400 mb-2">
-                  <span className="mr-2">📚</span> Recommendations
+              <div className="p-6 bg-indigo-900/10 border border-indigo-500/30 rounded-2xl transition-all duration-300 hover:scale-105">
+                <h4 className="flex items-center text-xl font-semibold text-indigo-400 mb-3">
+                  <span className="mr-3">📚</span> Recommendations
                 </h4>
-                <p className="text-gray-300">
-                  {feedback[2]?.Recommendations ||
-                    "No specific recommendations available."}
+                <p className="text-gray-300 text-lg">
+                  {feedback[2]?.Recommendations || "No specific recommendations available."}
                 </p>
               </div>
             </div>
           </div>
         )}
 
+        {/* Free User Prompt */}
         {freeUser === "Free" && (
-          <div className="mt-14">
-            <div className="w-full border bg-gray-900/90 backdrop-blur-md p-6 rounded-xl  border-indigo-600/40 shadow-xl shadow-purple-900/10 text-center">
-              <div className="mb-4 text-indigo-400 relative">
-                <div className="absolute inset-0 bg-indigo-600/10 blur-md rounded-full"></div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-10 h-10 mx-auto relative"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                Please Subscribe to Pro or Elite
-              </h3>
-              <p className="text-gray-300 text-sm mb-4">
-                Gain access to AI Feedback / Print Result feature and premium
-                tools by upgrading your plan.
-              </p>
-              <button
-                onClick={() => navigate("/pricing")}
-                className="w-full py-2.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-700 hover:via-purple-700 hover:to-blue-700 rounded-lg text-white font-medium transition-all duration-300 shadow-md shadow-indigo-900/20 flex items-center justify-center gap-2"
+          <div className="mt-16 bg-gray-900/90 backdrop-blur-md p-8 rounded-3xl border border-indigo-600/40 shadow-2xl text-center">
+            <div className="mb-6 text-indigo-400 relative">
+              <div className="absolute inset-0 bg-indigo-600/20 blur-lg rounded-full"></div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-12 h-12 mx-auto relative"
               >
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M16 4L19 7L16 10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M19 7H10C7.23858 7 5 9.23858 5 12C5 14.7614 7.23858 17 10 17H19"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                Upgrade Now
-              </button>
+                <path
+                  fillRule="evenodd"
+                  d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </div>
+            <h3 className="text-2xl font-bold text-white mb-4">Unlock Premium Features</h3>
+            <p className="text-gray-300 text-lg mb-6">
+              Upgrade to Pro or Elite to access AI Feedback, Print Results, and more premium tools.
+            </p>
+            <button
+              onClick={() => navigate("/pricing")}
+              className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl text-white font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all"
+            >
+              Upgrade Now
+            </button>
           </div>
         )}
 
-        {/* If not logged in */}
+        {/* Not Logged In Prompt */}
         {!user && (
-          <div className="mt-16 bg-gray-800/40 border border-gray-700 backdrop-blur-lg rounded-2xl shadow-lg p-8 text-center no-print">
-            <h2 className="text-2xl font-bold text-white mb-2">
-              You're not logged in
-            </h2>
-            <p className="text-sm text-gray-400 mb-6">
-              Sign in to save your progress and get personalized
-              recommendations.
+          <div className="mt-16 bg-gray-800/30 border border-gray-700/20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 text-center no-print">
+            <h2 className="text-3xl font-bold text-white mb-4">You're Not Logged In</h2>
+            <p className="text-gray-300 text-lg mb-6">
+              Sign in to save your progress and unlock personalized recommendations.
             </p>
             <button
               onClick={() => navigate("/login")}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all"
+              className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl text-white font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all"
             >
               <FaSignInAlt className="inline-block mr-2" />
               Log In
@@ -806,88 +629,74 @@ const QuizAnswer = () => {
       {/* Share Modal */}
       {showShareModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-gray-800 rounded-xl border border-gray-700 p-6 w-full max-w-md">
+          <div className="bg-gray-800/90 rounded-3xl border border-gray-700/20 p-8 w-full max-w-md backdrop-blur-sm transform transition-all duration-300 scale-100">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-white">
-                Share Your Results
-              </h3>
+              <h3 className="text-2xl font-bold text-white">Share Your Results</h3>
               <button
                 onClick={() => setShowShareModal(false)}
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white text-xl"
               >
                 ✕
               </button>
             </div>
-
-            {/* Share Preview Card */}
-            <div className="mb-6 p-4 border border-gray-700 rounded-lg bg-gray-900/50">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600">
-                  <span className="text-white font-bold">{score}%</span>
+            <div className="mb-6 p-6 border border-gray-700/20 rounded-2xl bg-gray-900/50">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-500">
+                  <span className="text-white font-bold text-lg">{score}%</span>
                 </div>
                 <div>
                   <p className="text-gray-300 text-sm">Quiz Results</p>
-                  <p className="text-white font-medium">
-                    {category || "General Knowledge"}
-                  </p>
+                  <p className="text-white font-semibold">{category || "General Knowledge"}</p>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm mt-2">
+              <p className="text-gray-300 text-sm">
                 I scored {score}% on the {category} quiz! Can you beat my score?
               </p>
             </div>
-
-            {/* Social Media Share Buttons */}
             <div className="grid grid-cols-4 gap-4 mb-6">
               <button
                 onClick={() => handleShareSocial("facebook")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition-all"
               >
                 <FaFacebookF className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">Facebook</span>
               </button>
-
               <button
                 onClick={() => handleShareSocial("twitter")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-gray-900 hover:bg-black transition-colors"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gray-900 hover:bg-black transition-all"
               >
                 <FaXTwitter className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">Twitter</span>
               </button>
-
               <button
                 onClick={() => handleShareSocial("linkedin")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-blue-500 hover:bg-blue-600 transition-all"
               >
                 <FaLinkedinIn className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">LinkedIn</span>
               </button>
-
               <button
                 onClick={() => handleShareSocial("whatsapp")}
-                className="flex flex-col items-center justify-center p-3 rounded-lg bg-green-600 hover:bg-green-700 transition-colors"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-green-600 hover:bg-green-700 transition-all"
               >
                 <FaWhatsapp className="text-white text-xl mb-1" />
                 <span className="text-white text-xs">WhatsApp</span>
               </button>
             </div>
-
-            {/* Copy Link */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-400 text-sm truncate">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex-1 bg-gray-900/50 border border-gray-700/20 rounded-2xl px-4 py-3 text-gray-400 text-sm truncate">
                 {shareableLink}
               </div>
               <button
                 onClick={copyToClipboard}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg transition-colors"
+                className="bg-gray-700/50 hover:bg-gray-600/50 text-white px-4 py-3 rounded-2xl transition-all"
               >
                 {linkCopied ? "Copied!" : <FaLink />}
               </button>
             </div>
-
             <button
               onClick={() => setShowShareModal(false)}
-              className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors"
+              className="w-full py-3 bg-gray-700/50 hover:bg-gray-600/50 text-white font-semibold rounded-2xl transition-all"
             >
               Close
             </button>
@@ -895,13 +704,9 @@ const QuizAnswer = () => {
         </div>
       )}
 
-      {/* Add print-specific styles */}
       <style jsx="true" global="true">{`
         @media print {
-          nav,
-          footer,
-          header,
-          .no-print {
+          nav, footer, header, .no-print {
             display: none !important;
           }
           body {

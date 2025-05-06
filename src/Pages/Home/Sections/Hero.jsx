@@ -53,7 +53,7 @@ const Hero = () => {
       <div className="relative mt-16 rounded-2xl overflow-hidden border border-purple-500/20 p-1 shadow-2xl">
         <div className="relative h-full w-full flex items-center justify-center rounded-xl overflow-hidden">
           <img
-            src="/quiz-result.png"
+            src="/banner.png"
             alt="BrainZap quiz interface with leaderboard and achievements"
             className="rounded-xl w-full object-cover shadow-lg transition-all duration-700 hover:scale-[1.01]"
           />
