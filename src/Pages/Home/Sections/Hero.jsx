@@ -25,7 +25,7 @@ const Hero = () => {
           />
         </h1>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed">
-          Test your knowledge with AI-generated quizzes in Programming, Science, Math, and more. Compete, create, and share your expertise—free to start!
+        Unlock your full potential with adaptive quizzes, real-time insights, and a personalized path to mastery.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-5 mb-16">
           <Link

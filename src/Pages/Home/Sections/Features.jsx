@@ -26,54 +26,55 @@ const Features = () => {
     {
       id: 1,
       icon: <Sparkles className="w-6 h-6" />,
-      title: "Explore Diverse Quizzes",
+      title: "Ready-Made Quiz Categories",
       description:
-        "Test your knowledge with 7+ topics in Programming, Science, Math, and more. Choose MCQ or True/False formats.",
+        "Access quizzes in Programming, Science, Languages, Math, Tech, Business & more — instantly.",
       highlight: "Free for all users",
       color: "from-indigo-500 via-purple-500 to-pink-500",
     },
     {
       id: 2,
       icon: <BrainCircuit className="w-6 h-6" />,
-      title: "Create Custom Quizzes",
+      title: "AI-Powered Custom Quizzes",
       description:
-        "Elite users can design quizzes on any topic, set question counts, and adjust difficulty levels.",
-      highlight: "Personalized learning",
+        "Generate quizzes by topic, difficulty, and question count powered by AI.",
+      highlight: "Tailored learning experience",
       color: "from-cyan-500 via-blue-500 to-indigo-500",
     },
     {
       id: 3,
       icon: <Trophy className="w-6 h-6" />,
-      title: "Compete & Shine",
+      title: "Gamified Adaptive Learning",
       description:
-        "Earn points, track streaks, and climb the leaderboard. Show off your skills globally!",
-      highlight: "Gamified experience",
+        "Earn points, maintain streaks, unlock achievements, and climb the leaderboard with every quiz.",
+      highlight: "Motivation meets mastery",
       color: "from-green-400 via-emerald-500 to-teal-500",
     },
     {
       id: 4,
       icon: <PenSquare className="w-6 h-6" />,
-      title: "Share Your Insights",
+      title: "Community-Driven Blog",
       description:
-        "Pro and Elite users can write blogs with our Rich Text Editor. Free users can read and learn.",
-      highlight: "Build your expertise",
+        "Write insightful blogs using our Rich Text Editor. Everyone can read and engage.",
+      highlight: "Learn & share knowledge",
       color: "from-amber-500 via-orange-500 to-red-500",
     },
   ];
+  
 
   const featureHighlights = [
     {
       icon: <Zap className="w-8 h-8 text-purple-400" />,
       title: "AI-Powered Feedback",
       description:
-        "Get detailed insights on your quiz performance to improve faster (Pro/Elite).",
+        "Get detailed insights on your quiz performance to improve faster.",
       color: "purple",
     },
     {
       icon: <Share2 className="w-8 h-8 text-blue-400" />,
       title: "Share Your Success",
       description:
-        "Post your quiz results on social media to showcase your expertise (Pro/Elite).",
+        "Post your quiz results on social media to showcase your expertise.",
       color: "blue",
     },
     {
@@ -160,11 +161,11 @@ const Features = () => {
                         Sample Quiz
                       </h3>
                       <p className="text-gray-400 text-sm">
-                        Test your skills in real-time!
+                      Adapting to your learning style...
                       </p>
                     </div>
                     <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs font-medium">
-                      Category: General Knowledge
+                    Intelligence Level: Adapting
                     </span>
                   </div>
                   <div className="grid grid-cols-4 gap-3 mb-8">
@@ -235,8 +236,8 @@ const Features = () => {
                   <p className="text-sm font-medium text-gray-300">600K+</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-1">User Satisfaction</p>
-                  <p className="text-sm font-medium text-gray-300">96%</p>
+                  <p className="text-xs text-gray-500 mb-1">AI Adaptation</p>
+                  <p className="text-sm font-medium text-gray-300">Real-time</p>
                 </div>
               </div>
             </div>

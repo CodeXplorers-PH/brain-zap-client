@@ -15,14 +15,14 @@ const HowItWorks = () => {
       icon: <Brain className="w-6 h-6 text-white" />,
       title: "Take AI-Driven Quizzes",
       description:
-        "Dive into 7+ categories like Programming or Science, with quizzes that adapt to your skill level.",
+        "Dive into categories like Programming or Science, with quizzes that adapt to your skill level.",
       gradient: "from-cyan-500 via-blue-500 to-indigo-500",
     },
     {
       icon: <Trophy className="w-6 h-6 text-white" />,
       title: "Compete & Grow",
       description:
-        "Earn points, climb leaderboards, and unlock achievements with personalized AI feedback (Pro/Elite).",
+        "Earn points, climb leaderboards, and unlock achievements with personalized AI feedback.",
       gradient: "from-green-400 via-emerald-500 to-teal-500",
     },
   ];

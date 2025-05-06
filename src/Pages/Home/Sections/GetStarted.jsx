@@ -15,7 +15,7 @@ const Started = () => {
       icon: <Brain className="w-6 h-6 text-white" />,
       title: "Pick Your Quiz",
       description:
-        "Choose from 7 categories like Programming or Science, or create your own (Elite).",
+        "Choose from 7 categories like Programming or Science, or create your own.",
       gradient: "from-cyan-500 via-blue-500 to-indigo-500",
     },
     {
@@ -61,7 +61,7 @@ const Started = () => {
               Kickstart Your Learning
             </span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
             Get started with BrainZap in three easy steps. Test your knowledge,
             compete, and grow today!
           </p>
