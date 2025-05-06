@@ -1,6 +1,5 @@
 import React from "react";
 import { UserPlus, Brain, Rocket } from "lucide-react";
-import { motion } from "framer-motion";
 
 const Started = () => {
   const startSteps = [
@@ -66,15 +65,11 @@ const Started = () => {
             compete, and grow today!
           </p>
         </div>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+        <div
           className="grid md:grid-cols-3 gap-8"
         >
           {startSteps.map((step, index) => (
-            <motion.div
+            <div
               key={step.title}
               variants={item}
               className="group relative overflow-hidden rounded-xl border border-gray-800 p-8 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 bg-gray-800/30"
@@ -98,9 +93,9 @@ const Started = () => {
                   {step.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

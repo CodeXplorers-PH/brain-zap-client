@@ -6,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Shield, Rocket, Star, Trophy, BadgeCheck, Zap } from "lucide-react";
-import { motion } from "framer-motion";
 
 const Faq = () => {
   const container = {
@@ -47,15 +46,11 @@ const Faq = () => {
             Everything you need to know about BrainZap’s quizzes, plans, and how to excel.
           </p>
         </div>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+        <div
           className="max-w-4xl mx-auto"
         >
           <Accordion type="single" collapsible className="space-y-6">
-            <motion.div variants={item}>
+            <div variants={item}>
               <AccordionItem
                 value="item-1"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-purple-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 bg-gray-800/30"
@@ -87,8 +82,8 @@ const Faq = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </motion.div>
-            <motion.div variants={item}>
+            </div>
+            <div variants={item}>
               <AccordionItem
                 value="item-2"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-blue-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 bg-gray-800/30"
@@ -120,8 +115,8 @@ const Faq = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </motion.div>
-            <motion.div variants={item}>
+            </div>
+            <div variants={item}>
               <AccordionItem
                 value="item-3"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-teal-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10 bg-gray-800/30"
@@ -153,8 +148,8 @@ const Faq = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </motion.div>
-            <motion.div variants={item}>
+            </div>
+            <div variants={item}>
               <AccordionItem
                 value="item-4"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-amber-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 bg-gray-800/30"
@@ -186,8 +181,8 @@ const Faq = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </motion.div>
-            <motion.div variants={item}>
+            </div>
+            <div variants={item}>
               <AccordionItem
                 value="item-5"
                 className="group relative overflow-hidden rounded-xl border border-gray-800 backdrop-blur-sm hover:border-pink-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10 bg-gray-800/30"
@@ -219,9 +214,9 @@ const Faq = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </motion.div>
+            </div>
           </Accordion>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
