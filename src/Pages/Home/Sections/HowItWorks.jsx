@@ -1,6 +1,5 @@
 import React from "react";
 import { User, Brain, Trophy } from "lucide-react";
-import { motion } from "framer-motion";
 
 const HowItWorks = () => {
   const processSteps = [
@@ -65,19 +64,13 @@ const HowItWorks = () => {
             Discover how BrainZap’s AI-powered platform helps you learn, compete, and excel in just three simple steps.
           </p>
         </div>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+        <div
           className="relative"
         >
           <div className="hidden md:block absolute top-1/2 left-1/2 h-0.5 bg-gradient-to-r from-purple-500/30 via-blue-500/30 to-teal-500/30 transform -translate-x-1/2 -translate-y-1/2 w-3/4"></div>
           <div className="grid md:grid-cols-3 gap-8">
             {processSteps.map((step, index) => (
-              <motion.div
-                key={step.title}
-                variants={item}
+              <div
                 className="relative group rounded-xl bg-gray-800/30 backdrop-blur-sm border border-gray-700 p-8 transition-all duration-300 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/10"
               >
                 <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-gray-700/50 border border-gray-600 text-gray-400 font-medium text-sm">
@@ -107,10 +100,10 @@ const HowItWorks = () => {
                     className={`relative inline-flex rounded-full h-3 w-3 bg-gradient-to-r ${step.gradient}`}
                   ></span>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

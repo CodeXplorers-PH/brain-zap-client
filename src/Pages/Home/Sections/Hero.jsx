@@ -2,17 +2,21 @@ import React from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { SparklesText } from "@/components/magicui/sparkles-text";
+import { Rocket } from "lucide-react";
+import { FaArrowRight } from "react-icons/fa";
 
 const Hero = () => {
   return (
     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-24 bg-transparent">
       <div className="text-center">
-        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gray-800/70 backdrop-blur-sm border border-purple-500/30 mb-8">
-          <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
-          <span className="text-sm font-medium text-gray-200">
-            AI-Powered Quiz Platform
+        <Link to="/start-quiz" className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 backdrop-blur-md border border-blue-500/20 mb-6">
+          <Rocket className="w-3.5 h-3.5 text-blue-400 mr-2" />
+          <span className="text-sm font-medium text-blue-100">
+            New: Personalized Quizzes Now Live!
           </span>
-        </div>
+          <FaArrowRight className="w-3.5 h-3.5 text-blue-400 ml-2" />
+        </Link>
+
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
             Master Your Skills
@@ -25,7 +29,7 @@ const Hero = () => {
           />
         </h1>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed">
-        Unlock your full potential with adaptive quizzes, real-time insights, and a personalized path to mastery.
+          Unlock your full potential with adaptive quizzes, real-time insights, and a personalized path to mastery.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-5 mb-16">
           <Link
