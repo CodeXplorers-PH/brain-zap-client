@@ -158,7 +158,12 @@ const Quiz = ({
         questions.length <= 20 ? 'sm:max-w-2xl' : 'sm:max-w-3xl'
       } px-4`}>
         <div className="bg-gray-900/70 backdrop-blur-sm p-4 sm:p-6 rounded-3xl border border-gray-700/20 shadow-2xl">
-          <div className="flex items-center justify-center md:justify-between mb-4">
+          <div className="flex flex-col gap-2 items-center justify-center md:justify-between mb-4">
+            <span className="text-xs sm:text-sm text-gray-400 hidden md:block">
+              {Object.keys(selectedOptions).length === questions.length
+                ? "All questions answered!"
+                : `${questions.length - Object.keys(selectedOptions).length} questions remaining`}
+            </span>
             <div className="flex flex-wrap gap-1">
               {questions.map((_, i) => (
                 <div 
@@ -177,11 +182,6 @@ const Quiz = ({
                 </div>
               ))}
             </div>
-            <span className="text-xs sm:text-sm text-gray-400 hidden md:block">
-              {Object.keys(selectedOptions).length === questions.length
-                ? "All questions answered!"
-                : `${questions.length - Object.keys(selectedOptions).length} questions remaining`}
-            </span>
           </div>
           
           <button
