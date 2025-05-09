@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 import useAuth from '@/hooks/useAuth';
 import { ApolloClient, gql, InMemoryCache, useQuery } from '@apollo/client';
-
 import CreatePostModal from '@/components/Blog/CreatePostModal';
 import BlogCard from '@/components/Blog/BlogCard';
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
-  uri: `${import.meta.env.VITE_ServerUrl}/graphql`, // Make sure to set this in your environment variables
+  uri: `${import.meta.env.VITE_ServerUrl}/graphql`,
   cache: new InMemoryCache(),
 });
-
 
 const GET_BLOG = gql`
   query getBlogs($search: String, $category: String, $limit: Int, $skip: Int) {
@@ -74,18 +72,20 @@ const Blog = () => {
         ...blog,
         description: blog.blog,
         author: {
-          id: blog.author_id,
-          name: blog.author_name,
-          avatar: blog.author_avatar,
+          id: blog.author_id || 'unknown',
+          name: blog.author_name || 'Anonymous',
+          avatar: blog.author_avatar || '/default-avatar.png',
         },
       }));
-
       setBlogs(prev =>
         page === 0 ? fetchedBlogs : [...prev, ...fetchedBlogs]
       );
       setTotalBlogs(data.blogs.total);
-      setIsLoading(false);
+    } else {
+      setBlogs([]);
+      setTotalBlogs(0);
     }
+    setIsLoading(false);
   }, [data, page]);
 
   const fetchBlogs = async (reset = false) => {
@@ -105,6 +105,8 @@ const Blog = () => {
     } catch (err) {
       console.error('Error fetching blogs:', err);
       setError(err.message || 'Failed to fetch blogs. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,7 +124,7 @@ const Blog = () => {
   };
 
   const filteredBlogs = blogs.filter(blog => {
-    if (viewMode === 'my' && blog.author?.id !== user?.uid) {
+    if (viewMode === 'my' && (!user?.uid || blog.author?.id !== user?.uid)) {
       return false;
     }
     return true;
@@ -152,6 +154,12 @@ const Blog = () => {
             <div className="max-w-3xl mx-auto mb-8 bg-red-900/40 border border-red-700 p-4 rounded-xl text-white">
               <p className="font-medium">Error:</p>
               <p>{error}</p>
+              <button
+                onClick={() => fetchBlogs(true)}
+                className="mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg"
+              >
+                Retry
+              </button>
             </div>
           )}
 
@@ -301,21 +309,6 @@ const Blog = () => {
               </p>
             </div>
           ) : null}
-
-          {/* Load More */}
-          {!isLoading &&
-            filteredBlogs.length > 0 &&
-            filteredBlogs.length < totalBlogs && (
-              <div className="mt-12 text-center">
-                <button
-                  onClick={loadMore}
-                  className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-lg transition-all"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Loading...' : 'Load More'}
-                </button>
-              </div>
-            )}
         </div>
 
         <CreatePostModal
