@@ -6,6 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import useStreak from "@/hooks/useStreak";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import BrainZapLoader from "@/components/BrainZapLoader/BrainZapLoader";
 
 const QuizAnswer = () => {
   const { user } = useAuth();
@@ -382,9 +383,9 @@ const QuizAnswer = () => {
 
   if (loading) {
     return (
-      <div className="bg-gray-900 min-h-screen pt-40 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mb-6"></div>
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center h-96 space-y-5">
+          <BrainZapLoader />
           <p className="text-gray-300 text-2xl font-medium">Loading your results...</p>
         </div>
       </div>

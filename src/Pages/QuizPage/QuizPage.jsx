@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Quiz from '../Quiz/Quiz';
 import useQuiz from '@/hooks/useQuiz';
+import BrainZapLoader from '@/components/BrainZapLoader/BrainZapLoader';
 
 const QuizPage = () => {
   const { questions, loading, error } = useQuiz();
@@ -23,9 +24,9 @@ const QuizPage = () => {
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
       {loading ? (
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mb-6"></div>
-          <p className="text-gray-300 text-2xl font-medium">Generating Questions...</p>
+        <div className="flex flex-col items-center justify-center h-96 space-y-10">
+          <BrainZapLoader />
+          <p className="text-gray-300 text-2xl font-medium">Generating Quiz...</p>
         </div>
       ) : error ? (
         <div className="text-center p-10 bg-gray-800/30 rounded-3xl border border-gray-700/30 backdrop-blur-sm">

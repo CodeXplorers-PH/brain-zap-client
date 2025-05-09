@@ -1,5 +1,4 @@
 import React from "react";
-import { RotateLoader } from "react-spinners";
 import BrainZapLoader from "../BrainZapLoader/BrainZapLoader";
 
 const Loader = () => {
