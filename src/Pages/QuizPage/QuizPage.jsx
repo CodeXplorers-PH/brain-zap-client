@@ -22,7 +22,6 @@ const QuizPage = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen pt-32 pb-20 px-4">
-
       {loading ? (
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mb-6"></div>
