@@ -302,7 +302,7 @@ const Leaderboard = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-950 pt-28 md:pt-32 pb-16 px-4">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-900 pt-28 md:pt-32 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-end items-center gap-2 my-2 lg:my-0">
             <select
