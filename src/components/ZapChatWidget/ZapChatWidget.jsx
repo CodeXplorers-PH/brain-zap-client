@@ -81,7 +81,7 @@ const ZapChatWidget = () => {
       {isOpen && (
         <div
           ref={chatContainerRef}
-          className="w-96 h-[32rem] transition-all duration-300 scale-95 opacity-0"
+          className="w-80 md:w-96 h-[32rem] transition-all duration-300 scale-95 opacity-0"
         >
           <Card className="relative h-full rounded-2xl overflow-hidden border border-transparent bg-gradient-to-r from-indigo-600 to-violet-600 p-[2px] shadow-2xl shadow-indigo-500/20">
             <div className="h-full bg-gray-900/95 backdrop-blur-sm rounded-2xl flex flex-col">

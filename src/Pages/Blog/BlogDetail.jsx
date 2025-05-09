@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client';
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { CustomToast } from '@/components/ui/CustomToast';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
+import BrainZapLoader from '@/components/BrainZapLoader/BrainZapLoader';
 
 // Initialize Apollo Client
 const apolloClient = new ApolloClient({
@@ -113,35 +114,8 @@ const BlogDetail = () => {
   if (isLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-900 pt-24 pb-20 px-4 sm:px-6 flex items-center justify-center">
-        <div className="text-center">
-          {/* Pulse animation container */}
-          <div className="relative w-24 h-24 mx-auto mb-6">
-            {/* Outer pulsing circle */}
-            <div className="absolute inset-0 rounded-full bg-purple-600/20 animate-ping"></div>
-
-            {/* Middle pulse circle */}
-            <div className="absolute inset-2 rounded-full bg-purple-500/40 animate-pulse"></div>
-
-            {/* Inner solid circle */}
-            <div className="absolute inset-4 rounded-full bg-purple-600 flex items-center justify-center">
-              {/* Loading "dots" animation */}
-              <div className="flex space-x-1">
-                <div
-                  className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: '0ms' }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: '150ms' }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: '300ms' }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
+        <div className="flex flex-col items-center justify-center h-96 space-y-5">
+        <BrainZapLoader />
           {/* Text with gradient */}
           <p className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 font-medium">
             Loading awesome content...
