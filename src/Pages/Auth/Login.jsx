@@ -77,7 +77,7 @@ const Login = () => {
             )}.`,
           });
         } catch (err) {
-          console.error('Error locking account:', err);
+          // console.error('Error locking account:', err);
         }
       } else {
         const newAttempt = loginAttempt + 1;

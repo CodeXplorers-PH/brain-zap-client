@@ -103,7 +103,7 @@ const Blog = () => {
         skip: reset ? 0 : page * limit,
       });
     } catch (err) {
-      console.error('Error fetching blogs:', err);
+      // console.error('Error fetching blogs:', err);
       setError(err.message || 'Failed to fetch blogs. Please try again later.');
     } finally {
       setIsLoading(false);

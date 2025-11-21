@@ -114,7 +114,7 @@ const CheckOutForm = () => {
       });
 
     if (confirmError) {
-      console.log('confirm error:', confirmError);
+      // console.log('confirm error:', confirmError);
     } else {
       if (paymentIntent.status === 'succeeded') {
         setTransectionId(paymentIntent.id);
