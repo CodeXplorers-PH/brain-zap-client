@@ -48,7 +48,7 @@ const Feedback = () => {
           })
           .then(() => refetch())
           .catch(error => {
-            console.error('Failed to mark as read:', error);
+            // console.error('Failed to mark as read:', error);
           });
       }
     });
@@ -83,7 +83,7 @@ const Feedback = () => {
           })
           .then(() => refetch())
           .catch(error => {
-            console.error('Failed to delete feedback:', error);
+            // console.error('Failed to delete feedback:', error);
             Swal.fire({
               title: 'Error',
               text: 'An error occurred while deleting the feedback.',
@@ -115,8 +115,8 @@ const Feedback = () => {
   ];
 
   useEffect(() => {
-      document.title = 'Admin Feedback | BrainZap';
-    },[])
+    document.title = 'Admin Feedback | BrainZap';
+  }, []);
 
   const filteredFeedbacks = feedbacks.filter(feedback => {
     const matchesSearch =

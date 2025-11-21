@@ -71,9 +71,9 @@ const useQuiz = () => {
     queryFn: fetchQuestions,
   });
 
-  if (error) {
-    console.log('Error to fetch Quizzes --> ', error);
-  }
+  // if (error) {
+  // console.log('Error to fetch Quizzes --> ', error);
+  // }
 
   return {
     questions,

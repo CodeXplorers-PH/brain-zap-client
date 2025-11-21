@@ -84,7 +84,7 @@ const BlogDetail = () => {
 
       navigate('/blogs');
     } catch (error) {
-      console.error('Error deleting blog:', error);
+      // console.error('Error deleting blog:', error);
       setError('Failed to delete blog');
       setDeleteLoading(false);
       setShowDeleteModal(false);
@@ -115,7 +115,7 @@ const BlogDetail = () => {
     return (
       <div className="min-h-screen bg-gray-900 pt-24 pb-20 px-4 sm:px-6 flex items-center justify-center">
         <div className="flex flex-col items-center justify-center h-96 space-y-5">
-        <BrainZapLoader />
+          <BrainZapLoader />
           {/* Text with gradient */}
           <p className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 font-medium">
             Loading awesome content...

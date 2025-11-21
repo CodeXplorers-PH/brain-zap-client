@@ -133,7 +133,7 @@ const AuthProvider = ({ children }) => {
           }
           setLoading(false);
         } catch (err) {
-          console.error('Auth side effects failed:', err);
+          // console.error('Auth side effects failed:', err);
           setLoading(false);
         }
       } else {

@@ -66,7 +66,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
       }
     },
     onError: error => {
-      console.error('Error fetching blog:', error);
+      // console.error('Error fetching blog:', error);
       setError('Failed to load blog data. Please try again.');
     },
   });
@@ -217,7 +217,7 @@ const EditPostModal = ({ isOpen, onClose, onUpdate, blogId }) => {
         });
       }
     } catch (err) {
-      console.error('Error updating blog:', err);
+      // console.error('Error updating blog:', err);
       setError(
         err.response?.data?.message ||
           err.message ||
